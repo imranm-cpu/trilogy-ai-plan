@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Roadmap - Imran Mirza | Day 23 of 90</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      padding: 40px 32px;
+    }
+
+    .page-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .page-heading {
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 4px;
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 48px;
+    }
+
+    /* ─── SECTION WRAPPER ─── */
+    .section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 40px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .section-desc {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    /* ─── STYLE 1: TIMELINE ─── */
+    .timeline-container {
+      position: relative;
+    }
+
+    .timeline-track {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .timeline-spine {
+      position: relative;
+      width: 100%;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-bottom: 16px;
+    }
+
+    .timeline-spine-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 4px;
+      width: 62%;
+      background: linear-gradient(90deg, #3b82f6, #22c55e);
+      border-radius: 2px;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      top: -5px;
+      transform: translateX(-50%);
+      border: 2px solid #fff;
+    }
+
+    .timeline-columns {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .tl-col {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tl-header {
+      margin-bottom: 10px;
+    }
+
+    .tl-week {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tl-date {
+      font-size: 11px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .tl-card {
+      border-radius: 8px;
+      padding: 14px;
+      flex: 1;
+      border-left: 3px solid transparent;
+    }
+
+    .tl-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tl-card ul li {
+      font-size: 12px;
+      line-height: 1.6;
+      padding: 2px 0;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .tl-card ul li::before {
+      content: "·";
+      position: absolute;
+      left: 4px;
+      font-weight: 700;
+    }
+
+    .col-blue .tl-week { color: #2563eb; }
+    .col-blue .tl-card { background: #eff6ff; border-color: #3b82f6; }
+
+    .col-green .tl-week { color: #16a34a; }
+    .col-green .tl-card { background: #f0fdf4; border-color: #22c55e; }
+
+    .col-now .tl-week { color: #16a34a; }
+    .col-now .tl-card { background: #f0fdf4; border-color: #16a34a; }
+    .col-now .tl-week::after {
+      content: " ●";
+      color: #16a34a;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+    .col-future .tl-week { color: #ea580c; }
+    .col-future .tl-card { background: #fff7ed; border-color: #f97316; border-style: dashed; }
+
+    /* ─── STYLE 2: STAIRCASE ─── */
+    .staircase-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      height: 360px;
+      padding-bottom: 0;
+      border-bottom: 3px solid #e0e0e0;
+      margin-bottom: 12px;
+    }
+
+    .stair-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: flex-end;
+      height: 100%;
+    }
+
+    .stair-bar {
+      border-radius: 8px 8px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 8px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .stair-bar-label {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stair-bar-detail {
+      font-size: 11px;
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    .stair-x-label {
+      display: flex;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .stair-x-item {
+      flex: 1;
+      text-align: center;
+      font-size: 11px;
+      color: #888;
+    }
+
+    /* ─── STYLE 3: KPI DASHBOARD ─── */
+    .kpi-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 6px;
+    }
+
+    .kpi-table thead th {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #aaa;
+      padding: 0 12px 10px;
+      text-align: left;
+    }
+
+    .kpi-table thead th:nth-child(2) { text-align: center; }
+    .kpi-table thead th:last-child { text-align: right; }
+
+    .kpi-row td {
+      padding: 10px 12px;
+      background: #fafafa;
+      border-top: 1px solid #f0f0f0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .kpi-row td:first-child {
+      border-radius: 8px 0 0 8px;
+      border-left: 1px solid #f0f0f0;
+    }
+
+    .kpi-row td:last-child {
+      border-radius: 0 8px 8px 0;
+      border-right: 1px solid #f0f0f0;
+      text-align: right;
+    }
+
+    .kpi-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #222;
+      white-space: nowrap;
+    }
+
+    .kpi-sub {
+      font-size: 11px;
+      color: #999;
+      margin-top: 2px;
+    }
+
+    .kpi-bar-wrap {
+      position: relative;
+      height: 28px;
+      background: #eee;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .kpi-bar-fill {
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.6s ease;
+    }
+
+    .kpi-bar-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .kpi-bar-text.light { color: #fff; }
+
+    .status-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .badge-done     { background: #dcfce7; color: #16a34a; }
+    .badge-progress { background: #fff7ed; color: #ea580c; }
+    .badge-track    { background: #eff6ff; color: #2563eb; }
+    .badge-none     { background: #f3f4f6; color: #9ca3af; }
+
+    /* ─── SUMMARY STATS ─── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+    }
+
+    .stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <p class="page-title">Trilogy Care · AI Innovations</p>
+  <h1 class="page-heading">AI Roadmap — Past 2 Weeks & Next 2 Weeks</h1>
+  <p class="page-sub">Imran Mirza · Day 14 of 90 business days · Started 9 March 2026</p>
+
+  <!-- SUMMARY STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" style="color:#2563eb">109</div>
+      <div class="stat-label">AI opportunities scoped</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#16a34a">18+</div>
+      <div class="stat-label">SKILL.md files written</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#16a34a">2</div>
+      <div class="stat-label">Live automations shipped</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#7c3aed">13+</div>
+      <div class="stat-label">Stakeholders engaged</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#ea580c">4</div>
+      <div class="stat-label">MCPs connected</div>
+    </div>
+  </div>
+
+  <!-- ─── STYLE 1: TIMELINE ─── -->
+  <div class="section">
+    <div class="section-label" style="color:#2563eb">Style 1</div>
+    <div class="section-title">Horizontal Timeline</div>
+    <div class="section-desc">What was shipped in each phase, and what's coming next</div>
+
+    <div class="timeline-spine">
+      <div class="timeline-spine-fill"></div>
+      <div class="timeline-dot" style="left:10%; background:#3b82f6;"></div>
+      <div class="timeline-dot" style="left:28%; background:#3b82f6;"></div>
+      <div class="timeline-dot" style="left:50%; background:#22c55e;"></div>
+      <div class="timeline-dot" style="left:62%; background:#16a34a; box-shadow: 0 0 0 4px rgba(22,163,74,0.2);"></div>
+      <div class="timeline-dot" style="left:85%; background:#f97316; border-style: dashed;"></div>
+    </div>
+
+    <div class="timeline-columns">
+      <div class="tl-col col-blue">
+        <div class="tl-header">
+          <div class="tl-week">Week 1</div>
+          <div class="tl-date">9 – 13 Mar (days 1-5)</div>
+        </div>
+        <div class="tl-card">
+          <ul>
+            <li>EA workspace built</li>
+            <li>Nick 1:1 set up</li>
+            <li>90-day plan ready</li>
+            <li>Leadership intros done</li>
+            <li>1 MCP connected</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-col col-blue">
+        <div class="tl-header">
+          <div class="tl-week">Week 2</div>
+          <div class="tl-date">16 – 20 Mar (days 6-10)</div>
+        </div>
+        <div class="tl-card">
+          <ul>
+            <li>109-item AI registry</li>
+            <li>Brand Intel prototype</li>
+            <li>M365 MCP connected</li>
+            <li>7 persona guides</li>
+            <li>3 agent specs written</li>
+            <li>Week 1 summary to Nick</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-col col-green">
+        <div class="tl-header">
+          <div class="tl-week">Week 3</div>
+          <div class="tl-date">23 – 27 Mar (days 11-15)</div>
+        </div>
+        <div class="tl-card">
+          <ul>
+            <li>6 marketing skills live</li>
+            <li>2 automations shipped</li>
+            <li>21 tools audited</li>
+            <li>Databricks + Figma Make</li>
+            <li>13+ stakeholders met</li>
+            <li>5 GM sessions done</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-col col-now">
+        <div class="tl-header">
+          <div class="tl-week">NOW</div>
+          <div class="tl-date">Day 14 · Week 3</div>
+        </div>
+        <div class="tl-card">
+          <ul>
+            <li>AgedCare Compare live</li>
+            <li>Vibe coding started</li>
+            <li>BD build mode on</li>
+            <li>Day 23 of 90</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="tl-col col-future">
+        <div class="tl-header">
+          <div class="tl-week">Next 2 Wks</div>
+          <div class="tl-date">30 Mar – 10 Apr (8 days — Easter 3 + 6 Apr)</div>
+        </div>
+        <div class="tl-card">
+          <ul>
+            <li>Will show-and-tell (2 Apr)</li>
+            <li>Pulse report auto</li>
+            <li>Call scoring tool</li>
+            <li>TL dashboard</li>
+            <li>NDIS Brain</li>
+            <li>Trilogy GPT hub</li>
+            <li style="color:#ea580c; margin-top:6px;">⚠ Good Friday 3 Apr</li>
+            <li style="color:#ea580c;">⚠ Easter Monday 6 Apr</li>
+            <li style="color:#ea580c; font-style:italic;">8 working days, not 10</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── STYLE 2: STAIRCASE ─── -->
+  <div class="section">
+    <div class="section-label" style="color:#16a34a">Style 2</div>
+    <div class="section-title">Growth Staircase</div>
+    <div class="section-desc">Cumulative output volume building week over week — dashed bar shows 90-day target</div>
+
+    <div class="staircase-wrap">
+      <div class="stair-col">
+        <div class="stair-bar" style="height:13%; background:#93c5fd;">
+          <div class="stair-bar-label" style="color:#1e3a5f">Week 1</div>
+          <div class="stair-bar-detail" style="color:#1e3a5f">Setup<br>4 outputs</div>
+        </div>
+      </div>
+      <div class="stair-col">
+        <div class="stair-bar" style="height:28%; background:#3b82f6;">
+          <div class="stair-bar-label">Week 2</div>
+          <div class="stair-bar-detail">Discovery<br>+6 items<br>10 total</div>
+        </div>
+      </div>
+      <div class="stair-col">
+        <div class="stair-bar" style="height:52%; background:#16a34a;">
+          <div class="stair-bar-label">Week 3</div>
+          <div class="stair-bar-detail">Build Phase<br>+8 items<br>18+ total</div>
+        </div>
+      </div>
+      <div class="stair-col">
+        <div class="stair-bar" style="height:60%; background:#22c55e;">
+          <div class="stair-bar-label">NOW</div>
+          <div class="stair-bar-detail">Day 14<br>Growing...</div>
+        </div>
+      </div>
+      <div class="stair-col">
+        <div class="stair-bar" style="height:100%; background: repeating-linear-gradient(45deg, #fed7aa, #fed7aa 6px, #fff7ed 6px, #fff7ed 12px); border: 2px dashed #f97316; border-bottom: none;">
+          <div class="stair-bar-label" style="color:#c2410c">Target</div>
+          <div class="stair-bar-detail" style="color:#c2410c">90 Days<br>10 autos<br>10+ skills<br>All KPIs met</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stair-x-label">
+      <div class="stair-x-item">Week 1<br>9-13 Mar</div>
+      <div class="stair-x-item">Week 2<br>16-20 Mar</div>
+      <div class="stair-x-item">Week 3<br>23-27 Mar</div>
+      <div class="stair-x-item">NOW<br>Day 14</div>
+      <div class="stair-x-item" style="color:#ea580c">Target<br>90 Days<br><span style="font-size:10px;">Note: Easter 3+6 Apr<br>= 8 days this window</span></div>
+    </div>
+  </div>
+
+  <!-- ─── STYLE 3: KPI DASHBOARD ─── -->
+  <div class="section">
+    <div class="section-label" style="color:#7c3aed">Style 3</div>
+    <div class="section-title">90-Day KPI Dashboard</div>
+    <div class="section-desc">Progress against each success metric as of Day 23</div>
+
+    <table class="kpi-table">
+      <thead>
+        <tr>
+          <th style="width:220px">KPI</th>
+          <th>Progress</th>
+          <th style="width:130px">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">AI Opportunity Audit</div>
+            <div class="kpi-sub">All 3 functions covered</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:100%; background:#16a34a;"></div>
+              <div class="kpi-bar-text light">Done — 109 items scoped across Marketing, Sales, BD</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-done">Done</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">10 Live Automations</div>
+            <div class="kpi-sub">2 live, 8 in pipeline</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:20%; background:#86efac;"></div>
+              <div class="kpi-bar-text">2 / 10 live — call scoring, TL dashboard, pulse report next</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-progress">In Progress</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">AI Training + Guidance</div>
+            <div class="kpi-sub">Marketing nearly done</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:67%; background:#86efac;"></div>
+              <div class="kpi-bar-text">6 of 7 marketing done — Miranda, Steve, Sales + BD pipeline</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-progress">In Progress</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">AI Tool Audit</div>
+            <div class="kpi-sub">SaaS done, stack pending</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:70%; background:#86efac;"></div>
+              <div class="kpi-bar-text">21 tools audited — stack recommendation pending</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-progress">In Progress</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">Baseline AI Confidence</div>
+            <div class="kpi-sub">Not started yet</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:0%; background:#d1d5db;"></div>
+              <div class="kpi-bar-text" style="color:#9ca3af">Not started — targeted for Month 2</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-none">Not Started</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">Stakeholder Relationships</div>
+            <div class="kpi-sub">Marketing + BD strong</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:80%; background:#16a34a;"></div>
+              <div class="kpi-bar-text light">Strong across Marketing + BD — Sales started</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-track">On Track</span></td>
+        </tr>
+        <tr class="kpi-row">
+          <td>
+            <div class="kpi-name">Team Skills Rollout</div>
+            <div class="kpi-sub">6 of 10+ done</div>
+          </td>
+          <td>
+            <div class="kpi-bar-wrap">
+              <div class="kpi-bar-fill" style="width:55%; background:#86efac;"></div>
+              <div class="kpi-bar-text">6 of 10+ marketing done — Sales + BD to come</div>
+            </div>
+          </td>
+          <td><span class="status-badge badge-progress">In Progress</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>
