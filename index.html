@@ -840,49 +840,6 @@
   </div>
 </section>
 
-<!-- FIVE CONSTRAINTS -->
-<section>
-  <div class="sec-eyebrow">Structural Bottlenecks</div>
-  <div class="sec-title">Five Constraints — AI Solves Each</div>
-  <div class="sec-sub">The execution load that makes the builder model unsustainable without AI. These are the gaps AI is designed to fill.</div>
-  <div class="constraints-grid">
-    <div class="constraint-card">
-      <div class="cc-label">Campaign Launch</div>
-      <div class="cc-title">Speed to market</div>
-      <div class="cc-from">Today: 3–4 weeks</div>
-      <div class="cc-arrow">↓ AI fix</div>
-      <div class="cc-to">Brief intake agent + tiered auto-approval cuts to &lt;1 week</div>
-    </div>
-    <div class="constraint-card">
-      <div class="cc-label">Content Production</div>
-      <div class="cc-title">Article time cost</div>
-      <div class="cc-from">Today: 8–12 hrs per piece</div>
-      <div class="cc-arrow">↓ AI fix</div>
-      <div class="cc-to">Brief generator + drafter = 1.5–2.5 hrs. 10+ articles/month sustainable.</div>
-    </div>
-    <div class="constraint-card">
-      <div class="cc-label">Design Bottleneck</div>
-      <div class="cc-title">Below-skill tasks</div>
-      <div class="cc-from">Today: 70% on resizing + templates</div>
-      <div class="cc-arrow">↓ AI fix</div>
-      <div class="cc-to">Design template agent + QA agent frees Alicia for creative direction</div>
-    </div>
-    <div class="constraint-card">
-      <div class="cc-label">Approval Burden</div>
-      <div class="cc-title">Process friction</div>
-      <div class="cc-from">Today: 53% say too burdensome</div>
-      <div class="cc-arrow">↓ AI fix</div>
-      <div class="cc-to">ICE auto-scoring + tiered governance. Low-risk assets auto-approved.</div>
-    </div>
-    <div class="constraint-card">
-      <div class="cc-label">Priority Chaos</div>
-      <div class="cc-title">Everything is urgent</div>
-      <div class="cc-from">Today: 55% labelled high priority</div>
-      <div class="cc-arrow">↓ AI fix</div>
-      <div class="cc-to">Asana triage agent + ICE scoring on intake. One channel, scored automatically.</div>
-    </div>
-  </div>
-</section>
 
 <!-- JOBS TO BE DONE -->
 <section id="jobs">
@@ -900,10 +857,14 @@
     </div>
     <div class="jtbd-col">
       <div class="jtbd-hdr foundations">Foundations — Sustainable Output</div>
-      <div class="jtbd-item">Social Command Center fully dynamic — Miranda, this week</div>
-      <div class="jtbd-item">Matt's toolkit migrated from Claude Code into Grow dashboard</div>
-      <div class="jtbd-item">Alicia's pipeline connected and visible to Steve + Ops Manager</div>
-      <div class="jtbd-item">Design tooling decision — Canva AI vs Firefly</div>
+      <div class="jtbd-item">Social Command Center fully dynamic — Miranda owns scheduling, drafting, and ORM from one place</div>
+      <div class="jtbd-item">Matt's content toolkit migrated from Claude Code into Grow — live output visible to Nick and Steve</div>
+      <div class="jtbd-item">Alicia's brief and QA pipeline visible to Steve and Ops Manager — no more chasing asset status</div>
+      <div class="jtbd-item">Design tooling decision made — Canva AI vs Adobe Firefly. Alicia and Miranda unblocked for AI-assisted production</div>
+      <div class="jtbd-item">Every builder on their own toolkit by end of Q1 — individual aha moments before KPIs go live</div>
+      <div class="jtbd-item">GM Visibility Dashboard — Nick and Steve see cross-pod output, time savings, and KPI pacing in one place</div>
+      <div class="jtbd-item">Builder confidence scores captured at baseline — measurement in place before Q2 to show growth</div>
+      <div class="jtbd-item">Asana clean across all active projects — no stale tasks, clear ownership, Ops Manager ready to inherit</div>
     </div>
     <div class="jtbd-col">
       <div class="jtbd-hdr transparency">Transparency — For Nick and Steve</div>
@@ -914,42 +875,95 @@
   </div>
 </section>
 
-<!-- BLOCKERS -->
+<!-- GROW PLATFORM -->
 <section>
-  <div class="sec-eyebrow">Dependencies</div>
-  <div class="sec-title">What Needs to Be Unblocked</div>
-  <div class="sec-sub">These sit outside the AI plan but determine whether it delivers commercially.</div>
-  <div class="blocker-grid">
-    <div class="blocker-card">
-      <div class="blocker-title">Grow Platform Access</div>
-      <div class="blocker-detail">Dashboards are in prototype. Cannot go live without platform access.</div>
-      <span class="blocker-owner">Imran + Tim</span>
+  <div class="sec-eyebrow">Platform</div>
+  <div class="sec-title">The Grow Platform — Where It All Lives</div>
+  <div class="sec-sub">Everything built in Claude Code today migrates into Grow. One platform, full visibility for Nick and Steve, tools accessible to every builder without needing a dev environment.</div>
+
+  <!-- Single dependency -->
+  <div style="background:rgba(231,76,60,0.05); border:1px solid rgba(231,76,60,0.15); border-radius:14px; padding:20px 28px; display:flex; align-items:center; justify-content:space-between; margin-bottom:36px; flex-wrap:wrap; gap:16px;">
+    <div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#e74c3c;margin-bottom:4px;">Key Dependency</div>
+      <div style="font-size:16px;font-weight:700;color:var(--text);">Grow Platform Access</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px;">All tools are prototyped and ready. Migration to Grow is the final step before the team gets live access.</div>
     </div>
-    <div class="blocker-card">
-      <div class="blocker-title">UTM Infrastructure at 100%</div>
-      <div class="blocker-detail">Attribution dashboard blocked. Building before clean data = false confidence for Paul and Nick.</div>
-      <span class="blocker-owner">Paul</span>
+    <span style="font-size:10px;font-weight:700;color:#e74c3c;background:rgba(231,76,60,0.1);padding:4px 14px;border-radius:20px;border:1px solid rgba(231,76,60,0.2);white-space:nowrap;">Imran + Tim</span>
+  </div>
+
+  <!-- Two columns: BI apps + Builder Tools -->
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+
+    <!-- Business Intelligence -->
+    <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:16px; overflow:hidden;">
+      <div style="padding:16px 20px; background:rgba(46,134,222,0.08); border-bottom:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:2px;">Business Intelligence</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);">Live Dashboards in Grow</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Real-time data. No manual reporting. Nick and Steve see everything.</div>
+      </div>
+      <div style="padding:8px 0;">
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Meta Ads Dashboard</div><div style="font-size:10px;color:var(--muted);">CPL, ROAS, spend efficiency — Paul Phare</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Competitor Intelligence Dashboard</div><div style="font-size:10px;color:var(--muted);">38-point competitor tracking — Paul Phare</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-progress"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Social Command Center</div><div style="font-size:10px;color:var(--muted);">Scheduling, drafting, ORM — Miranda Partridge</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-progress"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">GM Visibility Dashboard</div><div style="font-size:10px;color:var(--muted);">Cross-pod output, KPI pacing — Nick + Steve</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-pipeline"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Full Attribution Dashboard</div><div style="font-size:10px;color:var(--muted);">Multi-touch, real-time ROAS — after UTM foundations</div></div>
+        </div>
+        <div style="padding:10px 20px; display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-pipeline"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">SEO and Organic Performance</div><div style="font-size:10px;color:var(--muted);">Content output, rankings, AEO visibility — Matthew Hart</div></div>
+        </div>
+      </div>
     </div>
-    <div class="blocker-card">
-      <div class="blocker-title">Klaviyo + CRM Connected</div>
-      <div class="blocker-detail">Email performance data incomplete. Blocks lifecycle automation and speed-to-lead agents.</div>
-      <span class="blocker-owner">Paul + Performance Builder</span>
+
+    <!-- Builder Tools -->
+    <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:16px; overflow:hidden;">
+      <div style="padding:16px 20px; background:rgba(0,184,148,0.08); border-bottom:1px solid var(--border);">
+        <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--teal);margin-bottom:2px;">Builder Tools</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);">Skills Wrapped as Team Tools</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:3px;">Each skill built in Claude Code becomes a reusable tool inside Grow — no prompting required.</div>
+      </div>
+      <div style="padding:8px 0;">
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">SEO Content Brief + Article Drafter</div><div style="font-size:10px;color:var(--muted);">8–12 hrs down to 1.5–2.5 hrs — Matthew Hart</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Creative Brief + Brand QA</div><div style="font-size:10px;color:var(--muted);">Brief to asset in one flow, brand compliance automated — Alisha Van Bone</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Campaign Brief + Asana Planner</div><div style="font-size:10px;color:var(--muted);">Brief to Asana task list in minutes — Mariia Branch</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-live"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Daily Performance Snapshot</div><div style="font-size:10px;color:var(--muted);">Automated morning brief on paid metrics — Paul Phare</div></div>
+        </div>
+        <div style="padding:10px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-progress"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Social Drafting + Scheduling Tool</div><div style="font-size:10px;color:var(--muted);">50%+ AI-drafted posts across LinkedIn, Facebook, Instagram — Miranda Partridge</div></div>
+        </div>
+        <div style="padding:10px 20px; display:flex; align-items:center; gap:10px;">
+          <span class="status-dot dot-pipeline"></span>
+          <div><div style="font-size:12px;font-weight:600;color:var(--text);">Email Sequence Builder</div><div style="font-size:10px;color:var(--muted);">Nurture flows built in one session, not two weeks — Performance Builder</div></div>
+        </div>
+      </div>
     </div>
-    <div class="blocker-card">
-      <div class="blocker-title">Performance Builder Hired</div>
-      <div class="blocker-detail">Revenue engine AI toolkit has no owner. 6–8 week hiring window — Paul covers gaps.</div>
-      <span class="blocker-owner">Steve + Nick</span>
-    </div>
-    <div class="blocker-card">
-      <div class="blocker-title">Ops Manager Hired</div>
-      <div class="blocker-detail">Cross-training and governance layer has no owner. Equally critical to the Performance Builder.</div>
-      <span class="blocker-owner">Steve + Nick</span>
-    </div>
-    <div class="blocker-card">
-      <div class="blocker-title">Design Tooling Decision</div>
-      <div class="blocker-detail">Miranda and Alicia's design agent layer is blocked until platform is chosen.</div>
-      <span class="blocker-owner">Imran + Steve</span>
-    </div>
+
   </div>
 </section>
 
