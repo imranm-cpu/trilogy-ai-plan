@@ -296,7 +296,7 @@
 <!-- VIEWING BAR (Arkham style) -->
 <div class="viewing-bar">
   <span class="viewing-label">VIEWING:</span>
-  <span class="viewing-value" id="viewingRepo">imranm-cpu/trilogy-ai-plan</span>
+  <span class="viewing-value" id="viewingRepo">4 repos · trilogy-ai-plan · trilogy-ai-dashboard · homecare-prices · tc-grow</span>
   <span class="viewing-sep">|</span>
   <span class="viewing-label">RANGE:</span>
   <span class="viewing-value">Last 14 days</span>
@@ -366,8 +366,12 @@
 // ============================================================
 // CONFIG
 // ============================================================
-const REPO_OWNER = 'imranm-cpu';
-const REPO_NAME  = 'trilogy-ai-plan';
+const REPOS = [
+  { owner: 'imranm-cpu',    name: 'trilogy-ai-plan',            label: 'AI Roadmap' },
+  { owner: 'imranm-cpu',    name: 'trilogy-ai-dashboard',       label: 'Nick Dashboard' },
+  { owner: 'imranm-cpu',    name: 'homecare-prices-prototype',   label: 'HomeCare Prices' },
+  { owner: 'Trilogy-Care',  name: 'tc-grow-applications',        label: 'TC Grow Platform' },
+];
 const DAYS_TO_SHOW = 14;
 const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
 
@@ -423,32 +427,41 @@ function projectIcon(name) {
 }
 
 // ============================================================
-// DATA FETCHING
+// DATA FETCHING -- multi-repo
 // ============================================================
-async function fetchCommits() {
+function ghHeaders() {
   const token = getToken();
-  const headers = { 'Accept': 'application/vnd.github.v3+json' };
-  if (token) headers['Authorization'] = `token ${token}`;
-
-  const since = new Date();
-  since.setDate(since.getDate() - DAYS_TO_SHOW);
-  const sinceStr = since.toISOString();
-
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?per_page=60&since=${sinceStr}`;
-  const res = await fetch(url, { headers });
-  if (!res.ok) throw new Error(`GitHub API: ${res.status} ${res.statusText}`);
-  return res.json();
+  const h = { 'Accept': 'application/vnd.github.v3+json' };
+  if (token) h['Authorization'] = `token ${token}`;
+  return h;
 }
 
-async function fetchCommitDetail(sha) {
-  const token = getToken();
-  const headers = { 'Accept': 'application/vnd.github.v3+json' };
-  if (token) headers['Authorization'] = `token ${token}`;
+async function fetchCommitsForRepo(repo) {
+  const since = new Date();
+  since.setDate(since.getDate() - DAYS_TO_SHOW);
+  const url = `https://api.github.com/repos/${repo.owner}/${repo.name}/commits?per_page=60&since=${since.toISOString()}`;
+  const res = await fetch(url, { headers: ghHeaders() });
+  if (!res.ok) return [];
+  const commits = await res.json();
+  // Tag each commit with its repo
+  return Array.isArray(commits) ? commits.map(c => ({ ...c, _repo: repo })) : [];
+}
 
-  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits/${sha}`;
-  const res = await fetch(url, { headers });
+async function fetchCommitDetail(sha, repo) {
+  const url = `https://api.github.com/repos/${repo.owner}/${repo.name}/commits/${sha}`;
+  const res = await fetch(url, { headers: ghHeaders() });
   if (!res.ok) return null;
-  return res.json();
+  const detail = await res.json();
+  if (detail) detail._repo = repo;
+  return detail;
+}
+
+async function fetchAllCommits() {
+  const results = await Promise.all(REPOS.map(fetchCommitsForRepo));
+  // Flatten and sort by date desc
+  return results.flat().sort((a, b) =>
+    new Date(b.commit.author.date) - new Date(a.commit.author.date)
+  );
 }
 
 // ============================================================
@@ -464,11 +477,10 @@ function topFolder(filename) {
   return parts[0];
 }
 
-function projectLabel(filename) {
+function projectLabel(filename, repoLabel) {
   const parts = filename.split('/');
-  if (parts.length === 1) return 'root files';
-  if (parts.length === 2) return parts[0];
-  return parts[0] + '/' + parts[1];
+  const base = parts.length === 1 ? 'root' : parts.length === 2 ? parts[0] : parts[0] + '/' + parts[1];
+  return repoLabel + ' · ' + base;
 }
 
 function processCommits(commits, details) {
@@ -501,11 +513,12 @@ function processCommits(commits, details) {
     totalCommits++;
 
     const files = detail.files || [];
+    const repoLabel = (detail._repo && detail._repo.label) ? detail._repo.label : 'Other';
     for (const file of files) {
       totalFiles.add(file.filename);
       totalAdditions += (file.additions || 0);
 
-      const proj = projectLabel(file.filename);
+      const proj = projectLabel(file.filename, repoLabel);
       if (!slot.projects[proj]) {
         slot.projects[proj] = {
           name: proj,
@@ -827,12 +840,17 @@ async function loadData(force = false) {
     document.getElementById('graphCols').innerHTML = '<div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>';
     document.getElementById('sidebarFeed').innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
 
-    const commits = await fetchCommits();
-    if (!commits || commits.message) throw new Error(commits?.message || 'Failed to fetch commits');
+    const commits = await fetchAllCommits();
+    if (!commits || !commits.length) throw new Error('No commits returned from any repo');
 
-    // Batch fetch commit details (max 25 to stay within rate limits)
-    const toFetch = commits.slice(0, 25);
-    const details = await Promise.all(toFetch.map(c => fetchCommitDetail(c.sha)));
+    // Batch fetch commit details -- max 8 per repo to stay within rate limits
+    const seen = {};
+    const toFetch = commits.filter(c => {
+      const key = c._repo.name;
+      seen[key] = (seen[key] || 0) + 1;
+      return seen[key] <= 8;
+    });
+    const details = await Promise.all(toFetch.map(c => fetchCommitDetail(c.sha, c._repo)));
 
     allData = processCommits(commits, details);
     renderGraph(allData);
