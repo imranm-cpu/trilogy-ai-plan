@@ -213,6 +213,15 @@
   }
 
   /* ---- EMPTY / ERROR STATES ---- */
+  /* Ghost node -- project not touched this day */
+  .project-node.project-ghost {
+    background: transparent;
+    border: 1px dashed #1a2d42;
+    opacity: 0.5;
+    padding: 8px 14px;
+  }
+  .project-node.project-ghost:hover { opacity: 0.7; border-color: #2a3a50; }
+
   .empty-col { font-size: 11px; color: #2a3a50; text-align: center; padding: 20px 0; font-family: 'Courier New', monospace; }
   .error-banner { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.2); border-radius: 6px; padding: 12px 16px; margin: 20px 28px; font-size: 12px; color: #e74c3c; }
   .error-banner strong { display: block; margin-bottom: 4px; }
@@ -471,24 +480,18 @@ function dayKey(date) {
   return date.toISOString().split('T')[0];
 }
 
-function topFolder(filename) {
-  const parts = filename.split('/');
-  if (parts.length === 1) return 'root';
-  return parts[0];
+// One project = one repo. Returns the repo label as the project key.
+function projectKey(repoLabel) {
+  return repoLabel;
 }
 
-function projectLabel(filename, repoLabel) {
-  const parts = filename.split('/');
-  const base = parts.length === 1 ? 'root' : parts.length === 2 ? parts[0] : parts[0] + '/' + parts[1];
-  return repoLabel + ' · ' + base;
-}
+// Global set of all project names seen -- used to render ghost nodes
+const ALL_PROJECTS = new Map(); // name -> { label, color, icon }
 
 function processCommits(commits, details) {
-  // Build a unified structure grouped by day then by project
   const today = new Date();
   today.setHours(23, 59, 59, 999);
 
-  // Build index of dates for each day slot
   const daySlots = {};
   for (let i = 0; i < DAYS_TO_SHOW; i++) {
     const d = new Date(today);
@@ -497,7 +500,6 @@ function processCommits(commits, details) {
     daySlots[key] = { daysAgo: i, date: new Date(d), projects: {}, totalCommits: 0 };
   }
 
-  // Process each commit
   let totalFiles = new Set();
   let totalAdditions = 0;
   let totalCommits = 0;
@@ -512,41 +514,64 @@ function processCommits(commits, details) {
     slot.totalCommits++;
     totalCommits++;
 
-    const files = detail.files || [];
     const repoLabel = (detail._repo && detail._repo.label) ? detail._repo.label : 'Other';
+    const projKey   = projectKey(repoLabel);
+
+    // Register in global project list
+    if (!ALL_PROJECTS.has(projKey)) {
+      ALL_PROJECTS.set(projKey, { label: repoLabel });
+    }
+
+    if (!slot.projects[projKey]) {
+      slot.projects[projKey] = {
+        name: projKey,
+        label: repoLabel,
+        files: [],
+        commits: [],
+        totalAdditions: 0,
+        totalDeletions: 0,
+        ghost: false
+      };
+    }
+
+    const p = slot.projects[projKey];
+    const files = detail.files || [];
     for (const file of files) {
       totalFiles.add(file.filename);
       totalAdditions += (file.additions || 0);
-
-      const proj = projectLabel(file.filename, repoLabel);
-      if (!slot.projects[proj]) {
-        slot.projects[proj] = {
-          name: proj,
-          files: [],
-          commits: [],
-          totalAdditions: 0,
-          totalDeletions: 0
-        };
-      }
-      const p = slot.projects[proj];
       if (!p.files.find(f => f.filename === file.filename)) {
         p.files.push({ filename: file.filename, status: file.status, additions: file.additions, deletions: file.deletions });
-      }
-      if (!p.commits.find(c => c.sha === detail.sha)) {
-        p.commits.push({ sha: detail.sha, message: detail.commit.message, date: commitDate });
       }
       p.totalAdditions += (file.additions || 0);
       p.totalDeletions += (file.deletions || 0);
     }
+    if (!p.commits.find(c => c.sha === detail.sha)) {
+      p.commits.push({ sha: detail.sha, message: detail.commit.message, date: commitDate });
+    }
   }
 
-  // Update stats
+  // Inject ghost nodes -- every project on every day it wasn't touched
+  for (const [key, slot] of Object.entries(daySlots)) {
+    for (const [projKey, meta] of ALL_PROJECTS.entries()) {
+      if (!slot.projects[projKey]) {
+        slot.projects[projKey] = {
+          name: projKey,
+          label: meta.label,
+          files: [],
+          commits: [],
+          totalAdditions: 0,
+          totalDeletions: 0,
+          ghost: true
+        };
+      }
+    }
+  }
+
   document.getElementById('stat-commits').textContent   = totalCommits;
   document.getElementById('stat-files').textContent     = totalFiles.size;
   document.getElementById('stat-additions').textContent = '+' + totalAdditions.toLocaleString();
-  document.getElementById('stat-projects').textContent  = Object.values(daySlots).reduce((s, d) => s + Object.keys(d.projects).length, 0);
+  document.getElementById('stat-projects').textContent  = ALL_PROJECTS.size;
 
-  // Update sidebar feed (recent commits)
   renderSidebarFeed(details.slice(0, 10));
 
   return daySlots;
@@ -586,6 +611,9 @@ function renderGraph(daySlots) {
   const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
+  // Stable project order: active projects first (by first-seen day), then alphabetical
+  const projectOrder = Array.from(ALL_PROJECTS.keys());
+
   const orderedDays = Array.from({ length: DAYS_TO_SHOW }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
@@ -601,28 +629,47 @@ function renderGraph(daySlots) {
                     : slot.daysAgo === 1 ? 'YESTERDAY'
                     : dayNames[slot.date.getDay()].toUpperCase();
     const dateStr = slot.date.getDate() + ' ' + monthNames[slot.date.getMonth()];
-    const projCount = Object.keys(slot.projects).length;
+    const activeCount = Object.values(slot.projects).filter(p => !p.ghost).length;
 
     col.innerHTML = `
       <div class="day-header">
         <div class="day-label ${slot.daysAgo === 0 ? 'today' : ''}">${dateLabel}</div>
         <div class="day-date">${dateStr}</div>
-        <div class="day-count">${slot.totalCommits} commit${slot.totalCommits !== 1 ? 's' : ''} · ${projCount} area${projCount !== 1 ? 's' : ''}</div>
+        <div class="day-count">${slot.totalCommits} commit${slot.totalCommits !== 1 ? 's' : ''} · ${activeCount} active</div>
       </div>`;
 
-    if (projCount === 0) {
-      col.insertAdjacentHTML('beforeend', '<div class="empty-col">No activity</div>');
-    } else {
-      const projects = Object.values(slot.projects).sort((a, b) => b.totalAdditions - a.totalAdditions);
-      for (const proj of projects) {
-        // Apply filter
-        if (activeFilter !== 'all') {
-          const hasMatch = proj.files.some(f => f.filename.endsWith('.' + activeFilter));
-          if (!hasMatch) continue;
-        }
+    // Render ALL projects in stable order -- active full, ghost dimmed
+    for (const projKey of projectOrder) {
+      const proj = slot.projects[projKey];
+      if (!proj) continue;
 
-        const node = document.createElement('div');
-        const isToday = slot.daysAgo === 0;
+      // Filter: skip ghost nodes when a type filter is active
+      if (activeFilter !== 'all' && proj.ghost) continue;
+      if (activeFilter !== 'all' && !proj.ghost) {
+        const hasMatch = proj.files.some(f => f.filename.endsWith('.' + activeFilter));
+        if (!hasMatch) continue;
+      }
+
+      const node = document.createElement('div');
+      const isToday = slot.daysAgo === 0 && !proj.ghost;
+      const color = projectColor(proj.name);
+      const icon  = projectIcon(proj.name);
+
+      if (proj.ghost) {
+        // Ghost node -- project existed but not touched today
+        node.className = 'project-node project-ghost';
+        node.dataset.project = proj.name;
+        node.dataset.ghost = 'true';
+        node.innerHTML = `
+          <div class="node-header">
+            <div class="node-icon" style="background:${color}0d;color:${color}44;">${icon}</div>
+            <div>
+              <div class="node-title" style="color:${color}44;">${escapeHtml(proj.label)}</div>
+              <div class="node-folder" style="color:#1e3050;">no changes</div>
+            </div>
+          </div>`;
+      } else {
+        // Active node
         node.className = 'project-node' + (isToday ? ' active-today' : '');
         node.dataset.project = proj.name;
         node.dataset.additions = proj.totalAdditions;
@@ -630,22 +677,16 @@ function renderGraph(daySlots) {
         node.dataset.fileCount = proj.files.length;
         node.dataset.commitCount = proj.commits.length;
 
-        const color = projectColor(proj.name);
-        const icon = projectIcon(proj.name);
-
-        // Files to show (filtered)
         let filesToShow = proj.files;
-        if (activeFilter !== 'all') {
-          filesToShow = proj.files.filter(f => f.filename.endsWith('.' + activeFilter));
-        }
-        const MAX_FILES = 6;
+        if (activeFilter !== 'all') filesToShow = proj.files.filter(f => f.filename.endsWith('.' + activeFilter));
+        const MAX_FILES = 5;
         const shown = filesToShow.slice(0, MAX_FILES);
         const overflow = filesToShow.length - MAX_FILES;
 
         const fileChips = shown.map(f => {
           const fname = f.filename.split('/').pop();
-          const col = fileColor(f.filename);
-          return `<span class="file-chip"><span class="chip-dot" style="background:${col};"></span>${escapeHtml(fname)}</span>`;
+          const c = fileColor(f.filename);
+          return `<span class="file-chip"><span class="chip-dot" style="background:${c};"></span>${escapeHtml(fname)}</span>`;
         }).join('') + (overflow > 0 ? `<span class="file-chip">+${overflow} more</span>` : '');
 
         const latestMsg = proj.commits[0]?.message.split('\n')[0].slice(0, 55) || '';
@@ -655,38 +696,35 @@ function renderGraph(daySlots) {
           <div class="node-header">
             <div class="node-icon" style="background:${color}22;color:${color};">${icon}</div>
             <div>
-              <div class="node-title" style="color:${color};">${escapeHtml(proj.name)}</div>
-              <div class="node-folder">${proj.files.length} file${proj.files.length !== 1 ? 's' : ''}</div>
+              <div class="node-title" style="color:${color};">${escapeHtml(proj.label)}</div>
+              <div class="node-folder">${proj.files.length} file${proj.files.length !== 1 ? 's' : ''} · ${proj.commits.length} commit${proj.commits.length !== 1 ? 's' : ''}</div>
             </div>
           </div>
           <div class="file-chips">${fileChips}</div>
           <div class="node-meta">
             <span class="node-meta-item" style="color:#00b894;">+${proj.totalAdditions}</span>
             <span class="node-meta-item" style="color:#e74c3c;">-${proj.totalDeletions}</span>
-            <span class="node-meta-item" style="color:#7f96b2;">${proj.commits.length} commit${proj.commits.length !== 1 ? 's' : ''}</span>
           </div>
           ${latestMsg ? `<div class="node-commit-msg">${escapeHtml(latestMsg)}</div>` : ''}`;
 
-        // Tooltip events
         node.addEventListener('mouseenter', e => showTooltip(e, proj));
         node.addEventListener('mousemove', moveTooltip);
         node.addEventListener('mouseleave', hideTooltip);
-
-        col.appendChild(node);
       }
+
+      col.appendChild(node);
     }
 
     cols.appendChild(col);
   }
 
-  // Draw connections after DOM settles
-  requestAnimationFrame(() => requestAnimationFrame(() => drawConnections(daySlots)));
+  requestAnimationFrame(() => requestAnimationFrame(() => drawConnections(daySlots, projectOrder)));
 }
 
 // ============================================================
 // SVG CONNECTIONS (Arkham style bezier curves)
 // ============================================================
-function drawConnections(daySlots) {
+function drawConnections(daySlots, projectOrder) {
   const svg = document.getElementById('connectionsSvg');
   const container = document.getElementById('graphContainer');
   svg.innerHTML = '';
@@ -695,84 +733,106 @@ function drawConnections(daySlots) {
   const scrollLeft = container.parentElement.scrollLeft;
   const scrollTop  = container.parentElement.scrollTop;
 
-  // Total SVG dimensions
   svg.setAttribute('width',  container.scrollWidth);
   svg.setAttribute('height', Math.max(container.scrollHeight, 600));
   svg.style.width  = container.scrollWidth + 'px';
   svg.style.height = Math.max(container.scrollHeight, 600) + 'px';
 
-  // Group all project nodes by project name across days
+  // Index nodes by [project][dayIndex]
   const nodesByProject = {};
   document.querySelectorAll('.project-node').forEach(node => {
-    const proj = node.dataset.project;
+    const proj  = node.dataset.project;
+    const ghost = node.dataset.ghost === 'true';
+    const col   = node.closest('.day-col');
+    const daysAgo = col ? parseInt(col.dataset.daysAgo) : 0;
     if (!nodesByProject[proj]) nodesByProject[proj] = [];
-    nodesByProject[proj].push(node);
+    nodesByProject[proj].push({ node, ghost, daysAgo });
   });
 
-  // Draw connections for projects that appear on multiple days
-  for (const [projName, nodes] of Object.entries(nodesByProject)) {
-    if (nodes.length < 2) continue;
+  for (const [projName, entries] of Object.entries(nodesByProject)) {
+    if (entries.length < 2) continue;
+    // Sort by daysAgo ascending (left = recent, right = older)
+    entries.sort((a, b) => a.daysAgo - b.daysAgo);
     const color = projectColor(projName);
 
-    for (let i = 0; i < nodes.length - 1; i++) {
-      const fromRect = nodes[i].getBoundingClientRect();
-      const toRect   = nodes[i + 1].getBoundingClientRect();
+    for (let i = 0; i < entries.length - 1; i++) {
+      const from = entries[i];
+      const to   = entries[i + 1];
 
-      // Positions relative to container (accounting for scroll)
-      const x1 = fromRect.right  - containerRect.left + scrollLeft;
-      const y1 = fromRect.top    + fromRect.height / 2 - containerRect.top + scrollTop;
-      const x2 = toRect.left     - containerRect.left + scrollLeft;
-      const y2 = toRect.top      + toRect.height / 2 - containerRect.top + scrollTop;
+      // Both ghost = no line (projects that never appeared in range)
+      if (from.ghost && to.ghost) continue;
 
+      const fromRect = from.node.getBoundingClientRect();
+      const toRect   = to.node.getBoundingClientRect();
+
+      const x1 = fromRect.right - containerRect.left + scrollLeft;
+      const y1 = fromRect.top + fromRect.height / 2 - containerRect.top + scrollTop;
+      const x2 = toRect.left  - containerRect.left + scrollLeft;
+      const y2 = toRect.top  + toRect.height  / 2 - containerRect.top + scrollTop;
       const cx = (x1 + x2) / 2;
 
-      // Defs: gradient + glow
-      const defId = `grad_${projName.replace(/[^a-zA-Z0-9]/g, '_')}_${i}`;
-      const filterId = `glow_${defId}`;
+      const d = `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`;
 
+      const isActive = !from.ghost && !to.ghost;
+      const isHalfActive = !isActive; // one end is ghost
+
+      const defId    = `grad_${projName.replace(/[^a-zA-Z0-9]/g, '_')}_${i}`;
+      const filterId = `glow_${defId}`;
       const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
 
-      const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-      grad.setAttribute('id', defId);
-      grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
-      grad.innerHTML = `
-        <stop offset="0%"   stop-color="${color}" stop-opacity="0.7"/>
-        <stop offset="100%" stop-color="${color}" stop-opacity="0.2"/>`;
+      if (isActive) {
+        // Colored gradient line
+        const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+        grad.setAttribute('id', defId);
+        grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
+        grad.innerHTML = `
+          <stop offset="0%"   stop-color="${color}" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="${color}" stop-opacity="0.3"/>`;
+        const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+        filter.setAttribute('id', filterId);
+        filter.innerHTML = `<feGaussianBlur in="SourceGraphic" stdDeviation="2.5"/>`;
+        defs.appendChild(grad); defs.appendChild(filter);
+        svg.appendChild(defs);
 
-      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-      filter.setAttribute('id', filterId);
-      filter.innerHTML = `<feGaussianBlur in="SourceGraphic" stdDeviation="2"/>`;
+        // Glow
+        const glow = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        glow.setAttribute('d', d); glow.setAttribute('stroke', color);
+        glow.setAttribute('stroke-width', '5'); glow.setAttribute('fill', 'none');
+        glow.setAttribute('opacity', '0.15'); glow.setAttribute('filter', `url(#${filterId})`);
+        svg.appendChild(glow);
 
-      defs.appendChild(grad);
-      defs.appendChild(filter);
-      svg.appendChild(defs);
+        // Solid line
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d); path.setAttribute('stroke', `url(#${defId})`);
+        path.setAttribute('stroke-width', '1.5'); path.setAttribute('fill', 'none');
+        svg.appendChild(path);
 
-      // Glow path (blurred, behind)
-      const glowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      glowPath.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
-      glowPath.setAttribute('stroke', color);
-      glowPath.setAttribute('stroke-width', '4');
-      glowPath.setAttribute('fill', 'none');
-      glowPath.setAttribute('opacity', '0.2');
-      glowPath.setAttribute('filter', `url(#${filterId})`);
-      svg.appendChild(glowPath);
+        // End dots
+        [{ x: x1, y: y1 }, { x: x2, y: y2 }].forEach(pt => {
+          const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', '3');
+          c.setAttribute('fill', color); c.setAttribute('opacity', '0.8');
+          svg.appendChild(c);
+        });
 
-      // Main path
-      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
-      path.setAttribute('stroke', `url(#${defId})`);
-      path.setAttribute('stroke-width', '1.5');
-      path.setAttribute('fill', 'none');
-      path.setAttribute('stroke-dasharray', '6 3');
-      svg.appendChild(path);
+      } else {
+        // Ghost line -- gray, long-dashed, very faint
+        svg.appendChild(defs);
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', d); path.setAttribute('stroke', '#2a3a50');
+        path.setAttribute('stroke-width', '1'); path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-dasharray', '3 8');
+        path.setAttribute('opacity', '0.5');
+        svg.appendChild(path);
 
-      // Dot at connection point
-      [{ x: x1, y: y1 }, { x: x2, y: y2 }].forEach(pt => {
-        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); circle.setAttribute('r', '3');
-        circle.setAttribute('fill', color); circle.setAttribute('opacity', '0.7');
-        svg.appendChild(circle);
-      });
+        // Small hollow dot at the active end only
+        const activeEnd = from.ghost ? { x: x2, y: y2 } : { x: x1, y: y1 };
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('cx', activeEnd.x); dot.setAttribute('cy', activeEnd.y); dot.setAttribute('r', '2.5');
+        dot.setAttribute('fill', 'none'); dot.setAttribute('stroke', color);
+        dot.setAttribute('stroke-width', '1'); dot.setAttribute('opacity', '0.4');
+        svg.appendChild(dot);
+      }
     }
   }
 }
@@ -840,6 +900,7 @@ async function loadData(force = false) {
     document.getElementById('graphCols').innerHTML = '<div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>';
     document.getElementById('sidebarFeed').innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
 
+    ALL_PROJECTS.clear();
     const commits = await fetchAllCommits();
     if (!commits || !commits.length) throw new Error('No commits returned from any repo');
 
@@ -893,7 +954,7 @@ setInterval(() => loadData(true), REFRESH_INTERVAL_MS);
 
 // Redraw connections on resize
 window.addEventListener('resize', () => {
-  if (allData) requestAnimationFrame(() => drawConnections(allData));
+  if (allData) requestAnimationFrame(() => drawConnections(allData, Array.from(ALL_PROJECTS.keys())));
 });
 
 // Scroll progress bar
