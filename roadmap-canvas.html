@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imran · Work Canvas · Day 27 of 90</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background-color: #faf9f7;
+      background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
+      background-size: 28px 28px;
+      min-height: 100vh;
+      color: #1e293b;
+    }
+
+    /* ---- SITE NAV (unified) ---- */
+    .site-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      height: 52px;
+      background: #0f172a;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+    }
+
+    .snav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .snav-brand-name {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #64748b;
+    }
+
+    .snav-brand-name span {
+      color: #e2e8f0;
+    }
+
+    .snav-day {
+      font-size: 10px;
+      color: #475569;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 999px;
+      padding: 2px 8px;
+    }
+
+    .snav-tabs {
+      display: flex;
+      align-items: stretch;
+      height: 100%;
+      margin-left: 24px;
+    }
+
+    .snav-tab {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .snav-tab:hover {
+      color: #cbd5e1;
+      border-bottom-color: #334155;
+    }
+
+    .snav-tab.active {
+      color: #f8fafc;
+      border-bottom-color: #a855f7;
+    }
+
+    .snav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .snav-ext-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .snav-divider {
+      width: 1px;
+      height: 20px;
+      background: #1e293b;
+      margin: 0 4px;
+    }
+
+    .snav-ext {
+      font-size: 11px;
+      color: #475569;
+      text-decoration: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .snav-ext:hover {
+      color: #cbd5e1;
+      background: #1e293b;
+    }
+
+    .snav-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      color: #22c55e;
+      background: rgba(34,197,94,0.08);
+      border: 1px solid rgba(34,197,94,0.2);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-left: 6px;
+    }
+
+    .snav-live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: snav-pulse 2s infinite;
+    }
+
+    @keyframes snav-pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    /* ---- LEGEND BAR ---- */
+    .legend-bar {
+      position: sticky;
+      top: 52px;
+      z-index: 199;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 8px 32px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 11px;
+      color: #888;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .legend-spacer {
+      flex: 1;
+    }
+
+    /* ---- CANVAS WRAPPER ---- */
+    .canvas {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 1800px;
+      margin: 0 auto;
+    }
+
+    /* ---- ROWS ---- */
+    .row {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .row-full {
+      width: 100%;
+    }
+
+    /* ---- ZONES ---- */
+    .zone {
+      border-radius: 16px;
+      border: 2px dashed;
+      padding: 16px 18px 20px;
+      position: relative;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+
+    .zone-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .zone-sublabel {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.06);
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: inherit;
+      opacity: 0.7;
+    }
+
+    .zone-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    /* Zone colour variants */
+    .zone-green {
+      background: #f0fdf4;
+      border-color: #86efac;
+    }
+    .zone-green .zone-label { color: #15803d; }
+
+    .zone-blue {
+      background: #eff6ff;
+      border-color: #93c5fd;
+    }
+    .zone-blue .zone-label { color: #1d4ed8; }
+
+    .zone-teal {
+      background: #f0fdfa;
+      border-color: #99f6e4;
+    }
+    .zone-teal .zone-label { color: #0f766e; }
+
+    .zone-purple {
+      background: #faf5ff;
+      border-color: #d8b4fe;
+    }
+    .zone-purple .zone-label { color: #7c3aed; }
+
+    .zone-orange {
+      background: #fff7ed;
+      border-color: #fed7aa;
+    }
+    .zone-orange .zone-label { color: #c2410c; }
+
+    .zone-indigo {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+    }
+    .zone-indigo .zone-label { color: #4338ca; }
+
+    .zone-grey {
+      background: #f9fafb;
+      border-color: #e5e7eb;
+      opacity: 0.55;
+      filter: grayscale(0.4);
+    }
+    .zone-grey .zone-label { color: #6b7280; }
+
+    .zone-yellow {
+      background: #fffbeb;
+      border-color: #fde68a;
+    }
+    .zone-yellow .zone-label { color: #b45309; }
+
+    /* Column width helpers */
+    .col-100 { flex: 1 1 100%; }
+    .col-40  { flex: 0 0 calc(40% - 10px); min-width: 0; }
+    .col-30  { flex: 0 0 calc(30% - 10px); min-width: 0; }
+    .col-25  { flex: 0 0 calc(25% - 12px); min-width: 0; }
+
+    /* ---- ON HOLD BANNER ---- */
+    .on-hold-banner {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: #e5e7eb;
+      color: #6b7280;
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    /* ---- CARDS ---- */
+    .card {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+      padding: 10px 12px 10px 10px;
+      width: 180px;
+      min-height: 56px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      position: relative;
+      flex-shrink: 0;
+      border-left-width: 4px;
+      transition: box-shadow 0.15s ease;
+    }
+
+    .card:hover {
+      box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+      line-height: 1.35;
+      padding-right: 14px;
+    }
+
+    .card-sub {
+      font-size: 10px;
+      color: #64748b;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .status-dot {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* Card left-border and dot colour helpers */
+    .card-green  { border-left-color: #22c55e; }
+    .card-blue   { border-left-color: #3b82f6; }
+    .card-teal   { border-left-color: #14b8a6; }
+    .card-purple { border-left-color: #a855f7; }
+    .card-orange { border-left-color: #f97316; }
+    .card-indigo { border-left-color: #6366f1; }
+    .card-grey   { border-left-color: #9ca3af; }
+    .card-yellow { border-left-color: #f59e0b; }
+
+    .dot-green  { background: #22c55e; }
+    .dot-grey   { background: #9ca3af; }
+    .dot-orange { background: #f97316; }
+    .dot-blue   { background: #3b82f6; }
+    .dot-red    { background: #ef4444; }
+    .dot-purple { background: #a855f7; }
+
+    /* ---- FOOTER ---- */
+    .canvas-footer {
+      margin-top: 8px;
+      padding: 14px 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .canvas-footer span + span::before {
+      content: '·';
+      margin-right: 8px;
+    }
+
+    /* Row 2 + 3 responsive helpers */
+    @media (max-width: 1200px) {
+      .col-40, .col-30 {
+        flex: 1 1 calc(50% - 8px);
+      }
+      .col-25 {
+        flex: 1 1 calc(50% - 8px);
+      }
+    }
+
+    @media (max-width: 800px) {
+      .col-40, .col-30, .col-25 {
+        flex: 1 1 100%;
+      }
+      .card {
+        width: 160px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="snav-brand">
+      <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+      <span class="snav-day">Day 27 of 90</span>
+    </div>
+    <div class="snav-tabs">
+      <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+      <a class="snav-tab active" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+      <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+      <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    </div>
+    <div class="snav-ext-links">
+      <div class="snav-divider"></div>
+      <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
+      <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+      <a class="snav-ext" href="https://linear.app" target="_blank">Linear</a>
+      <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
+    </div>
+  </nav>
+
+  <!-- LEGEND BAR -->
+  <div class="legend-bar">
+    <div class="legend-item"><div class="legend-dot dot-green"></div> Active</div>
+    <div class="legend-item"><div class="legend-dot dot-grey"></div> Parked</div>
+    <div class="legend-item"><div class="legend-dot dot-orange"></div> Blocked</div>
+    <div class="legend-item"><div class="legend-dot dot-blue"></div> Done</div>
+    <div class="legend-item"><div class="legend-dot dot-purple"></div> New</div>
+    <div class="legend-spacer"></div>
+    <span>Work Canvas &middot; Day 27 of 90</span>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas">
+
+    <!-- ROW 1: SHIPPED / DONE (full width) -->
+    <div class="row row-full">
+      <div class="zone zone-green col-100">
+        <div class="zone-label">
+          Shipped / Done
+          <span class="zone-sublabel">20 items</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">AI Opportunity Registry</div>
+            <div class="card-sub">109 items, all 3 functions</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">SaaS Audit</div>
+            <div class="card-sub">21 tools documented</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Brand Intelligence Prototype</div>
+            <div class="card-sub">Tracksuit replacement, $19.5k/yr saving</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Delegation Tracker (Mariia)</div>
+            <div class="card-sub">Live Asana MCP</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Alicia Headshot Processor</div>
+            <div class="card-sub">Python, live and in use</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Trilogy Headshot Processor</div>
+            <div class="card-sub">Face detect, crop, Outlook draft</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Ray Skills</div>
+            <div class="card-sub">3 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Alicia Skills</div>
+            <div class="card-sub">5 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Mariia Skills</div>
+            <div class="card-sub">4 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Matt Skills</div>
+            <div class="card-sub">3 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Paul Skills</div>
+            <div class="card-sub">3 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Mike Coffey Skills</div>
+            <div class="card-sub">3 skills + handoff</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">SKILLS-FAQ</div>
+            <div class="card-sub">Team-wide reference</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">AI Integration Plan</div>
+            <div class="card-sub">v1 roadmap HTML</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Week 1 Summary to Nick</div>
+            <div class="card-sub">Delivered 14 March</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Week 2 Summary to Nick</div>
+            <div class="card-sub">Delivered on schedule</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Week 3 Summary to Nick</div>
+            <div class="card-sub">Delivered on schedule</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Miranda Discovery</div>
+            <div class="card-sub">Session done 31 March</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">GM Alignment Session</div>
+            <div class="card-sub">Completed</div>
+          </div>
+
+          <div class="card card-green">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">AI Strat + KPIs Session</div>
+            <div class="card-sub">1 April</div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2: Three columns -->
+    <div class="row">
+
+      <!-- MARKETING ACTIVE (40%) -->
+      <div class="zone zone-blue col-40">
+        <div class="zone-label">
+          Marketing Active
+          <span class="zone-sublabel">11 items</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-blue">
+            <div class="status-dot dot-red"></div>
+            <div class="card-title">Marketing AI KPI Framework</div>
+            <div class="card-sub">Due end of week -- Nick asked for this</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-red"></div>
+            <div class="card-title">Marketing Org Structure Visual</div>
+            <div class="card-sub">Overdue since 23 March</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Linear Migration</div>
+            <div class="card-sub">Access granted, board being built</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Miranda Skills</div>
+            <div class="card-sub">Discovery done, skills to build next</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Steve Session</div>
+            <div class="card-sub">Skills TBD -- session needed first</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Matt Session</div>
+            <div class="card-sub">Content agent, SEO-driven</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Ray Session</div>
+            <div class="card-sub">Paid media process + daily snapshot</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Paul Session</div>
+            <div class="card-sub">PMAX/attribution gap + agent extension</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Mike Coffey Session</div>
+            <div class="card-sub">Articulate Klaviyo use cases</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Source Docs Collection</div>
+            <div class="card-sub">Brand tone, social tone, SEO process, email tone</div>
+          </div>
+
+          <div class="card card-blue">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Asana Baseline</div>
+            <div class="card-sub">Pre-AI snapshot for Nick impact reporting</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- AGEDCARE COMPARE (30%) -->
+      <div class="zone zone-teal col-30">
+        <div class="zone-label">
+          AgedCare Compare
+          <span class="zone-sublabel">7 items</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-teal">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">3 New Design Prototypes</div>
+            <div class="card-sub">Softer colours, real imagery, big CTA. Mobile first.</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Competitor Research</div>
+            <div class="card-sub">Compare Club, Caring.co, Downsizing.com.au</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Vibe Coding</div>
+            <div class="card-sub">Imran prompts, Nick design direction</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Nick's Correspondence Pack</div>
+            <div class="card-sub">Read brief + background -- not yet done</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Luke Design Meeting</div>
+            <div class="card-sub">BLOCKED -- waiting on Nick calendar</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Calculator Strategy</div>
+            <div class="card-sub">Luke wants press-buttons, easy compare flow</div>
+          </div>
+
+          <div class="card card-teal">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Legal / Aaron</div>
+            <div class="card-sub">Powered by Trilogy branding -- no formal action yet</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- COMMS HUB (30%) -->
+      <div class="zone zone-purple col-30">
+        <div class="zone-label">
+          Comms Hub
+          <span class="zone-sublabel">11 items</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">7 Scoping Sessions</div>
+            <div class="card-sub">Thu 9 + Fri 10 April -- 6 business units</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Romy Blacklaw</div>
+            <div class="card-sub">Care -- Innovation + Transformation Lead</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Leslie Nelson</div>
+            <div class="card-sub">Operations Manager</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Candice Murphy</div>
+            <div class="card-sub">Client Services Manager</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Tiffany Whitelaw</div>
+            <div class="card-sub">SAH / Care</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Megan + Sophie</div>
+            <div class="card-sub">Quality / Ops -- covering Zoe</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Nadia Rivkaris</div>
+            <div class="card-sub">Partnerships Liaison</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-green"></div>
+            <div class="card-title">Katja Session</div>
+            <div class="card-sub">Data + AI scoping</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">ESP Decision</div>
+            <div class="card-sub">Consumer IO vs ActiveCampaign -- no owner yet</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">One Source Dependency</div>
+            <div class="card-sub">Critical for reliable automations -- timeline TBC</div>
+          </div>
+
+          <div class="card card-purple">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">GROW Dashboard (Ash)</div>
+            <div class="card-sub">Integrate with comms hub data layer</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ROW 3: Four columns -->
+    <div class="row">
+
+      <!-- BLOCKED (25%) -->
+      <div class="zone zone-orange col-25">
+        <div class="zone-label">
+          Blocked
+          <span class="zone-sublabel">6 items</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Databricks Read Access</div>
+            <div class="card-sub">Nick / Mike -- flagged multiple times</div>
+          </div>
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Shared Build Env</div>
+            <div class="card-sub">Mike (CIO) needs to get Imran in -- Jacqueline builds blocked</div>
+          </div>
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Brand Intel API Access</div>
+            <div class="card-sub">Tim + Paul sign-off needed -- Nick to facilitate</div>
+          </div>
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Brand Guidelines Doc</div>
+            <div class="card-sub">Waiting on Alicia / Steve</div>
+          </div>
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Nick's Strategy Doc Link</div>
+            <div class="card-sub">Brain dump ready to write -- waiting on link</div>
+          </div>
+
+          <div class="card card-orange">
+            <div class="status-dot dot-orange"></div>
+            <div class="card-title">Luke Design Meeting</div>
+            <div class="card-sub">AgedCare Compare -- Nick to reschedule</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- INFRASTRUCTURE (25%) -->
+      <div class="zone zone-indigo col-25">
+        <div class="zone-label">
+          Infrastructure
+          <span class="zone-sublabel">9 items live</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Asana MCP</div>
+            <div class="card-sub">Live</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">M365 MCP</div>
+            <div class="card-sub">Read access live</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Databricks MCP</div>
+            <div class="card-sub">Connected, not yet queried</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Fireflies MCP</div>
+            <div class="card-sub">Scoped for rollout</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">EA Workspace</div>
+            <div class="card-sub">Claude Code second brain</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Cron Jobs</div>
+            <div class="card-sub">Morning + evening check-ins, 4pm review</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Decision Log</div>
+            <div class="card-sub">10 decisions logged</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">GitHub Remote</div>
+            <div class="card-sub">Private repo, set up 26 March</div>
+          </div>
+
+          <div class="card card-indigo">
+            <div class="status-dot dot-blue"></div>
+            <div class="card-title">Vercel Deployment</div>
+            <div class="card-sub">This tracker, live</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PARKED -- SALES & BD (25%) -->
+      <div class="zone zone-grey col-25">
+        <div class="zone-label">
+          Parked -- Sales &amp; BD
+          <span class="zone-sublabel">8 items</span>
+        </div>
+        <div class="on-hold-banner">On hold -- Refocusing on Marketing until restructure settles</div>
+        <div class="zone-cards">
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">Call Scoring Tool</div>
+            <div class="card-sub">Sales / Jacqueline</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">TL Team Dashboard</div>
+            <div class="card-sub">Sales / Jacqueline</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">Churn Dashboard</div>
+            <div class="card-sub">Jacqueline leads</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">NDIS Brain</div>
+            <div class="card-sub">Andy Wallace spec done</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">Trilogy GPT Hub</div>
+            <div class="card-sub">Bernie's vision</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">BD Lead Research Automation</div>
+            <div class="card-sub">Nick idea</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">Jack: CRM Dedup + NDIS Import</div>
+            <div class="card-sub">Zoho CRM cleanup</div>
+          </div>
+
+          <div class="card card-grey">
+            <div class="status-dot dot-grey"></div>
+            <div class="card-title">Fireflies Rollout BD</div>
+            <div class="card-sub">Jack + Jay</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- NEWLY SURFACED (25%) -->
+      <div class="zone zone-yellow col-25">
+        <div class="zone-label">
+          Newly Surfaced
+          <span class="zone-sublabel">Not yet formally actioned</span>
+        </div>
+        <div class="zone-cards">
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Market Sentiment Index</div>
+            <div class="card-sub">Project folder exists, nothing scoped</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">ORM Automation (Miranda)</div>
+            <div class="card-sub">Meta API, Month 2-3</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">ESP Platform Decision</div>
+            <div class="card-sub">Consumer IO vs ActiveCampaign</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Zoe Judd Follow-up</div>
+            <div class="card-sub">Back after Easter (4 weeks away)</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Romy Blacklaw Relationship</div>
+            <div class="card-sub">Beyond scoping session</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Nadia Rivkaris</div>
+            <div class="card-sub">Partnerships scope TBC post session</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">Legal / AgedCare Compare</div>
+            <div class="card-sub">Aaron "Powered by Trilogy"</div>
+          </div>
+
+          <div class="card card-yellow">
+            <div class="status-dot dot-purple"></div>
+            <div class="card-title">One Source Timeline</div>
+            <div class="card-sub">Katja to confirm</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="canvas-footer">
+    <span>Canvas last updated: 4 April 2026</span>
+    <span>Generated from actions.md, wins.md, and session notes</span>
+    <span>Redeploy to update</span>
+  </div>
+
+</body>
+</html>

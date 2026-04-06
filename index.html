@@ -25,24 +25,161 @@
   html { scroll-behavior: smooth; }
   body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; }
 
-  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--teal), var(--amber)); width: 0%; z-index: 999; transition: width 0.1s; }
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--teal), var(--amber)); width: 0%; z-index: 300; transition: width 0.1s; }
 
-  nav {
-    position: fixed; top: 3px; left: 0; right: 0;
+  /* ---- SITE NAV (unified) ---- */
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    height: 52px;
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+  }
+
+  .snav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .snav-brand-name {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #64748b;
+  }
+
+  .snav-brand-name span {
+    color: #e2e8f0;
+  }
+
+  .snav-day {
+    font-size: 10px;
+    color: #475569;
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+
+  .snav-tabs {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    margin-left: 24px;
+  }
+
+  .snav-tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .snav-tab:hover {
+    color: #cbd5e1;
+    border-bottom-color: #334155;
+  }
+
+  .snav-tab.active {
+    color: #f8fafc;
+    border-bottom-color: #94a3b8;
+  }
+
+  .snav-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .snav-ext-links {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .snav-divider {
+    width: 1px;
+    height: 20px;
+    background: #1e293b;
+    margin: 0 4px;
+  }
+
+  .snav-ext {
+    font-size: 11px;
+    color: #475569;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: color 0.15s, background 0.15s;
+  }
+
+  .snav-ext:hover {
+    color: #cbd5e1;
+    background: #1e293b;
+  }
+
+  .snav-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    color: #22c55e;
+    background: rgba(34,197,94,0.08);
+    border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 6px;
+  }
+
+  .snav-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    animation: snav-pulse 2s infinite;
+  }
+
+  @keyframes snav-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* ---- SECTION NAV (internal page anchors) ---- */
+  .section-nav {
+    position: sticky; top: 52px; left: 0; right: 0;
     background: rgba(13,27,46,0.96); backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border);
     padding: 0 48px; display: flex; align-items: center; justify-content: space-between;
-    height: 58px; z-index: 100;
+    height: 44px; z-index: 100;
   }
   .nav-brand { font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: 0.8px; text-transform: uppercase; }
   .nav-brand span { color: var(--accent); }
   .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a { color: var(--muted); text-decoration: none; font-size: 12px; font-weight: 500; transition: color 0.2s; }
+  .nav-links a { color: var(--muted); text-decoration: none; font-size: 11px; font-weight: 500; transition: color 0.2s; }
   .nav-links a:hover { color: var(--text); }
   .nav-pill { background: linear-gradient(135deg, rgba(46,134,222,0.2), rgba(0,184,148,0.2)); border: 1px solid rgba(46,134,222,0.3); color: var(--accent); font-size: 10px; font-weight: 700; padding: 3px 12px; border-radius: 20px; letter-spacing: 0.5px; }
 
   /* HERO */
-  .hero { padding: 130px 48px 70px; max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 60px; align-items: center; }
+  .hero { padding: 110px 48px 70px; max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 60px; align-items: center; }
   .hero-left .eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
   .hero-left .eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--accent); }
   .hero-left h1 { font-size: 50px; font-weight: 800; line-height: 1.08; margin-bottom: 22px; letter-spacing: -0.5px; }
@@ -232,7 +369,7 @@
     .blocker-grid { grid-template-columns: repeat(2, 1fr); }
     .priority-row { grid-template-columns: 52px 1fr; }
     .pr-ai, .status-pill { display: none; }
-    nav { padding: 0 20px; }
+    .section-nav { padding: 0 20px; }
     .nav-links { gap: 16px; }
     section, .hero { padding-left: 20px; padding-right: 20px; }
   }
@@ -242,7 +379,27 @@
 
 <div id="progress"></div>
 
-<nav>
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 27 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab active" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
+    <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+    <a class="snav-ext" href="https://linear.app" target="_blank">Linear</a>
+    <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<nav class="section-nav">
   <div class="nav-brand">TRILOGY CARE &nbsp;·&nbsp; <span>AI Growth Strategy</span></div>
   <div class="nav-links">
     <a href="#commercial">Commercial</a>

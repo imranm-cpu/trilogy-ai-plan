@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Trace | Trilogy AI</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --deep: #060d17;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+    --col-width: 300px;
+    --col-gap: 40px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--deep); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
+
+  /* ---- NAV ---- */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--teal), var(--amber)); width: 0%; z-index: 300; transition: width 0.1s; }
+
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 500; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .snav-tab:hover { color: #e2e8f0; }
+  .snav-tab.active { color: #e2e8f0; border-bottom-color: var(--teal); }
+  .snav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+  .snav-ext { font-size: 11px; color: #64748b; text-decoration: none; transition: color 0.15s; }
+  .snav-ext:hover { color: #e2e8f0; }
+  .snav-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); text-decoration: none; }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* ---- TOP PANEL ---- */
+  .trace-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; background: #0a1525;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .trace-header-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .trace-header-sub { font-size: 11px; color: #3a5572; margin-top: 1px; font-family: 'Courier New', monospace; }
+  .live-badge { display: flex; align-items: center; gap: 6px; background: rgba(0,184,148,0.08); border: 1px solid rgba(0,184,148,0.25); border-radius: 4px; padding: 3px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--teal); }
+  .live-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 1.5s infinite; }
+  .refresh-info { font-size: 10px; color: #3a5572; margin-left: auto; }
+  .refresh-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .refresh-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* ---- TOKEN INPUT ---- */
+  .token-bar {
+    background: rgba(243,156,18,0.06); border-bottom: 1px solid rgba(243,156,18,0.15);
+    padding: 8px 28px; display: flex; align-items: center; gap: 12px;
+    font-size: 11px; color: var(--amber);
+  }
+  .token-bar input {
+    background: rgba(0,0,0,0.3); border: 1px solid rgba(243,156,18,0.2);
+    border-radius: 4px; padding: 4px 10px; color: var(--text); font-size: 11px;
+    font-family: 'Courier New', monospace; width: 320px; outline: none;
+  }
+  .token-bar input:focus { border-color: var(--amber); }
+  .token-btn { background: rgba(243,156,18,0.12); border: 1px solid rgba(243,156,18,0.3); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: var(--amber); cursor: pointer; transition: all 0.15s; }
+  .token-btn:hover { background: rgba(243,156,18,0.2); }
+  .token-dismiss { margin-left: auto; color: #3a5572; cursor: pointer; font-size: 18px; line-height: 1; }
+  .token-dismiss:hover { color: var(--muted); }
+
+  /* ---- MAIN LAYOUT ---- */
+  .trace-body { display: flex; height: calc(100vh - 52px - 44px); }
+  .trace-sidebar {
+    width: 260px; flex-shrink: 0; background: #0a1525;
+    border-right: 1px solid var(--border); overflow-y: auto;
+    padding: 20px 16px;
+  }
+  .trace-main { flex: 1; overflow: auto; position: relative; }
+
+  /* ---- SIDEBAR ---- */
+  .sidebar-section { margin-bottom: 24px; }
+  .sidebar-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #3a5572; margin-bottom: 10px; }
+  .legend-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 11px; color: var(--muted); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .stat-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .stat-label { font-size: 11px; color: var(--muted); }
+  .stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'Courier New', monospace; }
+  .stat-value.teal { color: var(--teal); }
+  .stat-value.amber { color: var(--amber); }
+  .sidebar-feed { }
+  .feed-item { padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-time { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; margin-bottom: 2px; }
+  .feed-msg { font-size: 11px; color: var(--muted); line-height: 1.4; }
+  .feed-files { font-size: 10px; color: #3a5572; margin-top: 3px; }
+  .repo-tag { display: inline-flex; align-items: center; gap: 4px; background: rgba(46,134,222,0.1); border: 1px solid rgba(46,134,222,0.2); border-radius: 3px; padding: 2px 6px; font-size: 10px; color: #54a0ff; margin-top: 4px; }
+  .loading-spinner { display: flex; align-items: center; justify-content: center; height: 200px; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- GRAPH AREA ---- */
+  .graph-container {
+    position: relative;
+    min-width: 100%; min-height: 100%;
+    padding: 32px 28px 60px;
+  }
+
+  .connections-svg {
+    position: absolute; top: 0; left: 0;
+    pointer-events: none; z-index: 1;
+  }
+
+  .graph-cols { display: flex; gap: var(--col-gap); position: relative; z-index: 2; }
+
+  /* ---- DAY COLUMN ---- */
+  .day-col { width: var(--col-width); flex-shrink: 0; }
+
+  .day-header {
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .day-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 2px;
+  }
+  .day-label.today { color: var(--teal); }
+  .day-date {
+    font-size: 18px; font-weight: 700; color: var(--text);
+    font-family: 'Courier New', monospace; letter-spacing: 0.02em;
+  }
+  .day-count { font-size: 10px; color: #3a5572; margin-top: 2px; }
+
+  /* ---- PROJECT NODE ---- */
+  .project-node {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    cursor: default;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+  }
+  .project-node:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.06); }
+  .project-node.active-today { border-color: rgba(0,184,148,0.3); }
+  .project-node.active-today::before {
+    content: '';
+    position: absolute; left: -1px; top: 0; bottom: 0; width: 3px;
+    background: var(--teal); border-radius: 6px 0 0 6px;
+  }
+
+  .node-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .node-icon { width: 22px; height: 22px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .node-title { font-size: 12px; font-weight: 600; color: var(--text); word-break: break-word; line-height: 1.3; }
+  .node-folder { font-size: 10px; color: var(--muted); font-family: 'Courier New', monospace; margin-top: 1px; }
+
+  .file-chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  .file-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 3px; padding: 2px 6px;
+    font-size: 10px; color: var(--muted);
+    font-family: 'Courier New', monospace;
+    max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .file-chip .chip-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  .node-meta { display: flex; gap: 10px; font-size: 10px; color: #3a5572; }
+  .node-meta-item { display: flex; align-items: center; gap: 4px; }
+  .node-commit-msg {
+    font-size: 10px; color: #3a5572; margin-top: 6px;
+    font-style: italic; border-top: 1px solid var(--border);
+    padding-top: 6px; line-height: 1.4;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .pulse-ring {
+    position: absolute; top: 10px; right: 10px;
+    width: 8px; height: 8px;
+  }
+  .pulse-ring::before {
+    content: ''; position: absolute; inset: 0;
+    border-radius: 50%; background: var(--teal);
+    animation: pulse-node 2s infinite;
+  }
+  @keyframes pulse-node {
+    0% { transform: scale(1); opacity: 1; }
+    70% { transform: scale(2.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 0; }
+  }
+  .pulse-ring::after {
+    content: ''; position: absolute; inset: 0;
+    border-radius: 50%; background: var(--teal);
+  }
+
+  /* ---- EMPTY / ERROR STATES ---- */
+  .empty-col { font-size: 11px; color: #2a3a50; text-align: center; padding: 20px 0; font-family: 'Courier New', monospace; }
+  .error-banner { background: rgba(231,76,60,0.08); border: 1px solid rgba(231,76,60,0.2); border-radius: 6px; padding: 12px 16px; margin: 20px 28px; font-size: 12px; color: #e74c3c; }
+  .error-banner strong { display: block; margin-bottom: 4px; }
+
+  /* ---- TOOLTIP ---- */
+  .tooltip {
+    position: fixed; z-index: 500;
+    background: #0f172a; border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 10px 14px;
+    font-size: 11px; color: var(--text);
+    max-width: 280px; pointer-events: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    display: none;
+  }
+  .tooltip.visible { display: block; }
+  .tooltip-title { font-weight: 700; margin-bottom: 6px; font-family: 'Courier New', monospace; font-size: 12px; }
+  .tooltip-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 3px; color: var(--muted); }
+  .tooltip-row span:last-child { color: var(--text); }
+
+  /* ---- VIEWING BAR (Arkham style) ---- */
+  .viewing-bar {
+    background: #070e1c; border-bottom: 1px solid var(--border);
+    padding: 8px 28px; display: flex; align-items: center; gap: 16px;
+    font-size: 11px; font-family: 'Courier New', monospace;
+    flex-wrap: wrap;
+  }
+  .viewing-label { color: #3a5572; font-weight: 700; letter-spacing: 0.1em; }
+  .viewing-value { color: var(--accent); }
+  .viewing-sep { color: #1a2a3a; }
+  .filter-chips { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+  .filter-chip {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    border-radius: 3px; padding: 2px 8px; font-size: 10px; color: var(--muted);
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .filter-chip:hover, .filter-chip.active { border-color: var(--accent); color: var(--accent); background: rgba(46,134,222,0.08); }
+
+  /* ---- GRID BACKGROUND ---- */
+  .graph-container::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 30 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab active" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
+    <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+    <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<!-- TOKEN BAR -->
+<div class="token-bar" id="tokenBar">
+  <span>GitHub token required for private repo access &mdash;</span>
+  <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+  <button class="token-btn" onclick="saveToken()">Connect</button>
+  <span class="token-dismiss" onclick="dismissToken()">&#x2715;</span>
+</div>
+
+<!-- VIEWING BAR (Arkham style) -->
+<div class="viewing-bar">
+  <span class="viewing-label">VIEWING:</span>
+  <span class="viewing-value" id="viewingRepo">imranm-cpu/trilogy-ai-plan</span>
+  <span class="viewing-sep">|</span>
+  <span class="viewing-label">RANGE:</span>
+  <span class="viewing-value">Last 7 days</span>
+  <span class="viewing-sep">|</span>
+  <span class="viewing-label">UPDATED:</span>
+  <span class="viewing-value" id="lastUpdated">--</span>
+  <div class="filter-chips">
+    <span class="filter-chip active" data-filter="all" onclick="setFilter(this,'all')">All files</span>
+    <span class="filter-chip" data-filter="md" onclick="setFilter(this,'md')">.md</span>
+    <span class="filter-chip" data-filter="html" onclick="setFilter(this,'html')">.html</span>
+    <span class="filter-chip" data-filter="js" onclick="setFilter(this,'js')">.js</span>
+    <button class="refresh-btn" onclick="loadData(true)" style="margin-left:8px;">&#x21bb; Refresh</button>
+  </div>
+</div>
+
+<!-- MAIN BODY -->
+<div class="trace-body">
+
+  <!-- SIDEBAR -->
+  <div class="trace-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Overview</div>
+      <div class="stat-row"><span class="stat-label">Commits (7d)</span><span class="stat-value teal" id="stat-commits">--</span></div>
+      <div class="stat-row"><span class="stat-label">Files changed</span><span class="stat-value" id="stat-files">--</span></div>
+      <div class="stat-row"><span class="stat-label">Lines added</span><span class="stat-value teal" id="stat-additions">--</span></div>
+      <div class="stat-row"><span class="stat-label">Active projects</span><span class="stat-value amber" id="stat-projects">--</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Legend</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#00b894;"></span>.md / skills / context</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#2e86de;"></span>.html / web files</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#f39c12;"></span>.js / .ts / logic</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#9b59b6;"></span>.json / config</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#54a0ff;"></span>.css / styles</div>
+      <div class="legend-row"><span class="legend-dot" style="background:#7f96b2;"></span>other</div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Recent Activity</div>
+      <div class="sidebar-feed" id="sidebarFeed">
+        <div class="loading-spinner"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRAPH MAIN -->
+  <div class="trace-main" id="traceMain">
+    <div class="graph-container" id="graphContainer">
+      <svg class="connections-svg" id="connectionsSvg"></svg>
+      <div class="graph-cols" id="graphCols">
+        <div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOOLTIP -->
+<div class="tooltip" id="tooltip">
+  <div class="tooltip-title" id="tt-title"></div>
+  <div class="tooltip-row"><span>Files changed</span><span id="tt-files"></span></div>
+  <div class="tooltip-row"><span>Lines added</span><span id="tt-add"></span></div>
+  <div class="tooltip-row"><span>Lines removed</span><span id="tt-del"></span></div>
+  <div class="tooltip-row"><span>Commits</span><span id="tt-commits"></span></div>
+</div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const REPO_OWNER = 'imranm-cpu';
+const REPO_NAME  = 'trilogy-ai-plan';
+const DAYS_TO_SHOW = 7;
+const REFRESH_INTERVAL_MS = 60 * 60 * 1000; // 1 hour
+
+let activeFilter = 'all';
+let allData = null;
+
+// ============================================================
+// GITHUB TOKEN
+// ============================================================
+function getToken() { return localStorage.getItem('gh_token') || ''; }
+function saveToken() {
+  const t = document.getElementById('tokenInput').value.trim();
+  if (t) { localStorage.setItem('gh_token', t); document.getElementById('tokenBar').style.display = 'none'; loadData(true); }
+}
+function dismissToken() { document.getElementById('tokenBar').style.display = 'none'; }
+
+// Hide token bar if token already saved or not needed
+window.addEventListener('DOMContentLoaded', () => {
+  if (getToken()) { document.getElementById('tokenBar').style.display = 'none'; }
+});
+
+// ============================================================
+// COLOR HELPERS
+// ============================================================
+function fileColor(filename) {
+  const ext = filename.split('.').pop().toLowerCase();
+  const base = filename.split('/').pop().toLowerCase();
+  if (['md', 'markdown'].includes(ext))  return '#00b894';
+  if (['html', 'htm'].includes(ext))     return '#2e86de';
+  if (['js', 'ts', 'jsx', 'tsx'].includes(ext)) return '#f39c12';
+  if (['json', 'yaml', 'yml', 'toml', 'env'].includes(ext)) return '#9b59b6';
+  if (['css', 'scss', 'sass', 'less'].includes(ext)) return '#54a0ff';
+  return '#7f96b2';
+}
+
+function projectColor(projectName) {
+  const colors = ['#2e86de','#00b894','#f39c12','#9b59b6','#54a0ff','#e74c3c','#1abc9c','#d35400'];
+  let hash = 0;
+  for (let c of projectName) hash = (hash * 31 + c.charCodeAt(0)) & 0xffffffff;
+  return colors[Math.abs(hash) % colors.length];
+}
+
+function projectIcon(name) {
+  const n = name.toLowerCase();
+  if (n.includes('skill') || n.includes('mariia') || n.includes('alicia') || n.includes('ray') || n.includes('matt') || n.includes('paul') || n.includes('mike')) return '⚡';
+  if (n.includes('html') || n.includes('roadmap') || n.includes('canvas')) return '🌐';
+  if (n.includes('context')) return '📋';
+  if (n.includes('week') || n.includes('project')) return '📁';
+  if (n.includes('decision')) return '⚖️';
+  if (n.includes('archive')) return '🗄️';
+  if (n.includes('template')) return '📄';
+  return '◈';
+}
+
+// ============================================================
+// DATA FETCHING
+// ============================================================
+async function fetchCommits() {
+  const token = getToken();
+  const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  if (token) headers['Authorization'] = `token ${token}`;
+
+  const since = new Date();
+  since.setDate(since.getDate() - DAYS_TO_SHOW);
+  const sinceStr = since.toISOString();
+
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?per_page=60&since=${sinceStr}`;
+  const res = await fetch(url, { headers });
+  if (!res.ok) throw new Error(`GitHub API: ${res.status} ${res.statusText}`);
+  return res.json();
+}
+
+async function fetchCommitDetail(sha) {
+  const token = getToken();
+  const headers = { 'Accept': 'application/vnd.github.v3+json' };
+  if (token) headers['Authorization'] = `token ${token}`;
+
+  const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits/${sha}`;
+  const res = await fetch(url, { headers });
+  if (!res.ok) return null;
+  return res.json();
+}
+
+// ============================================================
+// DATA PROCESSING
+// ============================================================
+function dayKey(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function topFolder(filename) {
+  const parts = filename.split('/');
+  if (parts.length === 1) return 'root';
+  return parts[0];
+}
+
+function projectLabel(filename) {
+  const parts = filename.split('/');
+  if (parts.length === 1) return 'root files';
+  if (parts.length === 2) return parts[0];
+  return parts[0] + '/' + parts[1];
+}
+
+function processCommits(commits, details) {
+  // Build a unified structure grouped by day then by project
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+
+  // Build index of dates for each day slot
+  const daySlots = {};
+  for (let i = 0; i < DAYS_TO_SHOW; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = dayKey(d);
+    daySlots[key] = { daysAgo: i, date: new Date(d), projects: {}, totalCommits: 0 };
+  }
+
+  // Process each commit
+  let totalFiles = new Set();
+  let totalAdditions = 0;
+  let totalCommits = 0;
+
+  for (const detail of details) {
+    if (!detail) continue;
+    const commitDate = new Date(detail.commit.author.date);
+    const key = dayKey(commitDate);
+    if (!daySlots[key]) continue;
+
+    const slot = daySlots[key];
+    slot.totalCommits++;
+    totalCommits++;
+
+    const files = detail.files || [];
+    for (const file of files) {
+      totalFiles.add(file.filename);
+      totalAdditions += (file.additions || 0);
+
+      const proj = projectLabel(file.filename);
+      if (!slot.projects[proj]) {
+        slot.projects[proj] = {
+          name: proj,
+          files: [],
+          commits: [],
+          totalAdditions: 0,
+          totalDeletions: 0
+        };
+      }
+      const p = slot.projects[proj];
+      if (!p.files.find(f => f.filename === file.filename)) {
+        p.files.push({ filename: file.filename, status: file.status, additions: file.additions, deletions: file.deletions });
+      }
+      if (!p.commits.find(c => c.sha === detail.sha)) {
+        p.commits.push({ sha: detail.sha, message: detail.commit.message, date: commitDate });
+      }
+      p.totalAdditions += (file.additions || 0);
+      p.totalDeletions += (file.deletions || 0);
+    }
+  }
+
+  // Update stats
+  document.getElementById('stat-commits').textContent   = totalCommits;
+  document.getElementById('stat-files').textContent     = totalFiles.size;
+  document.getElementById('stat-additions').textContent = '+' + totalAdditions.toLocaleString();
+  document.getElementById('stat-projects').textContent  = Object.values(daySlots).reduce((s, d) => s + Object.keys(d.projects).length, 0);
+
+  // Update sidebar feed (recent commits)
+  renderSidebarFeed(details.slice(0, 10));
+
+  return daySlots;
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+function renderSidebarFeed(details) {
+  const feed = document.getElementById('sidebarFeed');
+  if (!details.length) { feed.innerHTML = '<div class="empty-col">No recent activity</div>'; return; }
+  feed.innerHTML = details.map(d => {
+    if (!d) return '';
+    const date = new Date(d.commit.author.date);
+    const timeStr = date.toLocaleDateString('en-AU', { month: 'short', day: 'numeric' }) + ' ' +
+                    date.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' });
+    const msg = d.commit.message.split('\n')[0].slice(0, 60);
+    const fileCount = (d.files || []).length;
+    return `
+      <div class="feed-item">
+        <div class="feed-time">${timeStr}</div>
+        <div class="feed-msg">${escapeHtml(msg)}</div>
+        <div class="feed-files">${fileCount} file${fileCount !== 1 ? 's' : ''} changed</div>
+      </div>`;
+  }).join('');
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderGraph(daySlots) {
+  const cols = document.getElementById('graphCols');
+  cols.innerHTML = '';
+
+  const today = new Date();
+  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  const orderedDays = Array.from({ length: DAYS_TO_SHOW }, (_, i) => {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    return daySlots[dayKey(d)];
+  }).filter(Boolean);
+
+  for (const slot of orderedDays) {
+    const col = document.createElement('div');
+    col.className = 'day-col';
+    col.dataset.daysAgo = slot.daysAgo;
+
+    const dateLabel = slot.daysAgo === 0 ? 'TODAY'
+                    : slot.daysAgo === 1 ? 'YESTERDAY'
+                    : dayNames[slot.date.getDay()].toUpperCase();
+    const dateStr = slot.date.getDate() + ' ' + monthNames[slot.date.getMonth()];
+    const projCount = Object.keys(slot.projects).length;
+
+    col.innerHTML = `
+      <div class="day-header">
+        <div class="day-label ${slot.daysAgo === 0 ? 'today' : ''}">${dateLabel}</div>
+        <div class="day-date">${dateStr}</div>
+        <div class="day-count">${slot.totalCommits} commit${slot.totalCommits !== 1 ? 's' : ''} · ${projCount} area${projCount !== 1 ? 's' : ''}</div>
+      </div>`;
+
+    if (projCount === 0) {
+      col.insertAdjacentHTML('beforeend', '<div class="empty-col">No activity</div>');
+    } else {
+      const projects = Object.values(slot.projects).sort((a, b) => b.totalAdditions - a.totalAdditions);
+      for (const proj of projects) {
+        // Apply filter
+        if (activeFilter !== 'all') {
+          const hasMatch = proj.files.some(f => f.filename.endsWith('.' + activeFilter));
+          if (!hasMatch) continue;
+        }
+
+        const node = document.createElement('div');
+        const isToday = slot.daysAgo === 0;
+        node.className = 'project-node' + (isToday ? ' active-today' : '');
+        node.dataset.project = proj.name;
+        node.dataset.additions = proj.totalAdditions;
+        node.dataset.deletions = proj.totalDeletions;
+        node.dataset.fileCount = proj.files.length;
+        node.dataset.commitCount = proj.commits.length;
+
+        const color = projectColor(proj.name);
+        const icon = projectIcon(proj.name);
+
+        // Files to show (filtered)
+        let filesToShow = proj.files;
+        if (activeFilter !== 'all') {
+          filesToShow = proj.files.filter(f => f.filename.endsWith('.' + activeFilter));
+        }
+        const MAX_FILES = 6;
+        const shown = filesToShow.slice(0, MAX_FILES);
+        const overflow = filesToShow.length - MAX_FILES;
+
+        const fileChips = shown.map(f => {
+          const fname = f.filename.split('/').pop();
+          const col = fileColor(f.filename);
+          return `<span class="file-chip"><span class="chip-dot" style="background:${col};"></span>${escapeHtml(fname)}</span>`;
+        }).join('') + (overflow > 0 ? `<span class="file-chip">+${overflow} more</span>` : '');
+
+        const latestMsg = proj.commits[0]?.message.split('\n')[0].slice(0, 55) || '';
+
+        node.innerHTML = `
+          ${isToday ? '<div class="pulse-ring"></div>' : ''}
+          <div class="node-header">
+            <div class="node-icon" style="background:${color}22;color:${color};">${icon}</div>
+            <div>
+              <div class="node-title" style="color:${color};">${escapeHtml(proj.name)}</div>
+              <div class="node-folder">${proj.files.length} file${proj.files.length !== 1 ? 's' : ''}</div>
+            </div>
+          </div>
+          <div class="file-chips">${fileChips}</div>
+          <div class="node-meta">
+            <span class="node-meta-item" style="color:#00b894;">+${proj.totalAdditions}</span>
+            <span class="node-meta-item" style="color:#e74c3c;">-${proj.totalDeletions}</span>
+            <span class="node-meta-item" style="color:#7f96b2;">${proj.commits.length} commit${proj.commits.length !== 1 ? 's' : ''}</span>
+          </div>
+          ${latestMsg ? `<div class="node-commit-msg">${escapeHtml(latestMsg)}</div>` : ''}`;
+
+        // Tooltip events
+        node.addEventListener('mouseenter', e => showTooltip(e, proj));
+        node.addEventListener('mousemove', moveTooltip);
+        node.addEventListener('mouseleave', hideTooltip);
+
+        col.appendChild(node);
+      }
+    }
+
+    cols.appendChild(col);
+  }
+
+  // Draw connections after DOM settles
+  requestAnimationFrame(() => requestAnimationFrame(() => drawConnections(daySlots)));
+}
+
+// ============================================================
+// SVG CONNECTIONS (Arkham style bezier curves)
+// ============================================================
+function drawConnections(daySlots) {
+  const svg = document.getElementById('connectionsSvg');
+  const container = document.getElementById('graphContainer');
+  svg.innerHTML = '';
+
+  const containerRect = container.getBoundingClientRect();
+  const scrollLeft = container.parentElement.scrollLeft;
+  const scrollTop  = container.parentElement.scrollTop;
+
+  // Total SVG dimensions
+  svg.setAttribute('width',  container.scrollWidth);
+  svg.setAttribute('height', Math.max(container.scrollHeight, 600));
+  svg.style.width  = container.scrollWidth + 'px';
+  svg.style.height = Math.max(container.scrollHeight, 600) + 'px';
+
+  // Group all project nodes by project name across days
+  const nodesByProject = {};
+  document.querySelectorAll('.project-node').forEach(node => {
+    const proj = node.dataset.project;
+    if (!nodesByProject[proj]) nodesByProject[proj] = [];
+    nodesByProject[proj].push(node);
+  });
+
+  // Draw connections for projects that appear on multiple days
+  for (const [projName, nodes] of Object.entries(nodesByProject)) {
+    if (nodes.length < 2) continue;
+    const color = projectColor(projName);
+
+    for (let i = 0; i < nodes.length - 1; i++) {
+      const fromRect = nodes[i].getBoundingClientRect();
+      const toRect   = nodes[i + 1].getBoundingClientRect();
+
+      // Positions relative to container (accounting for scroll)
+      const x1 = fromRect.right  - containerRect.left + scrollLeft;
+      const y1 = fromRect.top    + fromRect.height / 2 - containerRect.top + scrollTop;
+      const x2 = toRect.left     - containerRect.left + scrollLeft;
+      const y2 = toRect.top      + toRect.height / 2 - containerRect.top + scrollTop;
+
+      const cx = (x1 + x2) / 2;
+
+      // Defs: gradient + glow
+      const defId = `grad_${projName.replace(/[^a-zA-Z0-9]/g, '_')}_${i}`;
+      const filterId = `glow_${defId}`;
+
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+      const grad = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      grad.setAttribute('id', defId);
+      grad.setAttribute('x1', '0%'); grad.setAttribute('x2', '100%');
+      grad.innerHTML = `
+        <stop offset="0%"   stop-color="${color}" stop-opacity="0.7"/>
+        <stop offset="100%" stop-color="${color}" stop-opacity="0.2"/>`;
+
+      const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+      filter.setAttribute('id', filterId);
+      filter.innerHTML = `<feGaussianBlur in="SourceGraphic" stdDeviation="2"/>`;
+
+      defs.appendChild(grad);
+      defs.appendChild(filter);
+      svg.appendChild(defs);
+
+      // Glow path (blurred, behind)
+      const glowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      glowPath.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
+      glowPath.setAttribute('stroke', color);
+      glowPath.setAttribute('stroke-width', '4');
+      glowPath.setAttribute('fill', 'none');
+      glowPath.setAttribute('opacity', '0.2');
+      glowPath.setAttribute('filter', `url(#${filterId})`);
+      svg.appendChild(glowPath);
+
+      // Main path
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', `M ${x1} ${y1} C ${cx} ${y1}, ${cx} ${y2}, ${x2} ${y2}`);
+      path.setAttribute('stroke', `url(#${defId})`);
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke-dasharray', '6 3');
+      svg.appendChild(path);
+
+      // Dot at connection point
+      [{ x: x1, y: y1 }, { x: x2, y: y2 }].forEach(pt => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); circle.setAttribute('r', '3');
+        circle.setAttribute('fill', color); circle.setAttribute('opacity', '0.7');
+        svg.appendChild(circle);
+      });
+    }
+  }
+}
+
+// ============================================================
+// TOOLTIP
+// ============================================================
+function showTooltip(e, proj) {
+  const tt = document.getElementById('tooltip');
+  document.getElementById('tt-title').textContent  = proj.name;
+  document.getElementById('tt-files').textContent   = proj.files.length;
+  document.getElementById('tt-add').textContent     = '+' + proj.totalAdditions;
+  document.getElementById('tt-del').textContent     = '-' + proj.totalDeletions;
+  document.getElementById('tt-commits').textContent = proj.commits.length;
+  tt.classList.add('visible');
+  moveTooltip(e);
+}
+
+function moveTooltip(e) {
+  const tt = document.getElementById('tooltip');
+  tt.style.left = (e.clientX + 16) + 'px';
+  tt.style.top  = (e.clientY + 16) + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('tooltip').classList.remove('visible');
+}
+
+// ============================================================
+// FILTER
+// ============================================================
+function setFilter(el, filter) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  if (allData) renderGraph(allData);
+}
+
+// ============================================================
+// MAIN LOAD
+// ============================================================
+async function loadData(force = false) {
+  const cacheKey = 'activity_trace_cache';
+  const cacheTs  = 'activity_trace_ts';
+  const ONE_HOUR = 60 * 60 * 1000;
+
+  // Use cache unless forced or expired
+  if (!force) {
+    const cached = sessionStorage.getItem(cacheKey);
+    const ts     = parseInt(sessionStorage.getItem(cacheTs) || '0');
+    if (cached && Date.now() - ts < ONE_HOUR) {
+      try {
+        const parsed = JSON.parse(cached);
+        allData = parsed.daySlots;
+        renderGraph(allData);
+        renderSidebarFeed(parsed.feed);
+        updateStats(parsed.stats);
+        document.getElementById('lastUpdated').textContent = new Date(ts).toLocaleTimeString();
+        return;
+      } catch(e) {}
+    }
+  }
+
+  try {
+    document.getElementById('graphCols').innerHTML = '<div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>';
+    document.getElementById('sidebarFeed').innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
+
+    const commits = await fetchCommits();
+    if (!commits || commits.message) throw new Error(commits?.message || 'Failed to fetch commits');
+
+    // Batch fetch commit details (max 25 to stay within rate limits)
+    const toFetch = commits.slice(0, 25);
+    const details = await Promise.all(toFetch.map(c => fetchCommitDetail(c.sha)));
+
+    allData = processCommits(commits, details);
+    renderGraph(allData);
+
+    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+
+    // Cache it
+    const stats = {
+      commits: document.getElementById('stat-commits').textContent,
+      files:   document.getElementById('stat-files').textContent,
+      adds:    document.getElementById('stat-additions').textContent,
+      projs:   document.getElementById('stat-projects').textContent,
+    };
+    sessionStorage.setItem(cacheKey, JSON.stringify({ daySlots: allData, feed: details.slice(0,10), stats }));
+    sessionStorage.setItem(cacheTs, Date.now().toString());
+
+  } catch (err) {
+    document.getElementById('graphCols').innerHTML = '';
+    document.getElementById('graphContainer').insertAdjacentHTML('afterbegin', `
+      <div class="error-banner">
+        <strong>Could not load activity data</strong>
+        ${err.message}. If this is a private repo, add a GitHub Personal Access Token using the bar at the top.
+      </div>`);
+    document.getElementById('sidebarFeed').innerHTML = '<div class="empty-col">No data</div>';
+  }
+}
+
+function updateStats(stats) {
+  if (!stats) return;
+  document.getElementById('stat-commits').textContent   = stats.commits;
+  document.getElementById('stat-files').textContent     = stats.files;
+  document.getElementById('stat-additions').textContent = stats.adds;
+  document.getElementById('stat-projects').textContent  = stats.projs;
+}
+
+// ============================================================
+// AUTO REFRESH + RESIZE
+// ============================================================
+setInterval(() => loadData(true), REFRESH_INTERVAL_MS);
+
+// Redraw connections on resize
+window.addEventListener('resize', () => {
+  if (allData) requestAnimationFrame(() => drawConnections(allData));
+});
+
+// Scroll progress bar
+window.addEventListener('scroll', () => {
+  const s = document.documentElement.scrollTop;
+  const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progress').style.width = (h > 0 ? s / h * 100 : 0) + '%';
+}, { passive: true });
+
+// Init
+loadData();
+</script>
+</body>
+</html>
