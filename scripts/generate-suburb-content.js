@@ -87,6 +87,26 @@ function loadSuburbs(filePath) {
   }
 }
 
+// ─── Checkpoint helpers ────────────────────────────────────────────────────
+
+function getCheckpointPath(inputFile) {
+  const base = path.basename(inputFile, '.json');
+  return path.resolve(`scripts/output/.checkpoint-${base}.json`);
+}
+
+function loadCheckpoint(checkpointPath) {
+  if (fs.existsSync(checkpointPath)) {
+    try {
+      return JSON.parse(fs.readFileSync(checkpointPath, 'utf-8'));
+    } catch (e) {}
+  }
+  return { completed: {}, results: [] };
+}
+
+function saveCheckpoint(checkpointPath, checkpoint) {
+  fs.writeFileSync(checkpointPath, JSON.stringify(checkpoint));
+}
+
 // ─── Main ──────────────────────────────────────────────────────────────────
 
 async function generateContent(client, suburb, index, total) {
@@ -146,50 +166,87 @@ async function main() {
     process.exit(1);
   }
 
-  const client = new Anthropic({ apiKey });
-  const suburbs = loadSuburbs(INPUT_FILE);
+  const client     = new Anthropic({ apiKey });
+  const suburbs    = loadSuburbs(INPUT_FILE);
+  const outputDir  = path.resolve('scripts/output');
+  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
+
+  // Load checkpoint - resume from where we left off if interrupted
+  const checkpointPath = getCheckpointPath(INPUT_FILE);
+  const checkpoint     = loadCheckpoint(checkpointPath);
+  const alreadyDone    = new Set(Object.keys(checkpoint.completed));
+  const remaining      = suburbs.filter(s => !alreadyDone.has(`${s.suburb}_${s.state}`));
 
   console.log('');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('  TPW-88: AgedCare Compare Content Generator');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`  Input:   ${INPUT_FILE}`);
-  console.log(`  Suburbs: ${suburbs.length}`);
-  console.log(`  Model:   ${MODEL}`);
-  console.log(`  Est. time: ~${Math.ceil(suburbs.length * DELAY_MS / 1000)}s`);
+  console.log(`  Input:     ${INPUT_FILE}`);
+  console.log(`  Total:     ${suburbs.length.toLocaleString()} suburbs`);
+  console.log(`  Remaining: ${remaining.length.toLocaleString()} (${alreadyDone.size} already done)`);
+  console.log(`  Model:     ${MODEL}`);
+  console.log(`  Est. time: ~${Math.ceil(remaining.length * (DELAY_MS + 1200) / 3600000 * 60)} minutes`);
+  if (alreadyDone.size > 0) console.log(`  Resuming from checkpoint...`);
   console.log('');
 
-  const results = [];
+  const results = [...checkpoint.results];
   const failed  = [];
+  let processed = alreadyDone.size;
 
-  for (let i = 0; i < suburbs.length; i++) {
-    const result = await generateContent(client, suburbs[i], i, suburbs.length);
+  for (let i = 0; i < remaining.length; i++) {
+    const suburb = remaining[i];
+    const result = await generateContent(client, suburb, processed, suburbs.length);
+
     results.push(result);
-    if (result.error) failed.push(result.suburb);
-    if (i < suburbs.length - 1) await sleep(DELAY_MS);
+    processed++;
+
+    if (result.error) {
+      failed.push(suburb.suburb);
+    } else {
+      // Save to checkpoint after every successful result
+      checkpoint.completed[`${suburb.suburb}_${suburb.state}`] = true;
+      checkpoint.results = results;
+      saveCheckpoint(checkpointPath, checkpoint);
+    }
+
+    // Save full output every 100 suburbs
+    if (processed % 100 === 0) {
+      const progressFile = path.join(outputDir, `suburb-content-IN-PROGRESS.json`);
+      fs.writeFileSync(progressFile, JSON.stringify(results, null, 2));
+      console.log(`  [saved progress: ${processed}/${suburbs.length}]`);
+    }
+
+    if (i < remaining.length - 1) await sleep(DELAY_MS);
   }
 
-  // Write output
-  const outputDir  = path.resolve('scripts/output');
-  if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
-
+  // Write final output
   const outputFile = path.join(outputDir, `suburb-content-${timestamp()}.json`);
   fs.writeFileSync(outputFile, JSON.stringify(results, null, 2));
+
+  // Clean up checkpoint and progress file on success
+  if (failed.length === 0) {
+    if (fs.existsSync(checkpointPath)) fs.unlinkSync(checkpointPath);
+    const progressFile = path.join(outputDir, 'suburb-content-IN-PROGRESS.json');
+    if (fs.existsSync(progressFile)) fs.unlinkSync(progressFile);
+  }
 
   // Summary
   const succeeded = results.filter(r => r.content).length;
   console.log('');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log(`  Done. ${succeeded}/${suburbs.length} generated successfully.`);
-  if (failed.length > 0) console.log(`  Failed: ${failed.join(', ')}`);
+  console.log(`  Done. ${succeeded.toLocaleString()}/${suburbs.length.toLocaleString()} generated.`);
+  if (failed.length > 0) {
+    console.log(`  Failed (${failed.length}): ${failed.slice(0, 5).join(', ')}${failed.length > 5 ? '...' : ''}`);
+    console.log(`  Re-run the script to retry failed suburbs.`);
+  }
   console.log(`  Output: ${outputFile}`);
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
   console.log('');
-  console.log('  Next step: share suburb-content-*.json with the dev team');
+  console.log('  Next step: share suburb-content-*.json with the dev team.');
   console.log('  They INSERT it into the suburb_content table in PostgreSQL.');
   console.log('');
 
-  // Preview first result
+  // Preview a result
   const first = results.find(r => r.content);
   if (first) {
     console.log(`  Preview — ${first.suburb}, ${first.state}:`);
