@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgedCare Compare — Project Status</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --orange: #f97316;
+    --card-bg: rgba(255,255,255,0.04);
+    --card-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--amber), var(--red)); width: 0%; z-index: 300; transition: width 0.1s; }
+
+  /* SITE NAV */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab {
+    display: flex; align-items: center; gap: 7px; padding: 0 16px;
+    font-size: 12px; font-weight: 600; color: #64748b; text-decoration: none;
+    border-bottom: 2px solid transparent; white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .snav-tab:hover { color: #cbd5e1; border-bottom-color: #334155; }
+  .snav-tab.active { color: #f8fafc; border-bottom-color: #f97316; }
+  .snav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: #1e293b; margin: 0 4px; }
+  .snav-ext { font-size: 11px; color: #475569; text-decoration: none; padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+  .snav-ext:hover { color: #cbd5e1; background: #1e293b; }
+  .snav-live {
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    color: #22c55e; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);
+    border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 6px;
+  }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: snav-pulse 2s infinite; }
+  @keyframes snav-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* PAGE HEADER */
+  .page-header {
+    padding: 56px 48px 40px;
+    max-width: 1160px;
+    margin: 0 auto;
+  }
+  .page-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
+    color: var(--orange); text-transform: uppercase; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .page-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--orange); }
+  .page-header h1 { font-size: 38px; font-weight: 800; line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.4px; }
+  .page-header h1 span { background: linear-gradient(135deg, #f97316, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .page-header p { font-size: 15px; color: var(--muted); max-width: 680px; line-height: 1.75; margin-bottom: 28px; }
+
+  /* SUMMARY PILLS */
+  .summary-pills { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 0; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 16px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    border: 1px solid;
+  }
+  .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pill.done { background: rgba(0,184,148,0.1); border-color: rgba(0,184,148,0.3); color: var(--teal); }
+  .pill.inprog { background: rgba(243,156,18,0.1); border-color: rgba(243,156,18,0.3); color: var(--amber); }
+  .pill.blocked { background: rgba(231,76,60,0.1); border-color: rgba(231,76,60,0.3); color: var(--red); }
+
+  /* MAIN CONTENT */
+  .content { max-width: 1160px; margin: 0 auto; padding: 0 48px 80px; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 20px; margin-top: 52px;
+  }
+  .section-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 5px 14px; border-radius: 8px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+  .section-badge.done { background: rgba(0,184,148,0.12); border: 1px solid rgba(0,184,148,0.25); color: var(--teal); }
+  .section-badge.inprog { background: rgba(243,156,18,0.12); border: 1px solid rgba(243,156,18,0.25); color: var(--amber); }
+  .section-badge.blocked { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.25); color: var(--red); }
+  .section-title { font-size: 20px; font-weight: 800; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* DONE GRID */
+  .done-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 0;
+  }
+  .done-card {
+    background: rgba(0,184,148,0.05);
+    border: 1px solid rgba(0,184,148,0.15);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .done-card:hover {
+    background: rgba(0,184,148,0.09);
+    border-color: rgba(0,184,148,0.25);
+  }
+  .done-card-icon { font-size: 18px; margin-bottom: 10px; }
+  .done-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .done-card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .done-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    margin-top: 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    color: var(--teal); text-transform: uppercase;
+  }
+  .done-tag::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+  /* TICKET TABLE */
+  .ticket-table-wrap {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ticket-table { width: 100%; border-collapse: collapse; }
+  .ticket-table thead th {
+    padding: 12px 18px; text-align: left;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--muted); background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .ticket-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .ticket-table tbody tr:last-child { border-bottom: none; }
+  .ticket-table tbody tr:hover { background: var(--card-hover); }
+  .ticket-table tbody td { padding: 14px 18px; font-size: 13px; vertical-align: top; }
+  .ticket-id { font-size: 11px; font-weight: 700; color: var(--muted); font-family: monospace; white-space: nowrap; }
+  .ticket-title { font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .ticket-detail { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .ticket-owner { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .ticket-owner.unowned { color: var(--red); font-weight: 600; }
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 700;
+    white-space: nowrap;
+  }
+  .status-chip.inprog { background: rgba(243,156,18,0.12); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
+  .status-chip.not-started { background: rgba(127,150,178,0.1); color: var(--muted); border: 1px solid rgba(127,150,178,0.2); }
+  .status-chip.blocked { background: rgba(231,76,60,0.12); color: var(--red); border: 1px solid rgba(231,76,60,0.25); }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+  /* BOTTLENECK CARDS */
+  .bottleneck-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+  .bottleneck-card {
+    background: rgba(231,76,60,0.05);
+    border: 1px solid rgba(231,76,60,0.2);
+    border-radius: 14px;
+    padding: 22px 24px;
+    transition: background 0.15s;
+  }
+  .bottleneck-card:hover { background: rgba(231,76,60,0.09); }
+  .bottleneck-card.amber {
+    background: rgba(243,156,18,0.05);
+    border-color: rgba(243,156,18,0.2);
+  }
+  .bottleneck-card.amber:hover { background: rgba(243,156,18,0.09); }
+  .bn-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .bottleneck-card .bn-label { color: var(--red); }
+  .bottleneck-card.amber .bn-label { color: var(--amber); }
+  .bn-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+  .bn-desc { font-size: 12px; color: var(--muted); line-height: 1.65; }
+  .bn-tickets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .bn-ticket {
+    font-size: 10px; font-weight: 700; font-family: monospace;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border);
+  }
+
+  /* PROGRESS BAR */
+  .progress-summary {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px 32px; margin-bottom: 52px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+    align-items: center;
+  }
+  .ps-stat .ps-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+  .ps-stat .ps-val { font-size: 32px; font-weight: 800; line-height: 1; }
+  .ps-stat.green .ps-val { color: var(--teal); }
+  .ps-stat.amber .ps-val { color: var(--amber); }
+  .ps-stat.red .ps-val { color: var(--red); }
+  .ps-stat .ps-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .progress-bar-wrap { margin-top: 8px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 999px; }
+  .progress-bar-fill.done { background: var(--teal); width: 60%; }
+  .progress-bar-fill.inprog { background: var(--amber); width: 80%; }
+  .progress-bar-fill.blocked { background: var(--red); width: 50%; }
+
+  /* FOOTER */
+  .page-footer { max-width: 1160px; margin: 0 auto; padding: 0 48px 48px; }
+  .footer-note { font-size: 11px; color: #334155; border-top: 1px solid var(--border); padding-top: 24px; }
+
+  @media (max-width: 900px) {
+    .done-grid { grid-template-columns: repeat(2, 1fr); }
+    .bottleneck-grid { grid-template-columns: 1fr; }
+    .progress-summary { grid-template-columns: 1fr; gap: 20px; }
+  }
+  @media (max-width: 600px) {
+    .done-grid { grid-template-columns: 1fr; }
+    .page-header, .content, .page-footer { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 30 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    <a class="snav-tab active" href="agedcare-compare.html"><span class="snav-dot" style="background:#f97316;"></span> AgedCare Compare</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
+    <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+    <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-eyebrow">Project Status Dashboard</div>
+  <h1><span>AgedCare Compare</span><br>Build Status</h1>
+  <p>Live view of what is shipped, what is in progress, and where the build is blocked. Updated April 2026. Data sourced from Jira (TPW tickets).</p>
+  <div class="summary-pills">
+    <div class="pill done"><span class="pill-dot" style="background:var(--teal);"></span> 9 areas complete</div>
+    <div class="pill inprog"><span class="pill-dot" style="background:var(--amber);"></span> 12 tickets open</div>
+    <div class="pill blocked"><span class="pill-dot" style="background:var(--red);"></span> 5 blockers active</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content">
+
+  <!-- PROGRESS SUMMARY -->
+  <div class="progress-summary">
+    <div class="ps-stat green">
+      <div class="ps-label">Completed</div>
+      <div class="ps-val">9</div>
+      <div class="ps-sub">feature areas shipped and live</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill done"></div></div>
+    </div>
+    <div class="ps-stat amber">
+      <div class="ps-label">In Progress / Open</div>
+      <div class="ps-val">12</div>
+      <div class="ps-sub">tickets in backlog or active</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill inprog"></div></div>
+    </div>
+    <div class="ps-stat red">
+      <div class="ps-label">Blockers</div>
+      <div class="ps-val">5</div>
+      <div class="ps-sub">decisions or resources needed</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill blocked"></div></div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: COMPLETED -->
+  <div class="section-header">
+    <div class="section-badge done">Done</div>
+    <div>
+      <div class="section-title">Completed Work</div>
+      <div class="section-sub">All marked Done in Jira. Core infrastructure, content, and conversion layer are live.</div>
+    </div>
+  </div>
+
+  <div class="done-grid">
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F5D8;</div>
+      <div class="done-card-title">Data Pipeline &amp; Scraping</div>
+      <div class="done-card-desc">Scraper, processing queue, PAC data import, and validation layer. Provider data is ingested and structured.</div>
+      <div class="done-tag">Infrastructure</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F4B0;</div>
+      <div class="done-card-title">Competitor Pricing Tables</div>
+      <div class="done-card-desc">Pricing comparison data structured and displayed. Provider-level fee breakdowns surfaced to users.</div>
+      <div class="done-tag">Data</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F4CD;</div>
+      <div class="done-card-title">Location SEO Pages</div>
+      <div class="done-card-desc">45,000 suburb pages generated with structured data. Geographic targeting framework live across Australia.</div>
+      <div class="done-tag">SEO</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F50D;</div>
+      <div class="done-card-title">Search &amp; Discovery</div>
+      <div class="done-card-desc">OpenSearch with hybrid and semantic search. Geolocation, filters, and sort all implemented.</div>
+      <div class="done-tag">Search</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F9EE;</div>
+      <div class="done-card-title">SAH Calculator</div>
+      <div class="done-card-desc">9-step Support at Home wizard with budget charts, government subsidy rules, and package level guidance.</div>
+      <div class="done-tag">Conversion</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F3E0;</div>
+      <div class="done-card-title">Homepage &amp; Core Pages</div>
+      <div class="done-card-desc">Homepage, about, and structural pages designed and live. Navigation and information architecture in place.</div>
+      <div class="done-tag">Frontend</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F4E7;</div>
+      <div class="done-card-title">Lead Capture</div>
+      <div class="done-card-desc">Contact form live with CRM webhook pushing directly to Zoho. Spam protection implemented.</div>
+      <div class="done-tag">CRM</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F4CA;</div>
+      <div class="done-card-title">GA4 / GTM Analytics</div>
+      <div class="done-card-desc">Full event tracking implemented via GTM. GA4 configured with key conversion events across the funnel.</div>
+      <div class="done-tag">Analytics</div>
+    </div>
+    <div class="done-card">
+      <div class="done-card-icon">&#x1F517;</div>
+      <div class="done-card-title">Semantic Search Infrastructure</div>
+      <div class="done-card-desc">Built and operational in backend. Hybrid vector + keyword search ready. Awaiting product decision to expose in UI.</div>
+      <div class="done-tag">Backend</div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: IN PROGRESS / INCOMPLETE -->
+  <div class="section-header">
+    <div class="section-badge inprog">Open</div>
+    <div>
+      <div class="section-title">In Progress / Incomplete</div>
+      <div class="section-sub">Tickets in the backlog. Mix of in-progress, not-started, and owner-unknown items.</div>
+    </div>
+  </div>
+
+  <div class="ticket-table-wrap">
+    <table class="ticket-table">
+      <thead>
+        <tr>
+          <th style="width:90px;">Ticket</th>
+          <th>Description</th>
+          <th style="width:130px;">Status</th>
+          <th style="width:110px;">Owner</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ticket-id">TPW-79</span></td>
+          <td>
+            <div class="ticket-title">Suburb geographic data</div>
+            <div class="ticket-detail">LGA boundaries, CBD distance, nearby suburbs. John's work — John is no longer available. DB queries needed before any geo-enrichment can proceed.</div>
+          </td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
+          <td><span class="ticket-owner unowned">Unowned</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-80</span></td>
+          <td>
+            <div class="ticket-title">Service-level pricing aggregation per suburb</div>
+            <div class="ticket-detail">Aggregate and surface pricing by service type at suburb level. Requires DB work. Blocked on TPW-79 geographic data.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner unowned">Unowned</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-81</span></td>
+          <td>
+            <div class="ticket-title">Region-level ACPR stats</div>
+            <div class="ticket-detail">Aged Care Provider Register stats rolled up to region level for suburb pages. Needs DB access and data pipeline work.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner unowned">Unowned</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-82</span></td>
+          <td>
+            <div class="ticket-title">Intro paragraph templates</div>
+            <div class="ticket-detail">Templated intro copy for suburb SEO pages. Structured for variable injection. In progress with Leo.</div>
+          </td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-88</span></td>
+          <td>
+            <div class="ticket-title">AI-generated unique suburb content</div>
+            <div class="ticket-detail">Unique intro paragraphs per geography, generated via Claude API. Scriptable — can run as a batch job once TPW-79 and TPW-82 are complete.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner unowned">Unowned</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-89</span></td>
+          <td>
+            <div class="ticket-title">Embedded savings widget on suburb pages</div>
+            <div class="ticket-detail">Inline widget showing estimated savings vs. current provider. Frontend build, no backend dependency.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner">-</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-90</span></td>
+          <td>
+            <div class="ticket-title">Service type toggle on suburb pages</div>
+            <div class="ticket-detail">Toggle between service types (personal care, domestic, nursing etc.) on the suburb detail view. Frontend only.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner">-</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-91</span></td>
+          <td>
+            <div class="ticket-title">Pricing accuracy disclaimer</div>
+            <div class="ticket-detail">Legal / UX copy explaining data freshness, source, and limitations. Small frontend task — copy needed from legal or comms.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner">-</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-92</span></td>
+          <td>
+            <div class="ticket-title">Provider pricing correction form</div>
+            <div class="ticket-detail">Allows providers to flag incorrect pricing data. In progress with Mehrnaz.</div>
+          </td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
+          <td><span class="ticket-owner">Mehrnaz</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-93</span></td>
+          <td>
+            <div class="ticket-title">Zoho webhook health monitoring</div>
+            <div class="ticket-detail">Monitoring and alerting for the Zoho CRM webhook. Ensure lead submissions are being received and not silently failing.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner">-</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-94</span></td>
+          <td>
+            <div class="ticket-title">Blog / articles section</div>
+            <div class="ticket-detail">Content hub for aged care guides, news, and long-form SEO content. Full build — design, CMS, and content pipeline to spec.</div>
+          </td>
+          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
+          <td><span class="ticket-owner">-</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-95</span></td>
+          <td>
+            <div class="ticket-title">Domain strategy</div>
+            <div class="ticket-detail">Final domain selection and DNS configuration. Blocked on Luke / marketing decision. "Powered by Trilogy" branding also pending (Aaron, Legal).</div>
+          </td>
+          <td><span class="status-chip blocked"><span class="status-dot" style="background:var(--red);"></span> Blocked</span></td>
+          <td><span class="ticket-owner unowned">Unowned</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- SECTION 3: BOTTLENECKS -->
+  <div class="section-header">
+    <div class="section-badge blocked">Blocked</div>
+    <div>
+      <div class="section-title">Bottlenecks</div>
+      <div class="section-sub">What is stopping progress. Decisions or resources needed before the build can move forward.</div>
+    </div>
+  </div>
+
+  <div class="bottleneck-grid">
+    <div class="bottleneck-card">
+      <div class="bn-label">Dev Capacity</div>
+      <div class="bn-title">John no longer available</div>
+      <div class="bn-desc">John owned the backend geographic data work. His departure leaves the suburb data enrichment pipeline unowned. No replacement assigned. These tickets are the dependency for the entire SEO content layer going live.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-79</span>
+        <span class="bn-ticket">TPW-80</span>
+        <span class="bn-ticket">TPW-81</span>
+        <span class="bn-ticket">TPW-88</span>
+      </div>
+    </div>
+    <div class="bottleneck-card">
+      <div class="bn-label">Data Access</div>
+      <div class="bn-title">DB access needed for geo work</div>
+      <div class="bn-desc">The geographic data and ACPR stats tickets require direct database access. Until access is provisioned and an owner assigned, the suburb page content layer cannot go live. This blocks SEO content generation for all 45k pages.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-79</span>
+        <span class="bn-ticket">TPW-80</span>
+        <span class="bn-ticket">TPW-81</span>
+      </div>
+    </div>
+    <div class="bottleneck-card">
+      <div class="bn-label">Leadership Decision</div>
+      <div class="bn-title">Domain decision blocked on Luke</div>
+      <div class="bn-desc">The site cannot launch publicly or be marketed until a domain is confirmed. Luke / marketing team have not yet made a call. "Powered by Trilogy" branding question also open — Aaron (Legal) needs to be looped in before any external launch activity.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-95</span>
+      </div>
+    </div>
+    <div class="bottleneck-card amber">
+      <div class="bn-label">Product Decision</div>
+      <div class="bn-title">Semantic search not exposed in UI</div>
+      <div class="bn-desc">The semantic search infrastructure is built and working in the backend. It has not been surfaced to users yet. This requires a product decision from Nick on how and where to expose it. No action is blocked, but this is live capability sitting unused.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">Search</span>
+        <span class="bn-ticket">Nick decision</span>
+      </div>
+    </div>
+    <div class="bottleneck-card amber">
+      <div class="bn-label">Team Reassignment</div>
+      <div class="bn-title">Databricks dashboards unowned</div>
+      <div class="bn-desc">TPW-60, 61, 62, 63, 64 (Databricks analytics dashboards) were reassigned to the data team after the original owner left. No confirmed owner on the data team. These are low urgency but will create a gap as the site scales.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-60</span>
+        <span class="bn-ticket">TPW-61</span>
+        <span class="bn-ticket">TPW-62</span>
+        <span class="bn-ticket">TPW-63</span>
+        <span class="bn-ticket">TPW-64</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <div class="footer-note">AgedCare Compare &mdash; Trilogy Care &mdash; Confidential &mdash; April 2026 &mdash; Status sourced from Jira (TPW tickets)</div>
+</div>
+
+<script>
+  // Progress bar on scroll
+  window.addEventListener('scroll', () => {
+    const el = document.getElementById('progress');
+    const h = document.documentElement;
+    const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    el.style.width = pct + '%';
+  });
+</script>
+
+</body>
+</html>
