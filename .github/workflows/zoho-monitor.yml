@@ -1,0 +1,66 @@
+name: Zoho Webhook Monitor (TPW-93)
+
+# Runs every 30 minutes and emails Imran if the Zoho webhook is down.
+# A failed webhook = leads silently dropped = ad spend wasted.
+#
+# SETUP (one-time):
+# Go to https://github.com/imranm-cpu/trilogy-ai-plan/settings/secrets/actions
+# Add three secrets:
+#   ZOHO_WEBHOOK_URL   - the Zoho CRM webhook endpoint (get from Mehrnaz)
+#   ALERT_EMAIL        - your email address (e.g. imran@trilogycare.com.au)
+#   GMAIL_APP_PASSWORD - Gmail app password (myaccount.google.com > Security > App passwords)
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # Every 30 minutes, 24/7
+  workflow_dispatch:           # Also allows manual trigger from GitHub Actions tab
+
+jobs:
+  check-zoho-webhook:
+    name: Check Zoho Webhook Health
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run webhook health check
+        id: health_check
+        run: node scripts/zoho-monitor.js
+        env:
+          ZOHO_WEBHOOK_URL: ${{ secrets.ZOHO_WEBHOOK_URL }}
+        continue-on-error: true
+
+      - name: Send alert email if webhook is down
+        if: steps.health_check.outcome == 'failure'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          secure: true
+          username: ${{ secrets.ALERT_EMAIL }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "ALERT: Zoho Webhook DOWN - AgedCare Compare leads at risk"
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: AgedCare Compare Monitor <${{ secrets.ALERT_EMAIL }}>
+          html_body: |
+            <h2 style="color:#e74c3c;">Zoho CRM Webhook is DOWN</h2>
+            <p>The AgedCare Compare contact form cannot deliver leads to Zoho CRM.</p>
+            <p><strong>Every lead submitted right now is being silently dropped.</strong></p>
+            <hr>
+            <h3>What to do:</h3>
+            <ol>
+              <li>Contact <a href="mailto:MehrnazH@trilogycare.com.au">Mehrnaz</a> to check the Zoho webhook configuration</li>
+              <li>Test the contact form on the live site manually</li>
+              <li>Check the Zoho CRM webhook settings for any recent changes</li>
+            </ol>
+            <hr>
+            <p><strong>Detected at:</strong> ${{ github.run_started_at || 'Scheduled check' }}</p>
+            <p><a href="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}">View full logs</a></p>
+            <p style="color:#888;font-size:12px;">This alert is sent by the automated Zoho health monitor (TPW-93). It runs every 30 minutes.</p>
+
+      - name: Fail workflow if webhook is down
+        if: steps.health_check.outcome == 'failure'
+        run: |
+          echo "Webhook health check failed. See logs above."
+          exit 1
