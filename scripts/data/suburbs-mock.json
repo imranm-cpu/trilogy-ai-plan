@@ -1,0 +1,102 @@
+[
+  {
+    "suburb": "Bondi",
+    "state": "NSW",
+    "postcode": "2026",
+    "provider_count": 14,
+    "price_low": 58.50,
+    "price_high": 89.00,
+    "price_avg": 71.20,
+    "acpr_region": "Sydney - Eastern Suburbs"
+  },
+  {
+    "suburb": "Cairns",
+    "state": "QLD",
+    "postcode": "4870",
+    "provider_count": 9,
+    "price_low": 54.00,
+    "price_high": 82.50,
+    "price_avg": 65.80,
+    "acpr_region": "Far North Queensland"
+  },
+  {
+    "suburb": "Fremantle",
+    "state": "WA",
+    "postcode": "6160",
+    "provider_count": 11,
+    "price_low": 56.00,
+    "price_high": 85.00,
+    "price_avg": 68.40,
+    "acpr_region": "Perth South"
+  },
+  {
+    "suburb": "Fitzroy",
+    "state": "VIC",
+    "postcode": "3065",
+    "provider_count": 17,
+    "price_low": 60.00,
+    "price_high": 92.00,
+    "price_avg": 74.50,
+    "acpr_region": "Melbourne - Inner"
+  },
+  {
+    "suburb": "Glenelg",
+    "state": "SA",
+    "postcode": "5045",
+    "provider_count": 8,
+    "price_low": 53.00,
+    "price_high": 78.00,
+    "price_avg": 63.20,
+    "acpr_region": "Adelaide - South"
+  },
+  {
+    "suburb": "New Farm",
+    "state": "QLD",
+    "postcode": "4005",
+    "provider_count": 13,
+    "price_low": 55.50,
+    "price_high": 84.00,
+    "price_avg": 67.90,
+    "acpr_region": "Brisbane - Inner City"
+  },
+  {
+    "suburb": "Manly",
+    "state": "NSW",
+    "postcode": "2095",
+    "provider_count": 16,
+    "price_low": 61.00,
+    "price_high": 91.50,
+    "price_avg": 73.80,
+    "acpr_region": "Sydney - Northern Beaches"
+  },
+  {
+    "suburb": "Hobart",
+    "state": "TAS",
+    "postcode": "7000",
+    "provider_count": 6,
+    "price_low": 51.00,
+    "price_high": 76.00,
+    "price_avg": 61.50,
+    "acpr_region": "Hobart"
+  },
+  {
+    "suburb": "Alice Springs",
+    "state": "NT",
+    "postcode": "0870",
+    "provider_count": 4,
+    "price_low": 62.00,
+    "price_high": 98.00,
+    "price_avg": 78.20,
+    "acpr_region": "Alice Springs"
+  },
+  {
+    "suburb": "Ballarat",
+    "state": "VIC",
+    "postcode": "3350",
+    "provider_count": 10,
+    "price_low": 52.00,
+    "price_high": 79.50,
+    "price_avg": 64.10,
+    "acpr_region": "Grampians"
+  }
+]
