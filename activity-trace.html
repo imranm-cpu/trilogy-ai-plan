@@ -220,16 +220,21 @@
   .node-title { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
   .node-folder { font-size: 10px; color: var(--muted); font-family: 'Courier New', monospace; margin-top: 1px; }
 
-  .file-chips { display: flex; flex-wrap: wrap; gap: 3px; margin-bottom: 7px; }
-  .file-chip {
-    display: inline-flex; align-items: center; gap: 3px;
-    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
-    border-radius: 3px; padding: 1px 5px;
-    font-size: 9px; color: var(--muted);
-    font-family: 'Courier New', monospace;
-    max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  .file-tiles { display: flex; flex-direction: column; gap: 2px; margin-top: 6px; margin-bottom: 4px; }
+  .file-tile {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+    border-left: 2px solid #2e86de;
+    border-radius: 3px; padding: 3px 7px; font-size: 10px;
   }
-  .file-chip .chip-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
+  .file-tile.tile-added { border-left-color: #00b894; }
+  .file-tile.tile-removed { border-left-color: #e74c3c; }
+  .file-tile.tile-modified { border-left-color: #2e86de; }
+  .tile-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .tile-name { flex: 1; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: 'Courier New', monospace; font-size: 10px; }
+  .tile-stats { display: flex; gap: 4px; flex-shrink: 0; font-family: 'Courier New', monospace; font-size: 9px; }
+  .tile-add { color: #00b894; }
+  .tile-del { color: #e74c3c; }
 
   .node-meta { display: flex; gap: 8px; font-size: 10px; }
   .node-commit-msg {
@@ -738,29 +743,28 @@ function renderGraph(daySlots) {
 
         let filesToShow = proj.files;
         if (activeFilter !== 'all') filesToShow = proj.files.filter(f => f.filename.endsWith('.' + activeFilter));
-        const MAX_FILES = 4;
-        const shown = filesToShow.slice(0, MAX_FILES);
-        const overflow = filesToShow.length - MAX_FILES;
-
-        const fileChips = shown.map(f => {
-          const fname = f.filename.split('/').pop();
-          const c = fileColor(f.filename);
-          return `<span class="file-chip"><span class="chip-dot" style="background:${c};"></span>${escapeHtml(fname)}</span>`;
-        }).join('') + (overflow > 0 ? `<span class="file-chip">+${overflow}</span>` : '');
 
         const latestMsg = proj.commits[0]?.message.split('\n')[0].slice(0, 50) || '';
 
         const node = document.createElement('div');
         node.className = 'project-node' + (isToday ? ' active-today' : '');
         node.dataset.project = proj.name;
+
+        const fileTilesHtml = filesToShow.map(f => {
+          const fname = f.filename.split('/').pop();
+          const c = fileColor(f.filename);
+          const statusClass = f.status === 'added' ? 'tile-added' : f.status === 'removed' ? 'tile-removed' : 'tile-modified';
+          return `<div class="file-tile ${statusClass}">
+            <span class="tile-dot" style="background:${c};"></span>
+            <span class="tile-name">${escapeHtml(fname)}</span>
+            <span class="tile-stats"><span class="tile-add">+${f.additions||0}</span><span class="tile-del">-${f.deletions||0}</span></span>
+          </div>`;
+        }).join('');
+
         node.innerHTML = `
           ${isToday ? '<div class="pulse-ring"></div>' : ''}
-          <div class="node-folder">${proj.files.length} file${proj.files.length !== 1 ? 's' : ''} · ${proj.commits.length} commit${proj.commits.length !== 1 ? 's' : ''}</div>
-          <div class="file-chips" style="margin-top:6px;">${fileChips}</div>
-          <div class="node-meta" style="margin-top:4px;">
-            <span style="color:#00b894;font-size:10px;">+${proj.totalAdditions}</span>
-            <span style="color:#e74c3c;font-size:10px;">-${proj.totalDeletions}</span>
-          </div>
+          <div class="node-folder">${filesToShow.length} file${filesToShow.length !== 1 ? 's' : ''} · ${proj.commits.length} commit${proj.commits.length !== 1 ? 's' : ''}</div>
+          <div class="file-tiles">${fileTilesHtml}</div>
           ${latestMsg ? `<div class="node-commit-msg">${escapeHtml(latestMsg)}</div>` : ''}`;
 
         node.addEventListener('mouseenter', e => showTooltip(e, proj));
