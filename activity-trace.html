@@ -954,7 +954,7 @@ async function loadData(force = false) {
   }
 
   try {
-    document.getElementById('graphCols').innerHTML = '<div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>';
+    document.getElementById('swimlaneRows').innerHTML = '<div class="loading-spinner" style="flex:1;height:400px;"><div class="spinner"></div></div>';
     document.getElementById('sidebarFeed').innerHTML = '<div class="loading-spinner"><div class="spinner"></div></div>';
 
     ALL_PROJECTS.clear();
@@ -986,7 +986,7 @@ async function loadData(force = false) {
     sessionStorage.setItem(cacheTs, Date.now().toString());
 
   } catch (err) {
-    document.getElementById('graphCols').innerHTML = '';
+    document.getElementById('swimlaneRows').innerHTML = '';
     document.getElementById('graphContainer').insertAdjacentHTML('afterbegin', `
       <div class="error-banner">
         <strong>Could not load activity data</strong>
