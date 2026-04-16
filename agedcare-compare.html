@@ -3,94 +3,129 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgedCare Compare — Project Status</title>
+<title>AgedCare Compare - Project Status</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root {
     --navy: #0d1b2e;
+    --navy-light: #111f33;
     --blue: #1e4d8c;
     --accent: #2e86de;
     --light-blue: #54a0ff;
     --teal: #00b894;
+    --teal-glow: rgba(0,184,148,0.15);
     --amber: #f39c12;
     --red: #e74c3c;
     --purple: #9b59b6;
     --orange: #f97316;
-    --card-bg: rgba(255,255,255,0.04);
-    --card-hover: rgba(255,255,255,0.07);
-    --border: rgba(255,255,255,0.08);
-    --border-strong: rgba(255,255,255,0.14);
+    --card-bg: rgba(255,255,255,0.035);
+    --card-hover: rgba(255,255,255,0.06);
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.12);
     --text: #e8edf5;
     --muted: #7f96b2;
+    --faint: #4a5f78;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.15);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.2);
+    --shadow-lg: 0 8px 30px rgba(0,0,0,0.25);
+    --radius: 14px;
+    --radius-sm: 10px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+  body { background: var(--navy); color: var(--text); font-family: 'Inter', -apple-system, system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
 
-  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--amber), var(--red)); width: 0%; z-index: 300; transition: width 0.1s; }
+  /* Subtle grid background */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--orange), var(--amber), var(--teal)); width: 0%; z-index: 300; transition: width 0.15s; }
+
+  /* Scroll Reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
   /* SITE NAV */
   .site-nav {
-    position: sticky; top: 0; z-index: 200; height: 52px;
-    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-    display: flex; align-items: center; padding: 0 24px;
+    position: sticky; top: 0; z-index: 200; height: 56px;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 8px 24px rgba(0,0,0,0.15);
+    display: flex; align-items: center; padding: 0 32px;
   }
-  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #64748b; }
   .snav-brand-name span { color: #e2e8f0; }
-  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
-  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-day { font-size: 10px; font-weight: 600; color: #94a3b8; background: rgba(30,41,59,0.8); border: 1px solid #334155; border-radius: 999px; padding: 3px 10px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 28px; }
   .snav-tab {
-    display: flex; align-items: center; gap: 7px; padding: 0 16px;
+    display: flex; align-items: center; gap: 7px; padding: 0 18px;
     font-size: 12px; font-weight: 600; color: #64748b; text-decoration: none;
     border-bottom: 2px solid transparent; white-space: nowrap;
-    transition: color 0.15s, border-color 0.15s;
+    transition: color 0.2s, border-color 0.2s;
   }
   .snav-tab:hover { color: #cbd5e1; border-bottom-color: #334155; }
   .snav-tab.active { color: #f8fafc; border-bottom-color: #f97316; }
   .snav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
   .snav-ext-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
-  .snav-divider { width: 1px; height: 20px; background: #1e293b; margin: 0 4px; }
-  .snav-ext { font-size: 11px; color: #475569; text-decoration: none; padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
-  .snav-ext:hover { color: #cbd5e1; background: #1e293b; }
+  .snav-divider { width: 1px; height: 20px; background: #1e293b; margin: 0 6px; }
+  .snav-ext { font-size: 11px; font-weight: 500; color: #475569; text-decoration: none; padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+  .snav-ext:hover { color: #cbd5e1; background: rgba(30,41,59,0.6); }
   .snav-live {
-    display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px;
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px;
     color: #22c55e; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2);
-    border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 6px;
+    border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 8px;
+    transition: background 0.15s;
   }
-  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: snav-pulse 2s infinite; }
-  @keyframes snav-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .snav-live:hover { background: rgba(34,197,94,0.15); }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: snav-pulse 2s ease-in-out infinite; }
+  @keyframes snav-pulse { 0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(34,197,94,0.4); } 50% { opacity: 0.4; box-shadow: 0 0 0 4px rgba(34,197,94,0); } }
 
   /* PAGE HEADER */
   .page-header {
     padding: 56px 48px 40px;
-    max-width: 1160px;
+    max-width: 1200px;
     margin: 0 auto;
   }
   .page-eyebrow {
-    font-size: 10px; font-weight: 700; letter-spacing: 2.5px;
-    color: var(--orange); text-transform: uppercase; margin-bottom: 12px;
-    display: flex; align-items: center; gap: 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2.5px;
+    color: var(--orange); text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
   }
-  .page-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--orange); }
-  .page-header h1 { font-size: 38px; font-weight: 800; line-height: 1.1; margin-bottom: 14px; letter-spacing: -0.4px; }
+  .page-eyebrow::before { content: ''; display: block; width: 32px; height: 2px; background: var(--orange); border-radius: 1px; }
+  .page-header h1 { font-size: 40px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.03em; }
   .page-header h1 span { background: linear-gradient(135deg, #f97316, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .page-header p { font-size: 15px; color: var(--muted); max-width: 680px; line-height: 1.75; margin-bottom: 28px; }
+  .page-header p { font-size: 15px; color: var(--muted); max-width: 700px; line-height: 1.75; margin-bottom: 28px; font-weight: 500; }
 
   /* SUMMARY PILLS */
   .summary-pills { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 0; }
   .pill {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 7px 16px; border-radius: 999px; font-size: 12px; font-weight: 700;
-    border: 1px solid;
+    padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 700;
+    border: 1px solid; transition: transform 0.15s;
   }
+  .pill:hover { transform: translateY(-1px); }
   .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .pill.done { background: rgba(0,184,148,0.1); border-color: rgba(0,184,148,0.3); color: var(--teal); }
   .pill.inprog { background: rgba(243,156,18,0.1); border-color: rgba(243,156,18,0.3); color: var(--amber); }
   .pill.blocked { background: rgba(231,76,60,0.1); border-color: rgba(231,76,60,0.3); color: var(--red); }
 
   /* MAIN CONTENT */
-  .content { max-width: 1160px; margin: 0 auto; padding: 0 48px 80px; }
+  .content { max-width: 1200px; margin: 0 auto; padding: 0 48px 80px; }
 
   /* SECTION HEADER */
   .section-header {
@@ -99,14 +134,15 @@
   }
   .section-badge {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 5px 14px; border-radius: 8px; font-size: 11px; font-weight: 700;
-    letter-spacing: 0.5px; text-transform: uppercase;
+    padding: 6px 16px; border-radius: 8px; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.6px; text-transform: uppercase;
   }
   .section-badge.done { background: rgba(0,184,148,0.12); border: 1px solid rgba(0,184,148,0.25); color: var(--teal); }
   .section-badge.inprog { background: rgba(243,156,18,0.12); border: 1px solid rgba(243,156,18,0.25); color: var(--amber); }
   .section-badge.blocked { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.25); color: var(--red); }
-  .section-title { font-size: 20px; font-weight: 800; }
-  .section-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .section-badge.new { background: rgba(84,160,255,0.12); border: 1px solid rgba(84,160,255,0.25); color: var(--light-blue); }
+  .section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
+  .section-sub { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 500; }
 
   /* DONE GRID */
   .done-grid {
@@ -116,25 +152,53 @@
     margin-bottom: 0;
   }
   .done-card {
-    background: rgba(0,184,148,0.05);
-    border: 1px solid rgba(0,184,148,0.15);
-    border-radius: 14px;
-    padding: 20px 22px;
-    transition: background 0.15s, border-color 0.15s;
+    background: rgba(0,184,148,0.04);
+    border: 1px solid rgba(0,184,148,0.12);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
   }
   .done-card:hover {
-    background: rgba(0,184,148,0.09);
-    border-color: rgba(0,184,148,0.25);
+    background: rgba(0,184,148,0.08);
+    border-color: rgba(0,184,148,0.22);
+    transform: translateY(-2px);
   }
-  .done-card-icon { font-size: 18px; margin-bottom: 10px; }
   .done-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .done-card-desc { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .done-card-desc { font-size: 12px; color: var(--muted); line-height: 1.7; font-weight: 500; }
   .done-tag {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-top: 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
     color: var(--teal); text-transform: uppercase;
   }
   .done-tag::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+
+  /* NEW WORK GRID (for Imran's contributions) */
+  .new-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 0;
+  }
+  .new-card {
+    background: rgba(84,160,255,0.04);
+    border: 1px solid rgba(84,160,255,0.12);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  }
+  .new-card:hover {
+    background: rgba(84,160,255,0.08);
+    border-color: rgba(84,160,255,0.22);
+    transform: translateY(-2px);
+  }
+  .new-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .new-card-desc { font-size: 12px; color: var(--muted); line-height: 1.7; font-weight: 500; }
+  .new-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
+    color: var(--light-blue); text-transform: uppercase;
+  }
+  .new-tag::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--light-blue); }
 
   /* TICKET TABLE */
   .ticket-table-wrap {
@@ -142,94 +206,133 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
+    box-shadow: var(--shadow-sm);
   }
   .ticket-table { width: 100%; border-collapse: collapse; }
   .ticket-table thead th {
-    padding: 12px 18px; text-align: left;
-    font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
-    color: var(--muted); background: rgba(255,255,255,0.03);
+    padding: 14px 20px; text-align: left;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); background: rgba(255,255,255,0.02);
     border-bottom: 1px solid var(--border);
   }
-  .ticket-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+  .ticket-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
   .ticket-table tbody tr:last-child { border-bottom: none; }
   .ticket-table tbody tr:hover { background: var(--card-hover); }
-  .ticket-table tbody td { padding: 14px 18px; font-size: 13px; vertical-align: top; }
-  .ticket-id { font-size: 11px; font-weight: 700; color: var(--muted); font-family: monospace; white-space: nowrap; }
-  .ticket-title { font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .ticket-detail { font-size: 11px; color: var(--muted); line-height: 1.5; }
-  .ticket-owner { font-size: 11px; color: var(--muted); white-space: nowrap; }
+  .ticket-table tbody td { padding: 16px 20px; font-size: 13px; vertical-align: top; }
+  .ticket-id { font-size: 11px; font-weight: 700; color: var(--faint); font-family: 'SF Mono', 'Fira Code', monospace; white-space: nowrap; }
+  .ticket-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .ticket-detail { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 500; }
+  .ticket-owner { font-size: 11px; color: var(--muted); white-space: nowrap; font-weight: 500; }
   .ticket-owner.unowned { color: var(--red); font-weight: 600; }
   .status-chip {
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 700;
     white-space: nowrap;
   }
+  .status-chip.done { background: rgba(0,184,148,0.12); color: var(--teal); border: 1px solid rgba(0,184,148,0.25); }
   .status-chip.inprog { background: rgba(243,156,18,0.12); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
-  .status-chip.not-started { background: rgba(127,150,178,0.1); color: var(--muted); border: 1px solid rgba(127,150,178,0.2); }
+  .status-chip.not-started { background: rgba(127,150,178,0.1); color: var(--muted); border: 1px solid rgba(127,150,178,0.15); }
   .status-chip.blocked { background: rgba(231,76,60,0.12); color: var(--red); border: 1px solid rgba(231,76,60,0.25); }
   .status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
   /* BOTTLENECK CARDS */
   .bottleneck-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
   .bottleneck-card {
-    background: rgba(231,76,60,0.05);
-    border: 1px solid rgba(231,76,60,0.2);
-    border-radius: 14px;
-    padding: 22px 24px;
-    transition: background 0.15s;
+    background: rgba(231,76,60,0.04);
+    border: 1px solid rgba(231,76,60,0.15);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    transition: background 0.2s, transform 0.2s;
   }
-  .bottleneck-card:hover { background: rgba(231,76,60,0.09); }
+  .bottleneck-card:hover { background: rgba(231,76,60,0.08); transform: translateY(-1px); }
   .bottleneck-card.amber {
-    background: rgba(243,156,18,0.05);
-    border-color: rgba(243,156,18,0.2);
+    background: rgba(243,156,18,0.04);
+    border-color: rgba(243,156,18,0.15);
   }
-  .bottleneck-card.amber:hover { background: rgba(243,156,18,0.09); }
+  .bottleneck-card.amber:hover { background: rgba(243,156,18,0.08); }
   .bn-label {
-    font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
     margin-bottom: 10px;
   }
   .bottleneck-card .bn-label { color: var(--red); }
   .bottleneck-card.amber .bn-label { color: var(--amber); }
   .bn-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
-  .bn-desc { font-size: 12px; color: var(--muted); line-height: 1.65; }
-  .bn-tickets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .bn-desc { font-size: 12px; color: var(--muted); line-height: 1.7; font-weight: 500; }
+  .bn-tickets { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
   .bn-ticket {
-    font-size: 10px; font-weight: 700; font-family: monospace;
-    padding: 2px 8px; border-radius: 4px;
-    background: rgba(255,255,255,0.06); color: var(--muted); border: 1px solid var(--border);
+    font-size: 10px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', monospace;
+    padding: 3px 9px; border-radius: 5px;
+    background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border);
   }
 
-  /* PROGRESS BAR */
+  /* PROGRESS SUMMARY */
   .progress-summary {
     background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: 16px; padding: 28px 32px; margin-bottom: 52px;
-    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+    border-radius: 16px; padding: 32px 36px; margin-bottom: 52px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 28px;
     align-items: center;
+    box-shadow: var(--shadow-sm);
   }
   .ps-stat .ps-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .ps-stat .ps-val { font-size: 32px; font-weight: 800; line-height: 1; }
+  .ps-stat .ps-val { font-size: 34px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
   .ps-stat.green .ps-val { color: var(--teal); }
   .ps-stat.amber .ps-val { color: var(--amber); }
   .ps-stat.red .ps-val { color: var(--red); }
-  .ps-stat .ps-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
-  .progress-bar-wrap { margin-top: 8px; height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; border-radius: 999px; }
-  .progress-bar-fill.done { background: var(--teal); width: 60%; }
-  .progress-bar-fill.inprog { background: var(--amber); width: 80%; }
-  .progress-bar-fill.blocked { background: var(--red); width: 50%; }
+  .ps-stat.blue .ps-val { color: var(--light-blue); }
+  .ps-stat .ps-sub { font-size: 11px; color: var(--muted); margin-top: 5px; font-weight: 500; }
+  .progress-bar-wrap { margin-top: 10px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+  .progress-bar-fill.done { background: var(--teal); }
+  .progress-bar-fill.inprog { background: var(--amber); }
+  .progress-bar-fill.blocked { background: var(--red); }
+  .progress-bar-fill.blue { background: var(--light-blue); }
+
+  /* SUBURB CONTENT PROGRESS */
+  .suburb-progress {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 16px; padding: 32px 36px; margin-top: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .suburb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .suburb-header-left h3 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+  .suburb-header-left p { font-size: 12px; color: var(--muted); font-weight: 500; }
+  .suburb-live-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 14px; border-radius: 999px; font-size: 11px; font-weight: 700;
+    background: rgba(0,184,148,0.1); border: 1px solid rgba(0,184,148,0.25); color: var(--teal);
+  }
+  .suburb-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: snav-pulse 2s ease-in-out infinite; }
+  .suburb-stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 20px; }
+  .suburb-stat { text-align: center; }
+  .suburb-stat-val { font-size: 24px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+  .suburb-stat-val.teal { color: var(--teal); }
+  .suburb-stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; margin-top: 2px; }
+  .suburb-bar-wrap { height: 10px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
+  .suburb-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--teal), var(--light-blue)); transition: width 1s ease; }
+  .suburb-bar-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-weight: 500; }
+  .suburb-states { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+  .suburb-state { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 600; }
+  .suburb-state.complete { border-color: rgba(0,184,148,0.25); background: rgba(0,184,148,0.04); }
+  .suburb-state-pct { font-variant-numeric: tabular-nums; }
+  .suburb-state-pct.done { color: var(--teal); }
+  .suburb-state-pct.partial { color: var(--amber); }
+  .suburb-state-pct.pending { color: var(--faint); }
 
   /* FOOTER */
-  .page-footer { max-width: 1160px; margin: 0 auto; padding: 0 48px 48px; }
-  .footer-note { font-size: 11px; color: #334155; border-top: 1px solid var(--border); padding-top: 24px; }
+  .page-footer { max-width: 1200px; margin: 0 auto; padding: 0 48px 48px; }
+  .footer-note { font-size: 11px; color: #334155; border-top: 1px solid var(--border); padding-top: 24px; font-weight: 500; }
 
   @media (max-width: 900px) {
-    .done-grid { grid-template-columns: repeat(2, 1fr); }
+    .done-grid, .new-grid { grid-template-columns: repeat(2, 1fr); }
     .bottleneck-grid { grid-template-columns: 1fr; }
-    .progress-summary { grid-template-columns: 1fr; gap: 20px; }
+    .progress-summary { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .suburb-stats { grid-template-columns: repeat(3, 1fr); }
+    .suburb-states { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 600px) {
-    .done-grid { grid-template-columns: 1fr; }
+    .done-grid, .new-grid { grid-template-columns: 1fr; }
     .page-header, .content, .page-footer { padding-left: 20px; padding-right: 20px; }
+    .progress-summary { grid-template-columns: 1fr; }
   }
 </style>
 </head>
@@ -240,7 +343,7 @@
 <nav class="site-nav">
   <div class="snav-brand">
     <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
-    <span class="snav-day">Day 38 of 90</span>
+    <span class="snav-day">Day 44 of 90</span>
   </div>
   <div class="snav-tabs">
     <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
@@ -251,21 +354,25 @@
   </div>
   <div class="snav-ext-links">
     <div class="snav-divider"></div>
+    <a class="snav-ext" href="suburb-progress.html">Suburb Progress</a>
+    <a class="snav-ext" href="suburb-map.html">Coverage Map</a>
+    <div class="snav-divider"></div>
     <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
-    <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+    <a class="snav-ext" href="https://linear.app" target="_blank">Linear</a>
     <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
   </div>
 </nav>
 
 <!-- PAGE HEADER -->
-<div class="page-header">
+<div class="page-header reveal">
   <div class="page-eyebrow">Project Status Dashboard</div>
   <h1><span>AgedCare Compare</span><br>Build Status</h1>
-  <p>Live view of what is shipped, what is in progress, and where the build is blocked. Updated April 2026. Data sourced from Jira (TPW tickets).</p>
+  <p>Live view of what is shipped, what is in progress, and where the build is blocked. Updated 16 April 2026. Data sourced from Jira (TPW tickets) and Imran's build log.</p>
   <div class="summary-pills">
     <div class="pill done"><span class="pill-dot" style="background:var(--teal);"></span> 9 areas complete</div>
-    <div class="pill inprog"><span class="pill-dot" style="background:var(--amber);"></span> 12 tickets open</div>
-    <div class="pill blocked"><span class="pill-dot" style="background:var(--red);"></span> 5 blockers active</div>
+    <div class="pill inprog"><span class="pill-dot" style="background:var(--light-blue);"></span> 8 new deliverables from Imran</div>
+    <div class="pill inprog"><span class="pill-dot" style="background:var(--amber);"></span> 10 tickets open</div>
+    <div class="pill blocked"><span class="pill-dot" style="background:var(--red);"></span> 4 blockers active</div>
   </div>
 </div>
 
@@ -273,87 +380,186 @@
 <div class="content">
 
   <!-- PROGRESS SUMMARY -->
-  <div class="progress-summary">
+  <div class="progress-summary reveal">
     <div class="ps-stat green">
       <div class="ps-label">Completed</div>
       <div class="ps-val">9</div>
-      <div class="ps-sub">feature areas shipped and live</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill done"></div></div>
+      <div class="ps-sub">dev team feature areas shipped</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill done" data-width="60%" style="width:0"></div></div>
+    </div>
+    <div class="ps-stat blue">
+      <div class="ps-label">Imran's Contributions</div>
+      <div class="ps-val">8</div>
+      <div class="ps-sub">new deliverables since Week 4</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill blue" data-width="75%" style="width:0"></div></div>
     </div>
     <div class="ps-stat amber">
-      <div class="ps-label">In Progress / Open</div>
-      <div class="ps-val">12</div>
-      <div class="ps-sub">tickets in backlog or active</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill inprog"></div></div>
+      <div class="ps-label">Open Tickets</div>
+      <div class="ps-val">10</div>
+      <div class="ps-sub">in backlog or active</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill inprog" data-width="65%" style="width:0"></div></div>
     </div>
     <div class="ps-stat red">
       <div class="ps-label">Blockers</div>
-      <div class="ps-val">5</div>
+      <div class="ps-val">4</div>
       <div class="ps-sub">decisions or resources needed</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill blocked"></div></div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill blocked" data-width="40%" style="width:0"></div></div>
     </div>
   </div>
 
-  <!-- SECTION 1: COMPLETED -->
-  <div class="section-header">
+  <!-- SUBURB CONTENT PROGRESS -->
+  <div class="suburb-progress reveal">
+    <div class="suburb-header">
+      <div class="suburb-header-left">
+        <h3>TPW-88 - AI Suburb Content Generation</h3>
+        <p>Unique intro paragraphs per suburb via Claude API. Batch job running across all 17,483 Australian suburbs.</p>
+      </div>
+      <div class="suburb-live-badge"><span class="suburb-live-dot"></span> 50.4% Complete</div>
+    </div>
+    <div class="suburb-stats">
+      <div class="suburb-stat">
+        <div class="suburb-stat-val teal">8,808</div>
+        <div class="suburb-stat-label">Generated</div>
+      </div>
+      <div class="suburb-stat">
+        <div class="suburb-stat-val">8,675</div>
+        <div class="suburb-stat-label">Remaining</div>
+      </div>
+      <div class="suburb-stat">
+        <div class="suburb-stat-val">17,483</div>
+        <div class="suburb-stat-label">Total Suburbs</div>
+      </div>
+      <div class="suburb-stat">
+        <div class="suburb-stat-val teal">86</div>
+        <div class="suburb-stat-label">Priority Suburbs Done</div>
+      </div>
+      <div class="suburb-stat">
+        <div class="suburb-stat-val teal">0</div>
+        <div class="suburb-stat-label">Errors</div>
+      </div>
+    </div>
+    <div class="suburb-bar-wrap">
+      <div class="suburb-bar-fill" data-width="50.4%" style="width:0"></div>
+    </div>
+    <div class="suburb-bar-label">
+      <span>Running on claude-haiku-4-5 - ~$2-3 for full 17k run</span>
+      <span>86 priority suburbs ready for dev team</span>
+    </div>
+    <div class="suburb-states">
+      <div class="suburb-state complete"><span>ACT</span> <span class="suburb-state-pct done">169/169</span></div>
+      <div class="suburb-state complete"><span>NSW</span> <span class="suburb-state-pct done">5,108/5,108</span></div>
+      <div class="suburb-state complete"><span>NT</span> <span class="suburb-state-pct done">196/196</span></div>
+      <div class="suburb-state complete"><span>QLD</span> <span class="suburb-state-pct done">3,335/3,335</span></div>
+      <div class="suburb-state"><span>SA</span> <span class="suburb-state-pct partial">0/1,253</span></div>
+      <div class="suburb-state"><span>TAS</span> <span class="suburb-state-pct partial">0/649</span></div>
+      <div class="suburb-state"><span>VIC</span> <span class="suburb-state-pct partial">0/3,756</span></div>
+      <div class="suburb-state"><span>WA</span> <span class="suburb-state-pct partial">0/3,021</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION: IMRAN'S CONTRIBUTIONS (NEW) -->
+  <div class="section-header reveal">
+    <div class="section-badge new">New - Imran</div>
+    <div>
+      <div class="section-title">Imran's Contributions (Weeks 4-7)</div>
+      <div class="section-sub">Work delivered by Imran since joining the project. Not in original Jira scope - all additional value.</div>
+    </div>
+  </div>
+
+  <div class="new-grid reveal">
+    <div class="new-card">
+      <div class="new-card-title">AI Suburb Content Pipeline</div>
+      <div class="new-card-desc">Built batch content generation script using Claude API. 8,808 unique paragraphs generated across 4 states (ACT, NSW, NT, QLD complete). 86 priority suburbs ready for dev team integration. Full 17k run costs ~$2-3.</div>
+      <div class="new-tag">TPW-88 - Build</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">15+ Design Variants Prototyped</div>
+      <div class="new-card-desc">Built 15+ design iterations in Next.js/Tailwind. v10 baseline, v2 organic, v5 community proof, plus multiple tweaked iterations. All viewable at /variants in the prototype. Informed the design direction decision.</div>
+      <div class="new-tag">Vibe Coding Sprint</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Design Direction Locked</div>
+      <div class="new-card-desc">Design review session 2 April with Nick and Steve. Direction confirmed: blend Design 10 + 2 + 7. Mobile-first (70% traffic from Google Ads). Soft blues, real photography, big CTA. 5,000+ suburb pages on Vercel.</div>
+      <div class="new-tag">Decision - 2 April</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Persona Calculator Spec</div>
+      <div class="new-card-desc">Full spec for persona-based calculator flow. 8 personas (parent-carer, spouse-carer, just-assessed, switching, respite, dementia, post-hospital, professional). Persona selection feeds pre-filled numbers into warm summary results.</div>
+      <div class="new-tag">Spec Complete</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Project Status Dashboard</div>
+      <div class="new-card-desc">This page. Full Jira ticket mapping (TPW-79 to TPW-95), bottleneck analysis, and progress tracking. Deployed to GitHub Pages with auto-updating day counter.</div>
+      <div class="new-tag">Live Dashboard</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Suburb Progress Tracker</div>
+      <div class="new-card-desc">Real-time progress page for TPW-88 content generation. State-by-state breakdown, completion bar, ETA tracking. Separate suburb coverage map also built showing geographic distribution.</div>
+      <div class="new-tag">Live Dashboard</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">User Testing Plan</div>
+      <div class="new-card-desc">Plan scoped for 6-12 real user tests before full build. Validates calculator flow, suburb page comprehension, and trust signals with actual aged care seekers. Pending scheduling post design lock.</div>
+      <div class="new-tag">Scoped</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Competitor Research</div>
+      <div class="new-card-desc">PPC competitor analysis completed for Luke ad concepts. 4 concepts drafted from research findings. Concept 3 storyboard written. Feeds into the paid acquisition strategy for the site.</div>
+      <div class="new-tag">PPC Concept for Luke</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1: COMPLETED (dev team) -->
+  <div class="section-header reveal">
     <div class="section-badge done">Done</div>
     <div>
-      <div class="section-title">Completed Work</div>
+      <div class="section-title">Completed Work (Dev Team)</div>
       <div class="section-sub">All marked Done in Jira. Core infrastructure, content, and conversion layer are live.</div>
     </div>
   </div>
 
-  <div class="done-grid">
+  <div class="done-grid reveal">
     <div class="done-card">
-      <div class="done-card-icon">&#x1F5D8;</div>
-      <div class="done-card-title">Data Pipeline &amp; Scraping</div>
+      <div class="done-card-title">Data Pipeline and Scraping</div>
       <div class="done-card-desc">Scraper, processing queue, PAC data import, and validation layer. Provider data is ingested and structured.</div>
       <div class="done-tag">Infrastructure</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F4B0;</div>
       <div class="done-card-title">Competitor Pricing Tables</div>
       <div class="done-card-desc">Pricing comparison data structured and displayed. Provider-level fee breakdowns surfaced to users.</div>
       <div class="done-tag">Data</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F4CD;</div>
       <div class="done-card-title">Location SEO Pages</div>
       <div class="done-card-desc">45,000 suburb pages generated with structured data. Geographic targeting framework live across Australia.</div>
       <div class="done-tag">SEO</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F50D;</div>
-      <div class="done-card-title">Search &amp; Discovery</div>
+      <div class="done-card-title">Search and Discovery</div>
       <div class="done-card-desc">OpenSearch with hybrid and semantic search. Geolocation, filters, and sort all implemented.</div>
       <div class="done-tag">Search</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F9EE;</div>
       <div class="done-card-title">SAH Calculator</div>
       <div class="done-card-desc">9-step Support at Home wizard with budget charts, government subsidy rules, and package level guidance.</div>
       <div class="done-tag">Conversion</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F3E0;</div>
-      <div class="done-card-title">Homepage &amp; Core Pages</div>
+      <div class="done-card-title">Homepage and Core Pages</div>
       <div class="done-card-desc">Homepage, about, and structural pages designed and live. Navigation and information architecture in place.</div>
       <div class="done-tag">Frontend</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F4E7;</div>
       <div class="done-card-title">Lead Capture</div>
       <div class="done-card-desc">Contact form live with CRM webhook pushing directly to Zoho. Spam protection implemented.</div>
       <div class="done-tag">CRM</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F4CA;</div>
       <div class="done-card-title">GA4 / GTM Analytics</div>
       <div class="done-card-desc">Full event tracking implemented via GTM. GA4 configured with key conversion events across the funnel.</div>
       <div class="done-tag">Analytics</div>
     </div>
     <div class="done-card">
-      <div class="done-card-icon">&#x1F517;</div>
       <div class="done-card-title">Semantic Search Infrastructure</div>
       <div class="done-card-desc">Built and operational in backend. Hybrid vector + keyword search ready. Awaiting product decision to expose in UI.</div>
       <div class="done-tag">Backend</div>
@@ -361,15 +567,15 @@
   </div>
 
   <!-- SECTION 2: IN PROGRESS / INCOMPLETE -->
-  <div class="section-header">
+  <div class="section-header reveal">
     <div class="section-badge inprog">Open</div>
     <div>
       <div class="section-title">In Progress / Incomplete</div>
-      <div class="section-sub">Tickets in the backlog. Mix of in-progress, not-started, and owner-unknown items.</div>
+      <div class="section-sub">Tickets in the backlog. Mix of in-progress, not-started, and blocked items.</div>
     </div>
   </div>
 
-  <div class="ticket-table-wrap">
+  <div class="ticket-table-wrap reveal">
     <table class="ticket-table">
       <thead>
         <tr>
@@ -384,7 +590,7 @@
           <td><span class="ticket-id">TPW-79</span></td>
           <td>
             <div class="ticket-title">Suburb geographic data</div>
-            <div class="ticket-detail">LGA boundaries, CBD distance, nearby suburbs. John's work — John is no longer available. DB queries needed before any geo-enrichment can proceed.</div>
+            <div class="ticket-detail">LGA boundaries, CBD distance, nearby suburbs. John's work - John is no longer available. DB queries needed before any geo-enrichment can proceed.</div>
           </td>
           <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
           <td><span class="ticket-owner unowned">Unowned</span></td>
@@ -411,7 +617,7 @@
           <td><span class="ticket-id">TPW-82</span></td>
           <td>
             <div class="ticket-title">Intro paragraph templates</div>
-            <div class="ticket-detail">Templated intro copy for suburb SEO pages. Structured for variable injection. In progress with Leo.</div>
+            <div class="ticket-detail">Templated intro copy for suburb SEO pages. Leo is actively engaged - asking UX questions (hero toggle) via Teams as of 16 April.</div>
           </td>
           <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
           <td><span class="ticket-owner">Leo</span></td>
@@ -420,10 +626,10 @@
           <td><span class="ticket-id">TPW-88</span></td>
           <td>
             <div class="ticket-title">AI-generated unique suburb content</div>
-            <div class="ticket-detail">Unique intro paragraphs per geography, generated via Claude API. Scriptable — can run as a batch job once TPW-79 and TPW-82 are complete.</div>
+            <div class="ticket-detail">8,808 of 17,483 suburbs generated (50.4%). ACT, NSW, NT, QLD complete. 86 priority suburbs ready for dev integration. Pipeline built by Imran using Claude API batch job.</div>
           </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner unowned">Unowned</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> 50.4% done</span></td>
+          <td><span class="ticket-owner">Imran</span></td>
         </tr>
         <tr>
           <td><span class="ticket-id">TPW-89</span></td>
@@ -438,16 +644,16 @@
           <td><span class="ticket-id">TPW-90</span></td>
           <td>
             <div class="ticket-title">Service type toggle on suburb pages</div>
-            <div class="ticket-detail">Toggle between service types (personal care, domestic, nursing etc.) on the suburb detail view. Frontend only.</div>
+            <div class="ticket-detail">Toggle between service types (personal care, domestic, nursing etc.) on the suburb detail view. Leo asking about hero toggle UX on Teams.</div>
           </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner">-</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
         </tr>
         <tr>
           <td><span class="ticket-id">TPW-91</span></td>
           <td>
             <div class="ticket-title">Pricing accuracy disclaimer</div>
-            <div class="ticket-detail">Legal / UX copy explaining data freshness, source, and limitations. Small frontend task — copy needed from legal or comms.</div>
+            <div class="ticket-detail">Legal / UX copy explaining data freshness, source, and limitations. Small frontend task - copy needed from legal or comms.</div>
           </td>
           <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
           <td><span class="ticket-owner">-</span></td>
@@ -460,24 +666,6 @@
           </td>
           <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
           <td><span class="ticket-owner">Mehrnaz</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-93</span></td>
-          <td>
-            <div class="ticket-title">Zoho webhook health monitoring</div>
-            <div class="ticket-detail">Monitoring and alerting for the Zoho CRM webhook. Ensure lead submissions are being received and not silently failing.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner">-</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-94</span></td>
-          <td>
-            <div class="ticket-title">Blog / articles section</div>
-            <div class="ticket-detail">Content hub for aged care guides, news, and long-form SEO content. Full build — design, CMS, and content pipeline to spec.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner">-</span></td>
         </tr>
         <tr>
           <td><span class="ticket-id">TPW-95</span></td>
@@ -493,7 +681,7 @@
   </div>
 
   <!-- SECTION 3: BOTTLENECKS -->
-  <div class="section-header">
+  <div class="section-header reveal">
     <div class="section-badge blocked">Blocked</div>
     <div>
       <div class="section-title">Bottlenecks</div>
@@ -501,22 +689,11 @@
     </div>
   </div>
 
-  <div class="bottleneck-grid">
+  <div class="bottleneck-grid reveal">
     <div class="bottleneck-card">
       <div class="bn-label">Dev Capacity</div>
       <div class="bn-title">John no longer available</div>
       <div class="bn-desc">John owned the backend geographic data work. His departure leaves the suburb data enrichment pipeline unowned. No replacement assigned. These tickets are the dependency for the entire SEO content layer going live.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">TPW-79</span>
-        <span class="bn-ticket">TPW-80</span>
-        <span class="bn-ticket">TPW-81</span>
-        <span class="bn-ticket">TPW-88</span>
-      </div>
-    </div>
-    <div class="bottleneck-card">
-      <div class="bn-label">Data Access</div>
-      <div class="bn-title">DB access needed for geo work</div>
-      <div class="bn-desc">The geographic data and ACPR stats tickets require direct database access. Until access is provisioned and an owner assigned, the suburb page content layer cannot go live. This blocks SEO content generation for all 45k pages.</div>
       <div class="bn-tickets">
         <span class="bn-ticket">TPW-79</span>
         <span class="bn-ticket">TPW-80</span>
@@ -526,9 +703,17 @@
     <div class="bottleneck-card">
       <div class="bn-label">Leadership Decision</div>
       <div class="bn-title">Domain decision blocked on Luke</div>
-      <div class="bn-desc">The site cannot launch publicly or be marketed until a domain is confirmed. Luke / marketing team have not yet made a call. "Powered by Trilogy" branding question also open — Aaron (Legal) needs to be looped in before any external launch activity.</div>
+      <div class="bn-desc">The site cannot launch publicly or be marketed until a domain is confirmed. Luke / marketing team have not yet made a call. "Powered by Trilogy" branding question also open - Aaron (Legal) needs to be looped in.</div>
       <div class="bn-tickets">
         <span class="bn-ticket">TPW-95</span>
+      </div>
+    </div>
+    <div class="bottleneck-card">
+      <div class="bn-label">Team Intro Needed</div>
+      <div class="bn-title">Imran not formally introduced to dev team</div>
+      <div class="bn-desc">Leo, John, Mehrnaz keep coming up but Imran has no formal introduction. Leo is now actively asking dev questions via Teams. Nick needs to set up a joint session before vibe coding goes deeper.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">Nick to action</span>
       </div>
     </div>
     <div class="bottleneck-card amber">
@@ -540,25 +725,13 @@
         <span class="bn-ticket">Nick decision</span>
       </div>
     </div>
-    <div class="bottleneck-card amber">
-      <div class="bn-label">Team Reassignment</div>
-      <div class="bn-title">Databricks dashboards unowned</div>
-      <div class="bn-desc">TPW-60, 61, 62, 63, 64 (Databricks analytics dashboards) were reassigned to the data team after the original owner left. No confirmed owner on the data team. These are low urgency but will create a gap as the site scales.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">TPW-60</span>
-        <span class="bn-ticket">TPW-61</span>
-        <span class="bn-ticket">TPW-62</span>
-        <span class="bn-ticket">TPW-63</span>
-        <span class="bn-ticket">TPW-64</span>
-      </div>
-    </div>
   </div>
 
 </div>
 
 <!-- FOOTER -->
 <div class="page-footer">
-  <div class="footer-note">AgedCare Compare &mdash; Trilogy Care &mdash; Confidential &mdash; April 2026 &mdash; Status sourced from Jira (TPW tickets)</div>
+  <div class="footer-note">AgedCare Compare - Trilogy Care - Confidential - Updated 16 April 2026 - Status sourced from Jira (TPW tickets) and Imran's build log</div>
 </div>
 
 <script>
@@ -569,6 +742,31 @@
     const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
     el.style.width = pct + '%';
   });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Animated progress bars
+  const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const fills = entry.target.querySelectorAll('[data-width]');
+        fills.forEach((fill, i) => {
+          setTimeout(() => { fill.style.width = fill.dataset.width; }, i * 120);
+        });
+        barObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.progress-summary, .suburb-progress').forEach(el => barObserver.observe(el));
 </script>
 
 </body>
