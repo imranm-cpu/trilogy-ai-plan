@@ -1,0 +1,862 @@
+[
+  {
+    "suburb": "BONDI",
+    "state": "NSW",
+    "postcode": "2026",
+    "provider_count": 20,
+    "price_low": 56.04,
+    "price_high": 73.58,
+    "price_avg": 64.34,
+    "acpr_region": "Illawarra"
+  },
+  {
+    "suburb": "MANLY",
+    "state": "NSW",
+    "postcode": "2095",
+    "provider_count": 13,
+    "price_low": 71.79,
+    "price_high": 85.11,
+    "price_avg": 75.22,
+    "acpr_region": "New England"
+  },
+  {
+    "suburb": "CHATSWOOD",
+    "state": "NSW",
+    "postcode": "2067",
+    "provider_count": 9,
+    "price_low": 55.35,
+    "price_high": 72.75,
+    "price_avg": 63.93,
+    "acpr_region": "Central Coast"
+  },
+  {
+    "suburb": "PARRAMATTA",
+    "state": "NSW",
+    "postcode": "2150",
+    "provider_count": 22,
+    "price_low": 58.17,
+    "price_high": 74.72,
+    "price_avg": 64.2,
+    "acpr_region": "Sydney - South West"
+  },
+  {
+    "suburb": "PENRITH",
+    "state": "NSW",
+    "postcode": "2750",
+    "provider_count": 17,
+    "price_low": 62.5,
+    "price_high": 69.45,
+    "price_avg": 64.93,
+    "acpr_region": "Sydney - West"
+  },
+  {
+    "suburb": "CAMPBELLTOWN",
+    "state": "NSW",
+    "postcode": "2560",
+    "provider_count": 9,
+    "price_low": 62.87,
+    "price_high": 77.19,
+    "price_avg": 71.74,
+    "acpr_region": "Illawarra"
+  },
+  {
+    "suburb": "HORNSBY",
+    "state": "NSW",
+    "postcode": "2077",
+    "provider_count": 19,
+    "price_low": 64.74,
+    "price_high": 77.75,
+    "price_avg": 67.42,
+    "acpr_region": "New England"
+  },
+  {
+    "suburb": "CASTLE HILL",
+    "state": "NSW",
+    "postcode": "2154",
+    "provider_count": 18,
+    "price_low": 58.03,
+    "price_high": 70.8,
+    "price_avg": 63.57,
+    "acpr_region": "Far West NSW"
+  },
+  {
+    "suburb": "BLACKTOWN",
+    "state": "NSW",
+    "postcode": "2148",
+    "provider_count": 6,
+    "price_low": 76.05,
+    "price_high": 85.77,
+    "price_avg": 80.72,
+    "acpr_region": "South Eastern NSW"
+  },
+  {
+    "suburb": "LIVERPOOL",
+    "state": "NSW",
+    "postcode": "2170",
+    "provider_count": 6,
+    "price_low": 67.5,
+    "price_high": 81.59,
+    "price_avg": 71.23,
+    "acpr_region": "Riverina"
+  },
+  {
+    "suburb": "SUTHERLAND",
+    "state": "NSW",
+    "postcode": "2232",
+    "provider_count": 16,
+    "price_low": 74.66,
+    "price_high": 87.04,
+    "price_avg": 77.21,
+    "acpr_region": "Sydney - Eastern Suburbs"
+  },
+  {
+    "suburb": "WOLLONGONG",
+    "state": "NSW",
+    "postcode": "2500",
+    "provider_count": 18,
+    "price_low": 70.61,
+    "price_high": 82.2,
+    "price_avg": 72.73,
+    "acpr_region": "Central Coast"
+  },
+  {
+    "suburb": "NEWCASTLE",
+    "state": "NSW",
+    "postcode": "2300",
+    "provider_count": 8,
+    "price_low": 62.87,
+    "price_high": 76.33,
+    "price_avg": 65.66,
+    "acpr_region": "Central Coast"
+  },
+  {
+    "suburb": "GOSFORD",
+    "state": "NSW",
+    "postcode": "2250",
+    "provider_count": 15,
+    "price_low": 61.89,
+    "price_high": 73.57,
+    "price_avg": 66.99,
+    "acpr_region": "Illawarra"
+  },
+  {
+    "suburb": "MAITLAND",
+    "state": "NSW",
+    "postcode": "2320",
+    "provider_count": 16,
+    "price_low": 72.19,
+    "price_high": 79.34,
+    "price_avg": 74.78,
+    "acpr_region": "Mid North Coast"
+  },
+  {
+    "suburb": "TAMWORTH",
+    "state": "NSW",
+    "postcode": "2340",
+    "provider_count": 9,
+    "price_low": 75.09,
+    "price_high": 87.95,
+    "price_avg": 78.26,
+    "acpr_region": "Riverina"
+  },
+  {
+    "suburb": "WAGGA WAGGA",
+    "state": "NSW",
+    "postcode": "2650",
+    "provider_count": 16,
+    "price_low": 63.55,
+    "price_high": 78.39,
+    "price_avg": 71.64,
+    "acpr_region": "Riverina"
+  },
+  {
+    "suburb": "ALBURY",
+    "state": "NSW",
+    "postcode": "2640",
+    "provider_count": 16,
+    "price_low": 56.42,
+    "price_high": 74.29,
+    "price_avg": 64.28,
+    "acpr_region": "Hunter"
+  },
+  {
+    "suburb": "BATHURST",
+    "state": "NSW",
+    "postcode": "2795",
+    "provider_count": 20,
+    "price_low": 73.67,
+    "price_high": 85.2,
+    "price_avg": 77.49,
+    "acpr_region": "South Eastern NSW"
+  },
+  {
+    "suburb": "ORANGE",
+    "state": "NSW",
+    "postcode": "2800",
+    "provider_count": 9,
+    "price_low": 62.73,
+    "price_high": 72.39,
+    "price_avg": 65.75,
+    "acpr_region": "Sydney - Eastern Suburbs"
+  },
+  {
+    "suburb": "DUBBO",
+    "state": "NSW",
+    "postcode": "2830",
+    "provider_count": 14,
+    "price_low": 60.4,
+    "price_high": 73.39,
+    "price_avg": 66.7,
+    "acpr_region": "Riverina"
+  },
+  {
+    "suburb": "COFFS HARBOUR",
+    "state": "NSW",
+    "postcode": "2450",
+    "provider_count": 22,
+    "price_low": 68.56,
+    "price_high": 83.68,
+    "price_avg": 76.79,
+    "acpr_region": "Illawarra"
+  },
+  {
+    "suburb": "PORT MACQUARIE",
+    "state": "NSW",
+    "postcode": "2444",
+    "provider_count": 8,
+    "price_low": 75.26,
+    "price_high": 90.44,
+    "price_avg": 79.85,
+    "acpr_region": "Sydney - Northern Beaches"
+  },
+  {
+    "suburb": "BALLINA",
+    "state": "NSW",
+    "postcode": "2478",
+    "provider_count": 7,
+    "price_low": 63.58,
+    "price_high": 72.37,
+    "price_avg": 66.38,
+    "acpr_region": "Northern NSW"
+  },
+  {
+    "suburb": "LISMORE",
+    "state": "NSW",
+    "postcode": "2480",
+    "provider_count": 13,
+    "price_low": 64.1,
+    "price_high": 81.12,
+    "price_avg": 72.18,
+    "acpr_region": "Murray"
+  },
+  {
+    "suburb": "BAULKHAM HILLS",
+    "state": "NSW",
+    "postcode": "2153",
+    "provider_count": 6,
+    "price_low": 57.91,
+    "price_high": 70.62,
+    "price_avg": 65.77,
+    "acpr_region": "Sydney - Northern Beaches"
+  },
+  {
+    "suburb": "DEE WHY",
+    "state": "NSW",
+    "postcode": "2099",
+    "provider_count": 14,
+    "price_low": 66.03,
+    "price_high": 74.1,
+    "price_avg": 69.38,
+    "acpr_region": "Sydney - West"
+  },
+  {
+    "suburb": "CRONULLA",
+    "state": "NSW",
+    "postcode": "2230",
+    "provider_count": 19,
+    "price_low": 70.74,
+    "price_high": 88.29,
+    "price_avg": 78.33,
+    "acpr_region": "Illawarra"
+  },
+  {
+    "suburb": "RANDWICK",
+    "state": "NSW",
+    "postcode": "2031",
+    "provider_count": 19,
+    "price_low": 64.18,
+    "price_high": 77.79,
+    "price_avg": 72.55,
+    "acpr_region": "South Eastern NSW"
+  },
+  {
+    "suburb": "EPPING",
+    "state": "NSW",
+    "postcode": "2121",
+    "provider_count": 10,
+    "price_low": 63.34,
+    "price_high": 78.55,
+    "price_avg": 68.22,
+    "acpr_region": "Northern NSW"
+  },
+  {
+    "suburb": "RICHMOND",
+    "state": "VIC",
+    "postcode": "3121",
+    "provider_count": 11,
+    "price_low": 62.54,
+    "price_high": 75.59,
+    "price_avg": 69.21,
+    "acpr_region": "Gippsland"
+  },
+  {
+    "suburb": "FITZROY",
+    "state": "VIC",
+    "postcode": "3065",
+    "provider_count": 13,
+    "price_low": 67.22,
+    "price_high": 75.62,
+    "price_avg": 71.41,
+    "acpr_region": "Hume"
+  },
+  {
+    "suburb": "ST KILDA",
+    "state": "VIC",
+    "postcode": "3182",
+    "provider_count": 13,
+    "price_low": 61.85,
+    "price_high": 76.61,
+    "price_avg": 66.36,
+    "acpr_region": "Melbourne - West"
+  },
+  {
+    "suburb": "SOUTH YARRA",
+    "state": "VIC",
+    "postcode": "3141",
+    "provider_count": 19,
+    "price_low": 53.88,
+    "price_high": 70.42,
+    "price_avg": 61.18,
+    "acpr_region": "Loddon Mallee"
+  },
+  {
+    "suburb": "HAWTHORN",
+    "state": "VIC",
+    "postcode": "3122",
+    "provider_count": 5,
+    "price_low": 58.57,
+    "price_high": 73.64,
+    "price_avg": 65.91,
+    "acpr_region": "Hume"
+  },
+  {
+    "suburb": "BOX HILL",
+    "state": "VIC",
+    "postcode": "3128",
+    "provider_count": 20,
+    "price_low": 56.38,
+    "price_high": 69.34,
+    "price_avg": 61.93,
+    "acpr_region": "Loddon Mallee"
+  },
+  {
+    "suburb": "DONCASTER",
+    "state": "VIC",
+    "postcode": "3108",
+    "provider_count": 5,
+    "price_low": 60.03,
+    "price_high": 78.79,
+    "price_avg": 68.28,
+    "acpr_region": "Ovens Murray"
+  },
+  {
+    "suburb": "FRANKSTON",
+    "state": "VIC",
+    "postcode": "3199",
+    "provider_count": 19,
+    "price_low": 67.79,
+    "price_high": 83.04,
+    "price_avg": 76.28,
+    "acpr_region": "Barwon"
+  },
+  {
+    "suburb": "DANDENONG",
+    "state": "VIC",
+    "postcode": "3175",
+    "provider_count": 12,
+    "price_low": 59.29,
+    "price_high": 75.11,
+    "price_avg": 66.36,
+    "acpr_region": "Gippsland"
+  },
+  {
+    "suburb": "RINGWOOD",
+    "state": "VIC",
+    "postcode": "3134",
+    "provider_count": 12,
+    "price_low": 72.27,
+    "price_high": 86.16,
+    "price_avg": 76.19,
+    "acpr_region": "Ovens Murray"
+  },
+  {
+    "suburb": "GEELONG",
+    "state": "VIC",
+    "postcode": "3220",
+    "provider_count": 5,
+    "price_low": 70.93,
+    "price_high": 84.38,
+    "price_avg": 73.99,
+    "acpr_region": "Melbourne - South East"
+  },
+  {
+    "suburb": "BALLARAT",
+    "state": "VIC",
+    "postcode": "3350",
+    "provider_count": 13,
+    "price_low": 67.05,
+    "price_high": 76.43,
+    "price_avg": 69.45,
+    "acpr_region": "Ballarat"
+  },
+  {
+    "suburb": "BENDIGO",
+    "state": "VIC",
+    "postcode": "3550",
+    "provider_count": 12,
+    "price_low": 55.14,
+    "price_high": 68.46,
+    "price_avg": 61.07,
+    "acpr_region": "Melbourne - West"
+  },
+  {
+    "suburb": "SHEPPARTON",
+    "state": "VIC",
+    "postcode": "3630",
+    "provider_count": 16,
+    "price_low": 66.96,
+    "price_high": 79.8,
+    "price_avg": 74.82,
+    "acpr_region": "Loddon Mallee"
+  },
+  {
+    "suburb": "MILDURA",
+    "state": "VIC",
+    "postcode": "3500",
+    "provider_count": 15,
+    "price_low": 64.1,
+    "price_high": 79.66,
+    "price_avg": 71.53,
+    "acpr_region": "Melbourne - Inner"
+  },
+  {
+    "suburb": "TRARALGON",
+    "state": "VIC",
+    "postcode": "3844",
+    "provider_count": 15,
+    "price_low": 72.88,
+    "price_high": 82.49,
+    "price_avg": 76.03,
+    "acpr_region": "Gippsland"
+  },
+  {
+    "suburb": "PAKENHAM",
+    "state": "VIC",
+    "postcode": "3810",
+    "provider_count": 11,
+    "price_low": 59.21,
+    "price_high": 75.58,
+    "price_avg": 66.83,
+    "acpr_region": "Melbourne - North East"
+  },
+  {
+    "suburb": "CRAIGIEBURN",
+    "state": "VIC",
+    "postcode": "3064",
+    "provider_count": 9,
+    "price_low": 69.25,
+    "price_high": 85.55,
+    "price_avg": 76.33,
+    "acpr_region": "Melbourne - North East"
+  },
+  {
+    "suburb": "SUNBURY",
+    "state": "VIC",
+    "postcode": "3429",
+    "provider_count": 18,
+    "price_low": 71.4,
+    "price_high": 84.92,
+    "price_avg": 77.47,
+    "acpr_region": "Melbourne - North West"
+  },
+  {
+    "suburb": "WERRIBEE",
+    "state": "VIC",
+    "postcode": "3030",
+    "provider_count": 13,
+    "price_low": 70.25,
+    "price_high": 80.98,
+    "price_avg": 72.95,
+    "acpr_region": "Bendigo"
+  },
+  {
+    "suburb": "NEW FARM",
+    "state": "QLD",
+    "postcode": "4005",
+    "provider_count": 6,
+    "price_low": 58.32,
+    "price_high": 67.93,
+    "price_avg": 63.22,
+    "acpr_region": "Brisbane - South"
+  },
+  {
+    "suburb": "TOOWONG",
+    "state": "QLD",
+    "postcode": "4066",
+    "provider_count": 11,
+    "price_low": 59.24,
+    "price_high": 74.19,
+    "price_avg": 65.19,
+    "acpr_region": "Brisbane - Inner City"
+  },
+  {
+    "suburb": "INDOOROOPILLY",
+    "state": "QLD",
+    "postcode": "4068",
+    "provider_count": 10,
+    "price_low": 54.71,
+    "price_high": 66.24,
+    "price_avg": 59.45,
+    "acpr_region": "Sunshine Coast"
+  },
+  {
+    "suburb": "CHERMSIDE",
+    "state": "QLD",
+    "postcode": "4032",
+    "provider_count": 13,
+    "price_low": 65.03,
+    "price_high": 73.4,
+    "price_avg": 67.87,
+    "acpr_region": "South West Queensland"
+  },
+  {
+    "suburb": "CARINDALE",
+    "state": "QLD",
+    "postcode": "4152",
+    "provider_count": 9,
+    "price_low": 60.82,
+    "price_high": 74.28,
+    "price_avg": 64.71,
+    "acpr_region": "Gold Coast"
+  },
+  {
+    "suburb": "SURFERS PARADISE",
+    "state": "QLD",
+    "postcode": "4217",
+    "provider_count": 18,
+    "price_low": 61.23,
+    "price_high": 72.48,
+    "price_avg": 63.74,
+    "acpr_region": "Brisbane - North"
+  },
+  {
+    "suburb": "NOOSA HEADS",
+    "state": "QLD",
+    "postcode": "4567",
+    "provider_count": 12,
+    "price_low": 54.02,
+    "price_high": 68.39,
+    "price_avg": 59.17,
+    "acpr_region": "Gold Coast"
+  },
+  {
+    "suburb": "CAIRNS",
+    "state": "QLD",
+    "postcode": "4870",
+    "provider_count": 10,
+    "price_low": 57.73,
+    "price_high": 70.18,
+    "price_avg": 61.45,
+    "acpr_region": "North Queensland"
+  },
+  {
+    "suburb": "TOWNSVILLE",
+    "state": "QLD",
+    "postcode": "4810",
+    "provider_count": 14,
+    "price_low": 56.65,
+    "price_high": 67.54,
+    "price_avg": 60.39,
+    "acpr_region": "Brisbane - Inner City"
+  },
+  {
+    "suburb": "TOOWOOMBA",
+    "state": "QLD",
+    "postcode": "4350",
+    "provider_count": 5,
+    "price_low": 62.58,
+    "price_high": 70.57,
+    "price_avg": 65.68,
+    "acpr_region": "Far North Queensland"
+  },
+  {
+    "suburb": "ROCKHAMPTON",
+    "state": "QLD",
+    "postcode": "4700",
+    "provider_count": 7,
+    "price_low": 61.78,
+    "price_high": 73.17,
+    "price_avg": 65.95,
+    "acpr_region": "North Queensland"
+  },
+  {
+    "suburb": "MACKAY",
+    "state": "QLD",
+    "postcode": "4740",
+    "provider_count": 15,
+    "price_low": 61.8,
+    "price_high": 74.09,
+    "price_avg": 67.36,
+    "acpr_region": "Brisbane - Inner City"
+  },
+  {
+    "suburb": "BUNDABERG",
+    "state": "QLD",
+    "postcode": "4670",
+    "provider_count": 6,
+    "price_low": 53.81,
+    "price_high": 64.27,
+    "price_avg": 58.52,
+    "acpr_region": "Gold Coast"
+  },
+  {
+    "suburb": "HERVEY BAY",
+    "state": "QLD",
+    "postcode": "4655",
+    "provider_count": 18,
+    "price_low": 56.06,
+    "price_high": 66.79,
+    "price_avg": 61.48,
+    "acpr_region": "Gold Coast"
+  },
+  {
+    "suburb": "FREMANTLE",
+    "state": "WA",
+    "postcode": "6160",
+    "provider_count": 7,
+    "price_low": 68.35,
+    "price_high": 80.25,
+    "price_avg": 71.69,
+    "acpr_region": "Perth - South West"
+  },
+  {
+    "suburb": "SUBIACO",
+    "state": "WA",
+    "postcode": "6008",
+    "provider_count": 6,
+    "price_low": 71.56,
+    "price_high": 80.82,
+    "price_avg": 74.11,
+    "acpr_region": "Perth - South West"
+  },
+  {
+    "suburb": "JOONDALUP",
+    "state": "WA",
+    "postcode": "6027",
+    "provider_count": 7,
+    "price_low": 57.47,
+    "price_high": 75.29,
+    "price_avg": 65.07,
+    "acpr_region": "Perth - North West"
+  },
+  {
+    "suburb": "ROCKINGHAM",
+    "state": "WA",
+    "postcode": "6168",
+    "provider_count": 3,
+    "price_low": 65.19,
+    "price_high": 75.45,
+    "price_avg": 68.31,
+    "acpr_region": "Perth - South East"
+  },
+  {
+    "suburb": "MANDURAH",
+    "state": "WA",
+    "postcode": "6210",
+    "provider_count": 16,
+    "price_low": 56.97,
+    "price_high": 72.94,
+    "price_avg": 63.01,
+    "acpr_region": "Pilbara"
+  },
+  {
+    "suburb": "BUNBURY",
+    "state": "WA",
+    "postcode": "6230",
+    "provider_count": 5,
+    "price_low": 56.21,
+    "price_high": 69.71,
+    "price_avg": 63.54,
+    "acpr_region": "Mid West"
+  },
+  {
+    "suburb": "GLENELG",
+    "state": "SA",
+    "postcode": "5045",
+    "provider_count": 13,
+    "price_low": 51.59,
+    "price_high": 65,
+    "price_avg": 58.88,
+    "acpr_region": "Adelaide - Central and Hills"
+  },
+  {
+    "suburb": "NORWOOD",
+    "state": "SA",
+    "postcode": "5067",
+    "provider_count": 7,
+    "price_low": 60.25,
+    "price_high": 72.21,
+    "price_avg": 65.31,
+    "acpr_region": "Adelaide - Central and Hills"
+  },
+  {
+    "suburb": "UNLEY",
+    "state": "SA",
+    "postcode": "5061",
+    "provider_count": 7,
+    "price_low": 52.09,
+    "price_high": 60.45,
+    "price_avg": 55.5,
+    "acpr_region": "Limestone Coast"
+  },
+  {
+    "suburb": "PROSPECT",
+    "state": "SA",
+    "postcode": "5082",
+    "provider_count": 11,
+    "price_low": 59.38,
+    "price_high": 68.7,
+    "price_avg": 63.98,
+    "acpr_region": "Far North SA"
+  },
+  {
+    "suburb": "MOUNT GAMBIER",
+    "state": "SA",
+    "postcode": "5290",
+    "provider_count": 14,
+    "price_low": 51.07,
+    "price_high": 67.52,
+    "price_avg": 57.86,
+    "acpr_region": "Murraylands and Riverland"
+  },
+  {
+    "suburb": "WHYALLA",
+    "state": "SA",
+    "postcode": "5600",
+    "provider_count": 10,
+    "price_low": 52.71,
+    "price_high": 68.19,
+    "price_avg": 58.42,
+    "acpr_region": "Adelaide - South"
+  },
+  {
+    "suburb": "HOBART",
+    "state": "TAS",
+    "postcode": "7000",
+    "provider_count": 6,
+    "price_low": 50.83,
+    "price_high": 59.58,
+    "price_avg": 55.01,
+    "acpr_region": "Hobart"
+  },
+  {
+    "suburb": "LAUNCESTON",
+    "state": "TAS",
+    "postcode": "7250",
+    "provider_count": 9,
+    "price_low": 53.11,
+    "price_high": 66.95,
+    "price_avg": 57.68,
+    "acpr_region": "Hobart"
+  },
+  {
+    "suburb": "DEVONPORT",
+    "state": "TAS",
+    "postcode": "7310",
+    "provider_count": 7,
+    "price_low": 51.92,
+    "price_high": 59.35,
+    "price_avg": 55.28,
+    "acpr_region": "South East TAS"
+  },
+  {
+    "suburb": "BURNIE",
+    "state": "TAS",
+    "postcode": "7320",
+    "provider_count": 8,
+    "price_low": 58.03,
+    "price_high": 68.96,
+    "price_avg": 60.24,
+    "acpr_region": "South East TAS"
+  },
+  {
+    "suburb": "DARWIN",
+    "state": "NT",
+    "postcode": "0800",
+    "provider_count": 6,
+    "price_low": 80.46,
+    "price_high": 90.85,
+    "price_avg": 82.66,
+    "acpr_region": "Katherine"
+  },
+  {
+    "suburb": "ALICE SPRINGS",
+    "state": "NT",
+    "postcode": "0870",
+    "provider_count": 3,
+    "price_low": 80.25,
+    "price_high": 91.11,
+    "price_avg": 85.36,
+    "acpr_region": "Barkly"
+  },
+  {
+    "suburb": "CANBERRA",
+    "state": "ACT",
+    "postcode": "2600",
+    "provider_count": 5,
+    "price_low": 65.47,
+    "price_high": 73.48,
+    "price_avg": 68.5,
+    "acpr_region": "Australian Capital Territory"
+  },
+  {
+    "suburb": "GUNGAHLIN",
+    "state": "ACT",
+    "postcode": "2912",
+    "provider_count": 14,
+    "price_low": 72.32,
+    "price_high": 85.33,
+    "price_avg": 76.4,
+    "acpr_region": "Australian Capital Territory"
+  },
+  {
+    "suburb": "TUGGERANONG",
+    "state": "ACT",
+    "postcode": "2900",
+    "provider_count": 13,
+    "price_low": 70.39,
+    "price_high": 79.76,
+    "price_avg": 73.48,
+    "acpr_region": "Australian Capital Territory"
+  },
+  {
+    "suburb": "BELCONNEN",
+    "state": "ACT",
+    "postcode": "2617",
+    "provider_count": 10,
+    "price_low": 66.38,
+    "price_high": 79.61,
+    "price_avg": 71.04,
+    "acpr_region": "Australian Capital Territory"
+  }
+]

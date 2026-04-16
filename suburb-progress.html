@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TPW-88 — Suburb Content Generation Progress</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0d1b2e;
+    color: #e8edf5;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    padding: 40px 32px;
+    min-height: 100vh;
+  }
+
+  h1 { font-size: 20px; font-weight: 700; color: #f8fafc; margin-bottom: 4px; }
+  .subtitle { color: #7f96b2; font-size: 13px; margin-bottom: 32px; }
+
+  .summary-row {
+    display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 18px 24px;
+    flex: 1; min-width: 140px;
+  }
+  .stat-label { font-size: 11px; color: #7f96b2; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .stat-value { font-size: 28px; font-weight: 700; color: #f8fafc; }
+  .stat-sub { font-size: 11px; color: #7f96b2; margin-top: 2px; }
+
+  .overall-bar-wrap { margin-bottom: 40px; }
+  .overall-label { display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .overall-label span { font-size: 13px; color: #7f96b2; }
+  .overall-label strong { color: #f8fafc; }
+  .bar-outer {
+    width: 100%; height: 24px; background: rgba(255,255,255,0.06);
+    border-radius: 99px; overflow: hidden;
+  }
+  .bar-inner {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, #00b894, #54a0ff);
+    transition: width 1s ease;
+    position: relative;
+  }
+  .bar-inner::after {
+    content: attr(data-pct);
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px; font-weight: 700; color: #fff;
+  }
+
+  .states-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  .state-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+  .state-card.complete { border-color: rgba(0,184,148,0.4); background: rgba(0,184,148,0.06); }
+  .state-card.in-progress { border-color: rgba(84,160,255,0.4); background: rgba(84,160,255,0.05); }
+  .state-card.pending { border-color: rgba(255,255,255,0.06); opacity: 0.6; }
+
+  .state-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .state-name { font-size: 16px; font-weight: 700; color: #f8fafc; }
+  .state-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+    padding: 3px 8px; border-radius: 99px; text-transform: uppercase;
+  }
+  .badge-done    { background: rgba(0,184,148,0.2); color: #00b894; }
+  .badge-active  { background: rgba(84,160,255,0.2); color: #54a0ff; }
+  .badge-pending { background: rgba(255,255,255,0.08); color: #7f96b2; }
+
+  .state-bar-outer {
+    width: 100%; height: 8px; background: rgba(255,255,255,0.08);
+    border-radius: 99px; overflow: hidden; margin-bottom: 10px;
+  }
+  .state-bar-inner { height: 100%; border-radius: 99px; }
+  .bar-green  { background: #00b894; }
+  .bar-blue   { background: linear-gradient(90deg, #00b894, #54a0ff); }
+  .bar-grey   { background: rgba(255,255,255,0.15); }
+
+  .state-counts { display: flex; justify-content: space-between; }
+  .state-counts span { font-size: 12px; color: #7f96b2; }
+  .state-counts strong { color: #e8edf5; }
+
+  .map-section { margin-bottom: 40px; }
+  .map-section h2 { font-size: 14px; font-weight: 600; color: #7f96b2; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px; }
+
+  .australia-map {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .australia-map svg { width: 100%; height: auto; }
+
+  .tick { animation: tick 2s ease-in-out infinite; }
+  @keyframes tick {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .eta-section {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex; gap: 24px; align-items: center; flex-wrap: wrap;
+  }
+  .eta-section .eta-item { flex: 1; min-width: 120px; }
+  .eta-label { font-size: 11px; color: #7f96b2; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .eta-value { font-size: 18px; font-weight: 700; color: #f8fafc; }
+
+  .pulse {
+    display: inline-block; width: 8px; height: 8px;
+    background: #00b894; border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(0,184,148,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(0,184,148,0); }
+  }
+</style>
+</head>
+<body>
+
+<h1>TPW-88 — Suburb Content Generation</h1>
+<p class="subtitle">AgedCare Compare &mdash; AI paragraph generation progress &mdash; Updated 10 April 2026</p>
+
+<!-- Summary stats -->
+<div class="summary-row">
+  <div class="stat-card">
+    <div class="stat-label">Generated</div>
+    <div class="stat-value">8,808</div>
+    <div class="stat-sub">unique paragraphs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Remaining</div>
+    <div class="stat-value">8,675</div>
+    <div class="stat-sub">suburbs to go</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total</div>
+    <div class="stat-value">17,483</div>
+    <div class="stat-sub">Australian suburbs</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Errors</div>
+    <div class="stat-value" style="color:#00b894">0</div>
+    <div class="stat-sub">running clean</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Est. completion</div>
+    <div class="stat-value" style="font-size:20px;">Tonight</div>
+    <div class="stat-sub">~10-11pm AEST</div>
+  </div>
+</div>
+
+<!-- Overall progress bar -->
+<div class="overall-bar-wrap">
+  <div class="overall-label">
+    <span><span class="pulse"></span><strong>Running</strong> &mdash; claude-haiku-4-5</span>
+    <strong>50.4% complete</strong>
+  </div>
+  <div class="bar-outer">
+    <div class="bar-inner" style="width: 50.4%" data-pct="50.4%"></div>
+  </div>
+</div>
+
+<!-- State breakdown -->
+<div class="map-section">
+  <h2>Progress by State</h2>
+  <div class="states-grid">
+
+    <div class="state-card complete">
+      <div class="state-header">
+        <span class="state-name">ACT</span>
+        <span class="state-badge badge-done">Complete</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-green" style="width:100%"></div></div>
+      <div class="state-counts"><span>Done</span><strong>169 / 169</strong></div>
+    </div>
+
+    <div class="state-card complete">
+      <div class="state-header">
+        <span class="state-name">NSW</span>
+        <span class="state-badge badge-done">Complete</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-green" style="width:100%"></div></div>
+      <div class="state-counts"><span>Done</span><strong>5,108 / 5,108</strong></div>
+    </div>
+
+    <div class="state-card complete">
+      <div class="state-header">
+        <span class="state-name">NT</span>
+        <span class="state-badge badge-done">Complete</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-green" style="width:100%"></div></div>
+      <div class="state-counts"><span>Done</span><strong>390 / 390</strong></div>
+    </div>
+
+    <div class="state-card in-progress">
+      <div class="state-header">
+        <span class="state-name">QLD</span>
+        <span class="state-badge badge-active">In Progress</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-blue" style="width:81.7%"></div></div>
+      <div class="state-counts"><span>3,133 done</span><strong>3,133 / 3,834</strong></div>
+    </div>
+
+    <div class="state-card pending">
+      <div class="state-header">
+        <span class="state-name">SA</span>
+        <span class="state-badge badge-pending">Pending</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-grey" style="width:0%"></div></div>
+      <div class="state-counts"><span>Not started</span><strong>0 / 2,033</strong></div>
+    </div>
+
+    <div class="state-card pending">
+      <div class="state-header">
+        <span class="state-name">TAS</span>
+        <span class="state-badge badge-pending">Pending</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-grey" style="width:0%"></div></div>
+      <div class="state-counts"><span>Not started</span><strong>0 / 807</strong></div>
+    </div>
+
+    <div class="state-card pending">
+      <div class="state-header">
+        <span class="state-name">VIC</span>
+        <span class="state-badge badge-pending">Pending</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-grey" style="width:0%"></div></div>
+      <div class="state-counts"><span>Not started</span><strong>0 / 3,337</strong></div>
+    </div>
+
+    <div class="state-card pending">
+      <div class="state-header">
+        <span class="state-name">WA</span>
+        <span class="state-badge badge-pending">Pending</span>
+      </div>
+      <div class="state-bar-outer"><div class="state-bar-inner bar-grey" style="width:0%"></div></div>
+      <div class="state-counts"><span>Not started</span><strong>0 / 1,805</strong></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ETA -->
+<div class="eta-section">
+  <div class="eta-item">
+    <div class="eta-label">Model</div>
+    <div class="eta-value">Haiku 4.5</div>
+  </div>
+  <div class="eta-item">
+    <div class="eta-label">Rate</div>
+    <div class="eta-value">~2/min</div>
+  </div>
+  <div class="eta-item">
+    <div class="eta-label">Errors so far</div>
+    <div class="eta-value" style="color:#00b894">0</div>
+  </div>
+  <div class="eta-item">
+    <div class="eta-label">Output size</div>
+    <div class="eta-value">9.6 MB</div>
+  </div>
+  <div class="eta-item">
+    <div class="eta-label">Est. final size</div>
+    <div class="eta-value">~19 MB</div>
+  </div>
+  <div class="eta-item">
+    <div class="eta-label">Next step</div>
+    <div class="eta-value" style="font-size:13px; color:#7f96b2">Hand JSON to dev team → INSERT into suburb_content table</div>
+  </div>
+</div>
+
+</body>
+</html>
