@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS | Trilogy AI</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --deep: #060d17;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--deep); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--teal), var(--amber)); width: 0%; z-index: 300; transition: width 0.1s; }
+
+  /* ---- NAV ---- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 500; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .snav-tab:hover { color: #e2e8f0; }
+  .snav-tab.active { color: #e2e8f0; border-bottom-color: var(--red); }
+  .snav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+  .snav-ext { font-size: 11px; color: #64748b; text-decoration: none; transition: color 0.15s; }
+  .snav-ext:hover { color: #e2e8f0; }
+  .snav-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); text-decoration: none; }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* ---- HEADER ---- */
+  .j-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; background: #0a1525;
+    border-bottom: 1px solid var(--border);
+  }
+  .j-header-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--red);
+  }
+  .j-header-text h1 {
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
+  }
+  .j-header-text p {
+    font-size: 11px; color: var(--muted); margin-top: 1px;
+  }
+  .j-status-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(0,184,148,0.08); border: 1px solid rgba(0,184,148,0.25);
+    border-radius: 4px; padding: 3px 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--teal);
+  }
+  .j-status-badge.warning { background: rgba(243,156,18,0.08); border-color: rgba(243,156,18,0.25); color: var(--amber); }
+  .j-status-badge.fail { background: rgba(231,76,60,0.08); border-color: rgba(231,76,60,0.25); color: var(--red); }
+  .j-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 1.5s infinite; }
+  .j-status-badge.warning .j-status-dot { background: var(--amber); }
+  .j-status-badge.fail .j-status-dot { background: var(--red); }
+  .j-refresh { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .j-refresh-time { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; }
+  .j-refresh-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .j-refresh-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* ---- LAYOUT ---- */
+  .j-body { display: flex; min-height: calc(100vh - 52px - 52px); }
+  .j-sidebar {
+    width: 260px; flex-shrink: 0; background: #0a1525;
+    border-right: 1px solid var(--border); overflow-y: auto;
+    padding: 20px 16px;
+  }
+  .j-main { flex: 1; overflow: auto; padding: 20px 28px; }
+
+  /* ---- SIDEBAR ---- */
+  .j-sb-section { margin-bottom: 24px; }
+  .j-sb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #3a5572; margin-bottom: 10px; }
+  .j-sb-stat { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .j-sb-stat-label { font-size: 11px; color: var(--muted); }
+  .j-sb-stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'Courier New', monospace; }
+  .j-sb-stat-value.teal { color: var(--teal); }
+  .j-sb-stat-value.amber { color: var(--amber); }
+  .j-sb-stat-value.red { color: var(--red); }
+
+  .j-loop-list { list-style: none; }
+  .j-loop-item { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+  .j-loop-item:last-child { border-bottom: none; }
+  .j-loop-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .j-loop-dot.pass { background: var(--teal); }
+  .j-loop-dot.warning { background: var(--amber); }
+  .j-loop-dot.fail { background: var(--red); }
+  .j-loop-dot.idle { background: #334155; }
+  .j-loop-name { flex: 1; }
+  .j-loop-time { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; }
+
+  /* ---- STATUS CARDS ---- */
+  .j-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .j-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; transition: border-color 0.2s;
+  }
+  .j-card:hover { border-color: var(--border-strong); }
+  .j-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .j-card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .j-card-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .j-card-badge.pass { background: rgba(0,184,148,0.12); color: var(--teal); }
+  .j-card-badge.warning { background: rgba(243,156,18,0.12); color: var(--amber); }
+  .j-card-badge.fail { background: rgba(231,76,60,0.12); color: var(--red); }
+  .j-card-badge.idle { background: rgba(255,255,255,0.05); color: #475569; }
+  .j-card-summary { font-size: 12px; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+  .j-card-meta { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; }
+
+  /* ---- ALERT FEED ---- */
+  .j-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+  }
+  .j-section-count {
+    background: rgba(231,76,60,0.12); color: var(--red);
+    font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  }
+  .j-alert-feed { margin-bottom: 28px; }
+  .j-alert {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px 16px; background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 6px; margin-bottom: 8px; transition: border-color 0.2s;
+  }
+  .j-alert:hover { border-color: var(--border-strong); }
+  .j-alert.fail { border-left: 3px solid var(--red); }
+  .j-alert.warning { border-left: 3px solid var(--amber); }
+  .j-alert-icon { font-size: 14px; margin-top: 1px; }
+  .j-alert-body { flex: 1; }
+  .j-alert-type { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 2px; }
+  .j-alert-msg { font-size: 12px; color: var(--text); line-height: 1.5; }
+  .j-alert-time { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; margin-top: 4px; }
+
+  /* ---- HISTORY TABLE ---- */
+  .j-table-wrap { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .j-table { width: 100%; border-collapse: collapse; }
+  .j-table th {
+    text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #3a5572;
+    background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+  }
+  .j-table td {
+    padding: 10px 14px; font-size: 12px; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .j-table tr:last-child td { border-bottom: none; }
+  .j-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ---- EMPTY STATE ---- */
+  .j-empty {
+    text-align: center; padding: 60px 20px; color: var(--muted);
+  }
+  .j-empty-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.3; }
+  .j-empty-title { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .j-empty-sub { font-size: 12px; color: var(--muted); max-width: 400px; margin: 0 auto; }
+
+  /* ---- LOADING ---- */
+  .j-loading { display: flex; align-items: center; justify-content: center; height: 200px; }
+  .j-spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--red); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---- TABS ---- */
+  .j-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; width: fit-content; }
+  .j-tab-btn {
+    background: none; border: none; padding: 6px 16px; font-size: 11px; font-weight: 600;
+    color: #475569; cursor: pointer; border-radius: 4px; transition: all 0.15s;
+  }
+  .j-tab-btn:hover { color: var(--text); }
+  .j-tab-btn.active { background: rgba(255,255,255,0.08); color: var(--text); }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 45 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    <a class="snav-tab" href="agedcare-compare.html"><span class="snav-dot" style="background:#f97316;"></span> AgedCare Compare</a>
+    <a class="snav-tab active" href="jarvis.html"><span class="snav-dot" style="background:#e74c3c;"></span> JARVIS</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://grow.trilogycare.com.au/admin/jarvis" target="_blank">Grow Admin</a>
+    <a class="snav-live" href="https://grow.trilogycare.com.au" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="j-header">
+  <div class="j-header-icon">J</div>
+  <div class="j-header-text">
+    <h1>JARVIS</h1>
+    <p>Just A Rather Very Intelligent System - Personal Intelligence Layer</p>
+  </div>
+  <div class="j-status-badge" id="globalStatus">
+    <span class="j-status-dot"></span>
+    ALL SYSTEMS OPERATIONAL
+  </div>
+  <div class="j-refresh">
+    <span class="j-refresh-time" id="lastRefresh">--</span>
+    <button class="j-refresh-btn" onclick="loadData()">Refresh</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="j-body">
+
+  <!-- SIDEBAR -->
+  <aside class="j-sidebar">
+    <div class="j-sb-section">
+      <div class="j-sb-label">System Stats</div>
+      <div class="j-sb-stat">
+        <span class="j-sb-stat-label">Total Checks</span>
+        <span class="j-sb-stat-value teal" id="statTotal">--</span>
+      </div>
+      <div class="j-sb-stat">
+        <span class="j-sb-stat-label">Alerts Fired</span>
+        <span class="j-sb-stat-value amber" id="statAlerts">--</span>
+      </div>
+      <div class="j-sb-stat">
+        <span class="j-sb-stat-label">Uptime Rate</span>
+        <span class="j-sb-stat-value teal" id="statUptime">--</span>
+      </div>
+    </div>
+
+    <div class="j-sb-section">
+      <div class="j-sb-label">Monitoring Loops</div>
+      <ul class="j-loop-list" id="loopList">
+        <li class="j-loop-item"><span class="j-loop-dot idle"></span><span class="j-loop-name">Platform Health</span><span class="j-loop-time">30m</span></li>
+        <li class="j-loop-item"><span class="j-loop-dot idle"></span><span class="j-loop-name">Linear Board</span><span class="j-loop-time">3h</span></li>
+        <li class="j-loop-item"><span class="j-loop-dot idle"></span><span class="j-loop-name">Vercel Deploys</span><span class="j-loop-time">3h</span></li>
+        <li class="j-loop-item"><span class="j-loop-dot idle"></span><span class="j-loop-name">Asana Intake</span><span class="j-loop-time">3h</span></li>
+        <li class="j-loop-item"><span class="j-loop-dot idle"></span><span class="j-loop-name">Nick Signals</span><span class="j-loop-time">2h</span></li>
+      </ul>
+    </div>
+
+    <div class="j-sb-section">
+      <div class="j-sb-label">Architecture</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Core</strong> - Grow App</div>
+        <div style="font-size:10px;color:#3a5572;margin-bottom:10px;">API + DB + Admin Panel</div>
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Orchestrator</strong> - EA Demo</div>
+        <div style="font-size:10px;color:#3a5572;">Crons + Agent Logic</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="j-main" id="mainContent">
+
+    <!-- STATUS CARDS -->
+    <div class="j-cards" id="statusCards">
+      <!-- Populated by JS -->
+    </div>
+
+    <!-- TABS -->
+    <div class="j-tabs">
+      <button class="j-tab-btn active" data-tab="alerts" onclick="switchTab('alerts')">Alerts</button>
+      <button class="j-tab-btn" data-tab="history" onclick="switchTab('history')">Full History</button>
+    </div>
+
+    <!-- ALERTS -->
+    <div id="alertsTab">
+      <div class="j-section-title">
+        Recent Alerts <span class="j-section-count" id="alertCount">0</span>
+      </div>
+      <div class="j-alert-feed" id="alertFeed">
+        <div class="j-empty">
+          <div class="j-empty-icon">&#9681;</div>
+          <div class="j-empty-title">No alerts</div>
+          <div class="j-empty-sub">All systems are running clean. JARVIS will surface issues here when something needs your attention.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HISTORY -->
+    <div id="historyTab" style="display:none;">
+      <div class="j-section-title">Check History</div>
+      <div class="j-table-wrap">
+        <table class="j-table" id="historyTable">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Summary</th>
+              <th>Alert</th>
+              <th>Time</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody">
+            <tr><td colspan="5" style="text-align:center;padding:40px;color:#3a5572;">Waiting for first check...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const API_BASE = 'https://grow.trilogycare.com.au/api/admin/jarvis';
+
+const CHECK_TYPES = [
+  { key: 'platform_health', label: 'Platform Health', icon: '&#9673;' },
+  { key: 'linear_board', label: 'Linear Agent Board', icon: '&#9881;' },
+  { key: 'vercel_deploy', label: 'Vercel Deployments', icon: '&#9650;' },
+  { key: 'asana_intake', label: 'Asana Intake', icon: '&#9993;' },
+  { key: 'nick_signal', label: 'Nick Signals', icon: '&#9888;' },
+];
+
+function formatTime(iso) {
+  if (!iso) return '--';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 60000);
+  if (diff < 1) return 'Just now';
+  if (diff < 60) return diff + 'm ago';
+  const hrs = Math.floor(diff / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return d.toLocaleDateString('en-AU', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.j-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('alertsTab').style.display = tab === 'alerts' ? 'block' : 'none';
+  document.getElementById('historyTab').style.display = tab === 'history' ? 'block' : 'none';
+}
+
+function renderStatusCards(statuses) {
+  const map = {};
+  (statuses || []).forEach(s => map[s.check_type] = s);
+
+  const html = CHECK_TYPES.map(ct => {
+    const s = map[ct.key];
+    const status = s ? s.status : 'idle';
+    const summary = s ? s.summary : 'Waiting for first check...';
+    const time = s ? formatTime(s.last_checked) : '--';
+    return `
+      <div class="j-card">
+        <div class="j-card-head">
+          <span class="j-card-title">${ct.label}</span>
+          <span class="j-card-badge ${status}">${status.toUpperCase()}</span>
+        </div>
+        <div class="j-card-summary">${summary}</div>
+        <div class="j-card-meta">${time}</div>
+      </div>
+    `;
+  }).join('');
+
+  document.getElementById('statusCards').innerHTML = html;
+
+  // Update sidebar loop dots
+  const loops = document.querySelectorAll('.j-loop-item');
+  CHECK_TYPES.forEach((ct, i) => {
+    const s = map[ct.key];
+    const dot = loops[i]?.querySelector('.j-loop-dot');
+    if (dot) {
+      dot.className = 'j-loop-dot ' + (s ? s.status : 'idle');
+    }
+  });
+
+  // Update global status badge
+  const badge = document.getElementById('globalStatus');
+  const hasFailure = statuses?.some(s => s.status === 'fail');
+  const hasWarning = statuses?.some(s => s.status === 'warning');
+  if (hasFailure) {
+    badge.className = 'j-status-badge fail';
+    badge.innerHTML = '<span class="j-status-dot"></span> ALERT - SYSTEM FAILURE DETECTED';
+  } else if (hasWarning) {
+    badge.className = 'j-status-badge warning';
+    badge.innerHTML = '<span class="j-status-dot"></span> WARNING - ATTENTION NEEDED';
+  } else {
+    badge.className = 'j-status-badge';
+    badge.innerHTML = '<span class="j-status-dot"></span> ALL SYSTEMS OPERATIONAL';
+  }
+}
+
+function renderAlerts(alerts) {
+  const count = alerts?.length || 0;
+  document.getElementById('alertCount').textContent = count;
+
+  if (count === 0) {
+    document.getElementById('alertFeed').innerHTML = `
+      <div class="j-empty">
+        <div class="j-empty-icon">&#9681;</div>
+        <div class="j-empty-title">No alerts</div>
+        <div class="j-empty-sub">All systems are running clean. JARVIS will surface issues here when something needs your attention.</div>
+      </div>
+    `;
+    return;
+  }
+
+  const typeMap = {};
+  CHECK_TYPES.forEach(ct => typeMap[ct.key] = ct);
+
+  document.getElementById('alertFeed').innerHTML = alerts.map(a => {
+    const ct = typeMap[a.check_type] || { label: a.check_type, icon: '&#9679;' };
+    return `
+      <div class="j-alert ${a.status}">
+        <div class="j-alert-icon">${ct.icon}</div>
+        <div class="j-alert-body">
+          <div class="j-alert-type">${ct.label}</div>
+          <div class="j-alert-msg">${a.summary}</div>
+          <div class="j-alert-time">${formatTime(a.created_at)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderHistory(checks) {
+  if (!checks || checks.length === 0) {
+    document.getElementById('historyBody').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#3a5572;">No check history yet.</td></tr>';
+    return;
+  }
+
+  const typeMap = {};
+  CHECK_TYPES.forEach(ct => typeMap[ct.key] = ct.label);
+
+  document.getElementById('historyBody').innerHTML = checks.map(c => `
+    <tr>
+      <td style="color:var(--text);font-weight:500;">${typeMap[c.check_type] || c.check_type}</td>
+      <td><span class="j-card-badge ${c.status}" style="font-size:9px;">${c.status.toUpperCase()}</span></td>
+      <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.summary}</td>
+      <td>${c.alert_triggered ? '<span style="color:var(--red);">Yes</span>' : '-'}</td>
+      <td style="font-size:11px;font-family:Courier New,monospace;color:#3a5572;">${formatTime(c.created_at)}</td>
+    </tr>
+  `).join('');
+}
+
+function updateStats(checks, alerts) {
+  const total = checks?.length || 0;
+  const alertCount = alerts?.length || 0;
+  const passes = checks?.filter(c => c.status === 'pass').length || 0;
+  const uptime = total > 0 ? Math.round((passes / total) * 100) : 100;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statAlerts').textContent = alertCount;
+  document.getElementById('statUptime').textContent = uptime + '%';
+
+  const uptimeEl = document.getElementById('statUptime');
+  uptimeEl.className = 'j-sb-stat-value ' + (uptime >= 95 ? 'teal' : uptime >= 80 ? 'amber' : 'red');
+}
+
+async function loadData() {
+  document.getElementById('lastRefresh').textContent = 'Loading...';
+
+  try {
+    const token = localStorage.getItem('jarvis_token') || '';
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+    const [statusRes, alertsRes, checksRes] = await Promise.all([
+      fetch(API_BASE + '/status', { headers }).then(r => r.ok ? r.json() : { data: [] }),
+      fetch(API_BASE + '/alerts?per_page=20', { headers }).then(r => r.ok ? r.json() : { data: [] }),
+      fetch(API_BASE + '?per_page=50', { headers }).then(r => r.ok ? r.json() : { data: [] }),
+    ]);
+
+    renderStatusCards(statusRes.data);
+    renderAlerts(alertsRes.data);
+    renderHistory(checksRes.data);
+    updateStats(checksRes.data, alertsRes.data);
+
+    const now = new Date();
+    document.getElementById('lastRefresh').textContent = now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  } catch (e) {
+    document.getElementById('lastRefresh').textContent = 'API unavailable';
+    // Render empty state - JARVIS page still works visually
+    renderStatusCards([]);
+    renderAlerts([]);
+    renderHistory([]);
+    updateStats([], []);
+  }
+}
+
+// Scroll progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = Math.min(pct, 100) + '%';
+});
+
+// Init
+loadData();
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>
