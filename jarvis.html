@@ -345,6 +345,15 @@ const CHECK_TYPES = [
   { key: 'nick_signal', label: 'Nick Signals', icon: '&#9888;' },
 ];
 
+const ALL_TYPE_LABELS = {
+  platform_health: 'Platform Health', linear_board: 'Linear Agent Board',
+  vercel_deploy: 'Vercel Deployments', asana_intake: 'Asana Intake', nick_signal: 'Nick Signals',
+  daily_brief: 'Daily Brief', actions_review: 'Actions Review', nick_agenda: 'Nick Agenda Update',
+  design_eval: 'Design Evaluation', design_fix: 'Design Auto-Fix', design_suggest: 'Design Suggestion',
+  meta_analysis: 'Meta-Analysis', self_improvement: 'Self-Improvement', research: 'Research Finding',
+  cron_fire: 'Cron Executed', skill_update: 'Skill Updated', context_update: 'Context Updated', mcp_status: 'MCP Connection',
+};
+
 function formatTime(iso) {
   if (!iso) return '--';
   const d = new Date(iso);
@@ -451,12 +460,9 @@ function renderHistory(checks) {
     return;
   }
 
-  const typeMap = {};
-  CHECK_TYPES.forEach(ct => typeMap[ct.key] = ct.label);
-
   document.getElementById('historyBody').innerHTML = checks.map(c => `
     <tr>
-      <td style="color:var(--text);font-weight:500;">${typeMap[c.check_type] || c.check_type}</td>
+      <td style="color:var(--text);font-weight:500;">${ALL_TYPE_LABELS[c.check_type] || c.check_type}</td>
       <td><span class="j-card-badge ${c.status}" style="font-size:9px;">${c.status.toUpperCase()}</span></td>
       <td style="max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${c.summary}</td>
       <td>${c.alert_triggered ? '<span style="color:var(--red);">Yes</span>' : '-'}</td>
