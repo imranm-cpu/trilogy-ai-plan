@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgedCare Compare - Project Status</title>
+<title>AgedCare Compare - Project Command Centre</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -19,6 +19,7 @@
     --amber: #f39c12;
     --red: #e74c3c;
     --purple: #9b59b6;
+    --violet: #8b5cf6;
     --orange: #f97316;
     --card-bg: rgba(255,255,255,0.035);
     --card-hover: rgba(255,255,255,0.06);
@@ -109,20 +110,8 @@
   .page-eyebrow::before { content: ''; display: block; width: 32px; height: 2px; background: var(--orange); border-radius: 1px; }
   .page-header h1 { font-size: 40px; font-weight: 900; line-height: 1.1; margin-bottom: 16px; letter-spacing: -0.03em; }
   .page-header h1 span { background: linear-gradient(135deg, #f97316, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-  .page-header p { font-size: 15px; color: var(--muted); max-width: 700px; line-height: 1.75; margin-bottom: 28px; font-weight: 500; }
-
-  /* SUMMARY PILLS */
-  .summary-pills { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 0; }
-  .pill {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 700;
-    border: 1px solid; transition: transform 0.15s;
-  }
-  .pill:hover { transform: translateY(-1px); }
-  .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-  .pill.done { background: rgba(0,184,148,0.1); border-color: rgba(0,184,148,0.3); color: var(--teal); }
-  .pill.inprog { background: rgba(243,156,18,0.1); border-color: rgba(243,156,18,0.3); color: var(--amber); }
-  .pill.blocked { background: rgba(231,76,60,0.1); border-color: rgba(231,76,60,0.3); color: var(--red); }
+  .page-header p { font-size: 15px; color: var(--muted); max-width: 700px; line-height: 1.75; margin-bottom: 12px; font-weight: 500; }
+  .page-header .sync-note { font-size: 11px; color: var(--faint); font-weight: 500; }
 
   /* MAIN CONTENT */
   .content { max-width: 1200px; margin: 0 auto; padding: 0 48px 80px; }
@@ -141,41 +130,82 @@
   .section-badge.inprog { background: rgba(243,156,18,0.12); border: 1px solid rgba(243,156,18,0.25); color: var(--amber); }
   .section-badge.blocked { background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.25); color: var(--red); }
   .section-badge.new { background: rgba(84,160,255,0.12); border: 1px solid rgba(84,160,255,0.25); color: var(--light-blue); }
+  .section-badge.ai { background: rgba(139,92,246,0.12); border: 1px solid rgba(139,92,246,0.25); color: var(--violet); }
+  .section-badge.neutral { background: rgba(127,150,178,0.1); border: 1px solid rgba(127,150,178,0.15); color: var(--muted); }
   .section-title { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; }
   .section-sub { font-size: 13px; color: var(--muted); margin-top: 4px; font-weight: 500; }
 
-  /* DONE GRID */
-  .done-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
+  /* SUMMARY STAT CARDS */
+  .summary-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px 26px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .stat-card:hover { background: var(--card-hover); transform: translateY(-2px); }
+  .stat-card .stat-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .stat-card .stat-val { font-size: 38px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .stat-card .stat-sub { font-size: 11px; color: var(--muted); margin-top: 6px; font-weight: 500; }
+  .stat-card.green { border-color: rgba(0,184,148,0.2); }
+  .stat-card.green .stat-val { color: var(--teal); }
+  .stat-card.amber { border-color: rgba(243,156,18,0.2); }
+  .stat-card.amber .stat-val { color: var(--amber); }
+  .stat-card.grey .stat-val { color: var(--muted); }
+  .stat-card.blue { border-color: rgba(84,160,255,0.2); }
+  .stat-card.blue .stat-val { color: var(--light-blue); }
+
+  /* OVERALL PROGRESS BAR */
+  .overall-progress {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 20px 26px;
     margin-bottom: 0;
   }
-  .done-card {
-    background: rgba(0,184,148,0.04);
-    border: 1px solid rgba(0,184,148,0.12);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  .overall-progress-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+  .overall-progress-header span { font-size: 13px; font-weight: 700; }
+  .overall-progress-header .pct { color: var(--teal); }
+  .overall-bar { height: 10px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
+  .overall-bar-fill { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--teal), #2dd4bf); transition: width 1.2s cubic-bezier(0.16,1,0.3,1); }
+
+  /* EPIC PROGRESS BARS */
+  .epic-list { display: flex; flex-direction: column; gap: 10px; }
+  .epic-row {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 16px 22px;
+    display: grid; grid-template-columns: 90px 1fr 180px 70px 90px; gap: 14px; align-items: center;
+    transition: background 0.15s;
   }
-  .done-card:hover {
-    background: rgba(0,184,148,0.08);
-    border-color: rgba(0,184,148,0.22);
-    transform: translateY(-2px);
+  .epic-row:hover { background: var(--card-hover); }
+  .epic-key { font-size: 11px; font-weight: 700; color: var(--faint); font-family: 'SF Mono', 'Fira Code', monospace; }
+  .epic-name { font-size: 13px; font-weight: 600; color: var(--text); }
+  .epic-bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .epic-bar { flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
+  .epic-bar-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
+  .epic-bar-fill.complete { background: var(--teal); }
+  .epic-bar-fill.partial { background: var(--amber); }
+  .epic-bar-fill.zero { background: var(--faint); width: 0 !important; }
+  .epic-frac { font-size: 12px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .epic-owner { font-size: 11px; color: var(--muted); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .epic-owner.unassigned { color: var(--red); font-weight: 600; }
+
+  /* STATUS CHIPS */
+  .status-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 700;
+    white-space: nowrap;
   }
-  .done-card-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .done-card-desc { font-size: 12px; color: var(--muted); line-height: 1.7; font-weight: 500; }
-  .done-tag {
-    display: inline-flex; align-items: center; gap: 6px;
-    margin-top: 14px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px;
-    color: var(--teal); text-transform: uppercase;
-  }
-  .done-tag::before { content: ''; display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
+  .status-chip.done { background: rgba(0,184,148,0.12); color: var(--teal); border: 1px solid rgba(0,184,148,0.25); }
+  .status-chip.inprog { background: rgba(243,156,18,0.12); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
+  .status-chip.todo { background: rgba(127,150,178,0.1); color: var(--muted); border: 1px solid rgba(127,150,178,0.15); }
+  .status-chip.blocked { background: rgba(231,76,60,0.12); color: var(--red); border: 1px solid rgba(231,76,60,0.25); }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
   /* NEW WORK GRID (for Imran's contributions) */
   .new-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 14px;
     margin-bottom: 0;
   }
@@ -205,35 +235,59 @@
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 16px;
-    overflow: hidden;
+    overflow-x: auto;
     box-shadow: var(--shadow-sm);
   }
-  .ticket-table { width: 100%; border-collapse: collapse; }
+  .ticket-table { width: 100%; border-collapse: collapse; min-width: 900px; }
   .ticket-table thead th {
-    padding: 14px 20px; text-align: left;
+    padding: 14px 16px; text-align: left;
     font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
     color: var(--muted); background: rgba(255,255,255,0.02);
     border-bottom: 1px solid var(--border);
+    white-space: nowrap;
   }
   .ticket-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
   .ticket-table tbody tr:last-child { border-bottom: none; }
   .ticket-table tbody tr:hover { background: var(--card-hover); }
-  .ticket-table tbody td { padding: 16px 20px; font-size: 13px; vertical-align: top; }
+  .ticket-table tbody td { padding: 14px 16px; font-size: 13px; vertical-align: top; }
   .ticket-id { font-size: 11px; font-weight: 700; color: var(--faint); font-family: 'SF Mono', 'Fira Code', monospace; white-space: nowrap; }
-  .ticket-title { font-weight: 600; color: var(--text); margin-bottom: 4px; }
-  .ticket-detail { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 500; }
-  .ticket-owner { font-size: 11px; color: var(--muted); white-space: nowrap; font-weight: 500; }
+  .ticket-epic { font-size: 11px; color: var(--faint); font-weight: 500; white-space: nowrap; }
+  .ticket-title { font-weight: 600; color: var(--text); }
+  .ticket-detail { font-size: 12px; color: var(--muted); line-height: 1.6; font-weight: 500; margin-top: 3px; }
+  .ticket-owner { font-size: 12px; color: var(--muted); white-space: nowrap; font-weight: 500; }
   .ticket-owner.unowned { color: var(--red); font-weight: 600; }
-  .status-chip {
+
+  /* AI OPP CHIPS */
+  .ai-chip {
     display: inline-flex; align-items: center; gap: 5px;
-    padding: 4px 12px; border-radius: 999px; font-size: 10px; font-weight: 700;
-    white-space: nowrap;
+    padding: 3px 10px; border-radius: 999px; font-size: 10px; font-weight: 700; white-space: nowrap;
   }
-  .status-chip.done { background: rgba(0,184,148,0.12); color: var(--teal); border: 1px solid rgba(0,184,148,0.25); }
-  .status-chip.inprog { background: rgba(243,156,18,0.12); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
-  .status-chip.not-started { background: rgba(127,150,178,0.1); color: var(--muted); border: 1px solid rgba(127,150,178,0.15); }
-  .status-chip.blocked { background: rgba(231,76,60,0.12); color: var(--red); border: 1px solid rgba(231,76,60,0.25); }
-  .status-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .ai-chip.yes { background: rgba(139,92,246,0.12); color: var(--violet); border: 1px solid rgba(139,92,246,0.25); }
+  .ai-chip.partial { background: rgba(243,156,18,0.08); color: var(--amber); border: 1px solid rgba(243,156,18,0.2); }
+  .ai-chip.no { background: rgba(127,150,178,0.06); color: var(--faint); border: 1px solid rgba(127,150,178,0.1); }
+  .ai-chip.parent { background: transparent; color: var(--faint); border: 1px solid transparent; }
+
+  /* AI OPPORTUNITY SUMMARY */
+  .ai-summary {
+    background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.15);
+    border-radius: 16px; padding: 32px 36px;
+    box-shadow: var(--shadow-sm);
+  }
+  .ai-summary-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .ai-summary-header h3 { font-size: 18px; font-weight: 800; }
+  .ai-summary-stat { font-size: 28px; font-weight: 900; color: var(--violet); }
+  .ai-group { margin-bottom: 20px; }
+  .ai-group:last-child { margin-bottom: 0; }
+  .ai-group-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .ai-group-label.completed { color: var(--teal); }
+  .ai-group-label.full { color: var(--violet); }
+  .ai-group-label.assist { color: var(--amber); }
+  .ai-item { display: flex; gap: 12px; padding: 8px 0; font-size: 13px; }
+  .ai-item-key { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; font-weight: 700; color: var(--faint); min-width: 70px; flex-shrink: 0; }
+  .ai-item-desc { color: var(--muted); font-weight: 500; }
 
   /* BOTTLENECK CARDS */
   .bottleneck-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -265,27 +319,32 @@
     background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border);
   }
 
-  /* PROGRESS SUMMARY */
-  .progress-summary {
-    background: var(--card-bg); border: 1px solid var(--border);
-    border-radius: 16px; padding: 32px 36px; margin-bottom: 52px;
-    display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 28px;
-    align-items: center;
+  /* WORKLOAD TABLE */
+  .workload-table-wrap {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
     box-shadow: var(--shadow-sm);
   }
-  .ps-stat .ps-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
-  .ps-stat .ps-val { font-size: 34px; font-weight: 900; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-  .ps-stat.green .ps-val { color: var(--teal); }
-  .ps-stat.amber .ps-val { color: var(--amber); }
-  .ps-stat.red .ps-val { color: var(--red); }
-  .ps-stat.blue .ps-val { color: var(--light-blue); }
-  .ps-stat .ps-sub { font-size: 11px; color: var(--muted); margin-top: 5px; font-weight: 500; }
-  .progress-bar-wrap { margin-top: 10px; height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; }
-  .progress-bar-fill { height: 100%; border-radius: 999px; transition: width 1s cubic-bezier(0.16,1,0.3,1); }
-  .progress-bar-fill.done { background: var(--teal); }
-  .progress-bar-fill.inprog { background: var(--amber); }
-  .progress-bar-fill.blocked { background: var(--red); }
-  .progress-bar-fill.blue { background: var(--light-blue); }
+  .workload-table { width: 100%; border-collapse: collapse; }
+  .workload-table thead th {
+    padding: 14px 20px; text-align: left;
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border);
+  }
+  .workload-table thead th.num { text-align: center; }
+  .workload-table tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  .workload-table tbody tr:last-child { border-bottom: none; }
+  .workload-table tbody tr:hover { background: var(--card-hover); }
+  .workload-table tbody td { padding: 14px 20px; font-size: 13px; font-weight: 500; }
+  .workload-table tbody td.num { text-align: center; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .workload-table tbody td.num.green { color: var(--teal); }
+  .workload-table tbody td.num.amber { color: var(--amber); }
+  .workload-table tbody td.num.muted { color: var(--muted); }
+  .workload-table tbody td.num.red { color: var(--red); }
+  .workload-note { font-size: 11px; color: var(--faint); font-weight: 500; }
 
   /* SUBURB CONTENT PROGRESS */
   .suburb-progress {
@@ -315,24 +374,34 @@
   .suburb-state.complete { border-color: rgba(0,184,148,0.25); background: rgba(0,184,148,0.04); }
   .suburb-state-pct { font-variant-numeric: tabular-nums; }
   .suburb-state-pct.done { color: var(--teal); }
-  .suburb-state-pct.partial { color: var(--amber); }
-  .suburb-state-pct.pending { color: var(--faint); }
 
   /* FOOTER */
   .page-footer { max-width: 1200px; margin: 0 auto; padding: 0 48px 48px; }
   .footer-note { font-size: 11px; color: #334155; border-top: 1px solid var(--border); padding-top: 24px; font-weight: 500; }
 
+  @media (max-width: 1100px) {
+    .epic-row { grid-template-columns: 80px 1fr 140px 60px 80px; gap: 10px; padding: 14px 18px; }
+    .new-grid { grid-template-columns: repeat(2, 1fr); }
+  }
   @media (max-width: 900px) {
-    .done-grid, .new-grid { grid-template-columns: repeat(2, 1fr); }
+    .summary-stats { grid-template-columns: repeat(2, 1fr); }
+    .new-grid { grid-template-columns: repeat(2, 1fr); }
     .bottleneck-grid { grid-template-columns: 1fr; }
-    .progress-summary { grid-template-columns: 1fr 1fr; gap: 20px; }
     .suburb-stats { grid-template-columns: repeat(3, 1fr); }
     .suburb-states { grid-template-columns: repeat(2, 1fr); }
+    .epic-row { grid-template-columns: 70px 1fr 120px 60px; }
+    .epic-owner { display: none; }
+    .site-nav { padding: 0 16px; }
+    .snav-ext-links { display: none; }
   }
   @media (max-width: 600px) {
-    .done-grid, .new-grid { grid-template-columns: 1fr; }
+    .summary-stats { grid-template-columns: 1fr; }
+    .new-grid { grid-template-columns: 1fr; }
     .page-header, .content, .page-footer { padding-left: 20px; padding-right: 20px; }
-    .progress-summary { grid-template-columns: 1fr; }
+    .page-header h1 { font-size: 28px; }
+    .epic-row { grid-template-columns: 1fr; gap: 8px; }
+    .epic-bar-wrap { grid-column: 1 / -1; }
+    .snav-tabs { display: none; }
   }
 </style>
 </head>
@@ -366,54 +435,718 @@
 
 <!-- PAGE HEADER -->
 <div class="page-header reveal">
-  <div class="page-eyebrow">Project Status Dashboard</div>
-  <h1><span>AgedCare Compare</span><br>Build Status</h1>
-  <p>Live view of what is shipped, what is in progress, and where the build is blocked. Updated 17 April 2026. Data sourced from Jira (TPW tickets) and Imran's build log.</p>
-  <div class="summary-pills">
-    <div class="pill done"><span class="pill-dot" style="background:var(--teal);"></span> 10 areas complete</div>
-    <div class="pill inprog"><span class="pill-dot" style="background:var(--light-blue);"></span> 8 new deliverables from Imran</div>
-    <div class="pill inprog"><span class="pill-dot" style="background:var(--amber);"></span> 9 tickets open</div>
-    <div class="pill blocked"><span class="pill-dot" style="background:var(--red);"></span> 4 blockers active</div>
-  </div>
+  <div class="page-eyebrow">Project Command Centre</div>
+  <h1><span>AgedCare Compare</span></h1>
+  <p>100 Jira tickets across 10 epics. Live data as at 19 April 2026.</p>
+  <div class="sync-note">Last synced from Jira: 19 April 2026</div>
 </div>
 
 <!-- MAIN CONTENT -->
 <div class="content">
 
-  <!-- PROGRESS SUMMARY -->
-  <div class="progress-summary reveal">
-    <div class="ps-stat green">
-      <div class="ps-label">Completed</div>
-      <div class="ps-val">10</div>
-      <div class="ps-sub">feature areas shipped</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill done" data-width="65%" style="width:0"></div></div>
+  <!-- 1. EXECUTIVE SUMMARY -->
+  <div class="summary-stats reveal">
+    <div class="stat-card green">
+      <div class="stat-label">Done</div>
+      <div class="stat-val">74</div>
+      <div class="stat-sub">tickets completed</div>
     </div>
-    <div class="ps-stat blue">
-      <div class="ps-label">Imran's Contributions</div>
-      <div class="ps-val">8</div>
-      <div class="ps-sub">new deliverables since Week 4</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill blue" data-width="75%" style="width:0"></div></div>
+    <div class="stat-card amber">
+      <div class="stat-label">In Progress</div>
+      <div class="stat-val">6</div>
+      <div class="stat-sub">actively being worked</div>
     </div>
-    <div class="ps-stat amber">
-      <div class="ps-label">Open Tickets</div>
-      <div class="ps-val">9</div>
-      <div class="ps-sub">in backlog or active</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill inprog" data-width="60%" style="width:0"></div></div>
+    <div class="stat-card grey">
+      <div class="stat-label">To Do</div>
+      <div class="stat-val">20</div>
+      <div class="stat-sub">not yet started</div>
     </div>
-    <div class="ps-stat red">
-      <div class="ps-label">Blockers</div>
-      <div class="ps-val">4</div>
-      <div class="ps-sub">decisions or resources needed</div>
-      <div class="progress-bar-wrap"><div class="progress-bar-fill blocked" data-width="40%" style="width:0"></div></div>
+    <div class="stat-card blue">
+      <div class="stat-label">Active Epics</div>
+      <div class="stat-val">3</div>
+      <div class="stat-sub">epics with open work</div>
     </div>
   </div>
 
-  <!-- SUBURB CONTENT PROGRESS -->
+  <div class="overall-progress reveal">
+    <div class="overall-progress-header">
+      <span>Overall Project Progress</span>
+      <span class="pct">74%</span>
+    </div>
+    <div class="overall-bar">
+      <div class="overall-bar-fill" data-width="74%" style="width:0"></div>
+    </div>
+  </div>
+
+  <!-- 2. EPIC PROGRESS -->
+  <div class="section-header reveal">
+    <div class="section-badge neutral">10 Epics</div>
+    <div>
+      <div class="section-title">Epic Progress</div>
+      <div class="section-sub">All 10 epics with subtask completion. Plus 8 standalone tickets (7 done, 1 to do).</div>
+    </div>
+  </div>
+
+  <div class="epic-list reveal">
+    <div class="epic-row">
+      <span class="epic-key">TPW-1</span>
+      <span class="epic-name">Data Pipeline & Scraping</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">11/11</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">John</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-2</span>
+      <span class="epic-name">Competitor Pricing Comparison</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">7/7</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">Mehrnaz</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-3</span>
+      <span class="epic-name">Location SEO Pages</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">8/8</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">Leo</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-4</span>
+      <span class="epic-name">Search & Discovery</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill partial" data-width="90%" style="width:0"></div></div>
+        <span class="epic-frac">9/10</span>
+      </div>
+      <span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span>
+      <span class="epic-owner">Leo</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-5</span>
+      <span class="epic-name">SAH Calculator</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">6/6</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">John</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-6</span>
+      <span class="epic-name">Homepage & Core Pages</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">9/9</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">Leo</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-7</span>
+      <span class="epic-name">Lead Capture</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill complete" data-width="100%" style="width:0"></div></div>
+        <span class="epic-frac">7/7</span>
+      </div>
+      <span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span>
+      <span class="epic-owner">Mehrnaz</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-78</span>
+      <span class="epic-name">Local SEO Content Enhancement</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill partial" data-width="0%" style="width:0"></div></div>
+        <span class="epic-frac">0/8</span>
+      </div>
+      <span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span>
+      <span class="epic-owner unassigned">Unassigned</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-8</span>
+      <span class="epic-name">Analytics & Internal Insights</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill partial" data-width="37.5%" style="width:0"></div></div>
+        <span class="epic-frac">3/8</span>
+      </div>
+      <span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span>
+      <span class="epic-owner">Mehrnaz</span>
+    </div>
+    <div class="epic-row">
+      <span class="epic-key">TPW-87</span>
+      <span class="epic-name">CEO Direction: Conversion & Content at Scale</span>
+      <div class="epic-bar-wrap">
+        <div class="epic-bar"><div class="epic-bar-fill partial" data-width="0%" style="width:0"></div></div>
+        <span class="epic-frac">0/8</span>
+      </div>
+      <span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span>
+      <span class="epic-owner unassigned">Unassigned</span>
+    </div>
+  </div>
+
+  <!-- 3. IMRAN'S CONTRIBUTIONS -->
+  <div class="section-header reveal">
+    <div class="section-badge new">Imran</div>
+    <div>
+      <div class="section-title">Imran's Contributions</div>
+      <div class="section-sub">Work delivered since joining the project. Not in original Jira scope - all additional value.</div>
+    </div>
+  </div>
+
+  <div class="new-grid reveal">
+    <div class="new-card">
+      <div class="new-card-title">AI Suburb Content Pipeline</div>
+      <div class="new-card-desc">All 17,483 unique paragraphs generated via Claude API. 100% complete. Cost ~$2-3. TPW-88.</div>
+      <div class="new-tag">Complete</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">ACPR Region Stats (TPW-81)</div>
+      <div class="new-card-desc">5,251 services extracted from AIHW data. 65 ACPR regions, 2,073 suburbs mapped. 7/8 states (TAS unavailable). Built 18 April 2026.</div>
+      <div class="new-tag">Complete</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">15+ Design Variants Prototyped</div>
+      <div class="new-card-desc">v10, v2, v5 plus iterations in Next.js/Tailwind. All viewable at /variants. Informed design direction.</div>
+      <div class="new-tag">Vibe Coding Sprint</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Design Direction Locked</div>
+      <div class="new-card-desc">Nick/Steve confirmed 2 April. Blend Design 10+2+7. Mobile-first. Soft blues, real photography, big CTA.</div>
+      <div class="new-tag">Decision - 2 April</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Persona Calculator Spec</div>
+      <div class="new-card-desc">8 personas, full flow specced. Persona selection feeds pre-filled numbers into warm summary results.</div>
+      <div class="new-tag">Spec Complete</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Project Status Dashboard</div>
+      <div class="new-card-desc">This page. Full Jira ticket mapping with AI opportunity analysis, dependency map, and team workload view.</div>
+      <div class="new-tag">Live Dashboard</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Suburb Progress + Coverage Map</div>
+      <div class="new-card-desc">Real-time progress pages for TPW-88. State-by-state breakdown and geographic distribution map.</div>
+      <div class="new-tag">Live Dashboard</div>
+    </div>
+    <div class="new-card">
+      <div class="new-card-title">Competitor Research + PPC Concepts</div>
+      <div class="new-card-desc">4 PPC concepts for Luke. Storyboard for Concept 3. Feeds into the paid acquisition strategy.</div>
+      <div class="new-tag">PPC Concept for Luke</div>
+    </div>
+  </div>
+
+  <!-- 4. OPEN TICKETS TABLE -->
+  <div class="section-header reveal">
+    <div class="section-badge inprog">26 Open</div>
+    <div>
+      <div class="section-title">Open Tickets</div>
+      <div class="section-sub">Full breakdown of all 26 open tickets with AI opportunity assessment.</div>
+    </div>
+  </div>
+
+  <div class="ticket-table-wrap reveal">
+    <table class="ticket-table">
+      <thead>
+        <tr>
+          <th style="width:80px;">Ticket</th>
+          <th style="width:70px;">Epic</th>
+          <th>Summary</th>
+          <th style="width:100px;">Status</th>
+          <th style="width:90px;">Owner</th>
+          <th style="width:80px;">AI Opp</th>
+          <th>Dependencies / Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ticket-id">TPW-100</span></td>
+          <td><span class="ticket-epic">TPW-4</span></td>
+          <td><span class="ticket-title">Specific Service Page</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Frontend build, Leo actively working</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-60</span></td>
+          <td><span class="ticket-epic">TPW-8</span></td>
+          <td><span class="ticket-title">Usage by Location Dashboard</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mike Wise</span></td>
+          <td><span class="ai-chip partial">Partial</span></td>
+          <td><span class="ticket-detail">Needs GA4 data access. AI can build dashboard UI once data source confirmed</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-61</span></td>
+          <td><span class="ticket-epic">TPW-8</span></td>
+          <td><span class="ticket-title">Usage by Service Type Dashboard</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mike Wise</span></td>
+          <td><span class="ai-chip partial">Partial</span></td>
+          <td><span class="ticket-detail">Same dependency as TPW-60</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-62</span></td>
+          <td><span class="ticket-epic">TPW-8</span></td>
+          <td><span class="ticket-title">Quarterly Sector Reporting</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mike Wise</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Data aggregation + report generation - ideal for AI</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-63</span></td>
+          <td><span class="ticket-epic">TPW-8</span></td>
+          <td><span class="ticket-title">Competitor Trend Analysis</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mike Wise</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Web scraping + analysis - AI agent territory</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-64</span></td>
+          <td><span class="ticket-epic">TPW-8</span></td>
+          <td><span class="ticket-title">Data Export Tools</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mike Wise</span></td>
+          <td><span class="ai-chip partial">Partial</span></td>
+          <td><span class="ticket-detail">API/export layer. AI can build if schema is known</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-74</span></td>
+          <td><span class="ticket-epic">Standalone</span></td>
+          <td><span class="ticket-title">Confirmation email to client</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mehrnaz</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Template + integration. Straightforward</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-78</span></td>
+          <td><span class="ticket-epic">Epic</span></td>
+          <td><span class="ticket-title">Local SEO Content Enhancement</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner unowned">Unassigned</span></td>
+          <td><span class="ai-chip parent">-</span></td>
+          <td><span class="ticket-detail">Parent epic. 0/8 subtasks done in Jira</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-79</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Suburb Geographic Data Source</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner">John</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">DONE by Imran (ACPR data pipeline). John unavailable. Jira not updated.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-80</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Service-Level Pricing Aggregation</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">John</span></td>
+          <td><span class="ai-chip partial">Partial</span></td>
+          <td><span class="ticket-detail">Needs pricing data source confirmed. Prompt given to work Claude. John unavailable.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-81</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Region-Level Statistics</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">John</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">DONE by Imran (ACPR stats pipeline, 65 regions, 2,073 suburbs). Jira not updated.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-82</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Intro Paragraph Template System</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Leo actively working. Asking UX questions on Teams.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-83</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Dynamic FAQ Enhancement</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">FAQ generation per suburb - ideal for Claude API</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-84</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Suburb Overview Section</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip partial">Partial</span></td>
+          <td><span class="ticket-detail">Frontend component. AI can generate content, Leo builds the UI.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-85</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">FAQPage Schema Alignment</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Schema markup generation. AI can auto-generate structured data.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-86</span></td>
+          <td><span class="ticket-epic">TPW-78</span></td>
+          <td><span class="ticket-title">Content Quality Validation</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Automated content QA - textbook AI use case</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-87</span></td>
+          <td><span class="ticket-epic">Epic</span></td>
+          <td><span class="ticket-title">CEO Direction: Conversion & Content at Scale</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner unowned">Unassigned</span></td>
+          <td><span class="ai-chip parent">-</span></td>
+          <td><span class="ticket-detail">Parent epic. 0/8 subtasks done in Jira.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-88</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">AI-generated unique suburb content</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">John</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">DONE by Imran (17,483 suburbs, 100%). Jira not updated.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-89</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Embedded savings widget</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Frontend component</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-8</span></td>
+          <td><span class="ticket-epic">Epic</span></td>
+          <td><span class="ticket-title">Analytics & Internal Insights</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner">Mehrnaz</span></td>
+          <td><span class="ai-chip parent">-</span></td>
+          <td><span class="ticket-detail">Parent epic. 3/8 subtasks done.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-90</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Service type toggle on suburb pages</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Frontend UX component</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-91</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Pricing accuracy disclaimer</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Copy generation. AI can draft, legal reviews.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-92</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Provider pricing correction form</span></td>
+          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In Progress</span></td>
+          <td><span class="ticket-owner">Mehrnaz</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Mehrnaz actively building</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-93</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Zoho webhook health monitoring</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Mehrnaz</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Monitoring + alerting. AI agent can build and maintain.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-94</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Blog/articles section</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">Leo</span></td>
+          <td><span class="ai-chip yes">Yes</span></td>
+          <td><span class="ticket-detail">Content generation at scale. Core AI use case.</span></td>
+        </tr>
+        <tr>
+          <td><span class="ticket-id">TPW-95</span></td>
+          <td><span class="ticket-epic">TPW-87</span></td>
+          <td><span class="ticket-title">Domain strategy & redirect config</span></td>
+          <td><span class="status-chip todo"><span class="status-dot" style="background:var(--muted);"></span> To Do</span></td>
+          <td><span class="ticket-owner">John</span></td>
+          <td><span class="ai-chip no">No</span></td>
+          <td><span class="ticket-detail">Blocked on Luke/marketing decision. Not a build task.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. AI OPPORTUNITY SUMMARY -->
+  <div class="section-header reveal">
+    <div class="section-badge ai">AI Analysis</div>
+    <div>
+      <div class="section-title">AI Opportunity Summary</div>
+      <div class="section-sub">Assessment of which open tickets can be addressed with AI.</div>
+    </div>
+  </div>
+
+  <div class="ai-summary reveal">
+    <div class="ai-summary-header">
+      <h3>12 of 26 open tickets are AI-addressable</h3>
+      <div class="ai-summary-stat">46%</div>
+    </div>
+
+    <div class="ai-group">
+      <div class="ai-group-label completed">Already Done by AI (3 tickets - Jira not yet updated)</div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-79</span>
+        <span class="ai-item-desc">Suburb Geographic Data Source - ACPR data pipeline built by Imran. 65 regions, 2,073 suburbs mapped.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-81</span>
+        <span class="ai-item-desc">Region-Level Statistics - 5,251 services extracted from AIHW data across 7/8 states.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-88</span>
+        <span class="ai-item-desc">AI-generated suburb content - All 17,483 unique paragraphs generated via Claude API. Cost ~$2-3.</span>
+      </div>
+    </div>
+
+    <div class="ai-group">
+      <div class="ai-group-label full">Can Be Fully Done by AI (6 tickets)</div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-62</span>
+        <span class="ai-item-desc">Quarterly Sector Reporting - Data aggregation and report generation via scheduled pipeline.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-63</span>
+        <span class="ai-item-desc">Competitor Trend Analysis - Web scraping agent + Claude analysis. Similar to existing ORM tool pattern.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-74</span>
+        <span class="ai-item-desc">Confirmation email to client - Template generation + integration. Straightforward automation.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-83</span>
+        <span class="ai-item-desc">Dynamic FAQ Enhancement - FAQ generation per suburb via Claude API. Same pattern as TPW-88.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-85</span>
+        <span class="ai-item-desc">FAQPage Schema Alignment - Structured data markup auto-generation. Template-based.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-86</span>
+        <span class="ai-item-desc">Content Quality Validation - Automated QA pass over generated content. Batch Claude job.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-91</span>
+        <span class="ai-item-desc">Pricing accuracy disclaimer - Copy generation, AI drafts and legal reviews.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-93</span>
+        <span class="ai-item-desc">Zoho webhook health monitoring - Monitoring agent with alerting. Same pattern as JARVIS.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-94</span>
+        <span class="ai-item-desc">Blog/articles section - Content generation at scale. Core AI use case.</span>
+      </div>
+    </div>
+
+    <div class="ai-group">
+      <div class="ai-group-label assist">AI Can Assist (3 tickets)</div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-60</span>
+        <span class="ai-item-desc">Usage by Location Dashboard - AI can build dashboard UI once GA4 data access is confirmed.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-61</span>
+        <span class="ai-item-desc">Usage by Service Type Dashboard - Same dependency as TPW-60.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-64</span>
+        <span class="ai-item-desc">Data Export Tools - AI can build API/export layer if schema is confirmed.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-80</span>
+        <span class="ai-item-desc">Service-Level Pricing Aggregation - Needs pricing data source. AI can process once confirmed.</span>
+      </div>
+      <div class="ai-item">
+        <span class="ai-item-key">TPW-84</span>
+        <span class="ai-item-desc">Suburb Overview Section - AI generates content, Leo builds the frontend component.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. DEPENDENCY MAP -->
+  <div class="section-header reveal">
+    <div class="section-badge blocked">Blockers</div>
+    <div>
+      <div class="section-title">Dependency Map</div>
+      <div class="section-sub">Key blockers and risks that affect progress.</div>
+    </div>
+  </div>
+
+  <div class="bottleneck-grid reveal">
+    <div class="bottleneck-card">
+      <div class="bn-label">Dev Capacity - Red</div>
+      <div class="bn-title">John (Wilkinson John Chan) unavailable</div>
+      <div class="bn-desc">Owns 5 open tickets. TPW-79, 81, 88 already completed by Imran using AI. TPW-80 in scoping (pricing data source TBC). TPW-95 blocked on Luke decision, not a John dependency. Net: John's departure has been mitigated for 3/5 tickets.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-79</span>
+        <span class="bn-ticket">TPW-80</span>
+        <span class="bn-ticket">TPW-81</span>
+        <span class="bn-ticket">TPW-88</span>
+        <span class="bn-ticket">TPW-95</span>
+      </div>
+    </div>
+    <div class="bottleneck-card">
+      <div class="bn-label">Leadership Decision - Red</div>
+      <div class="bn-title">Domain decision (Luke / Marketing)</div>
+      <div class="bn-desc">TPW-95 cannot proceed. Blocks public launch and marketing. "Powered by Trilogy" branding question also open - Aaron (Legal) needs to be looped in.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-95</span>
+      </div>
+    </div>
+    <div class="bottleneck-card amber">
+      <div class="bn-label">Coordination - Amber</div>
+      <div class="bn-title">Dev team intro needed</div>
+      <div class="bn-desc">Leo asking questions on Teams. Imran has no formal introduction to the dev team. Nick to action a joint session before any deeper collaboration.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">Nick to action</span>
+      </div>
+    </div>
+    <div class="bottleneck-card amber">
+      <div class="bn-label">Capacity Unknown - Amber</div>
+      <div class="bn-title">Mike Wise analytics block</div>
+      <div class="bn-desc">5 tickets (TPW-60 to 64) assigned to Mike Wise. Unclear if Mike has started or if this is parked. AI can build dashboards once data access is confirmed.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-60</span>
+        <span class="bn-ticket">TPW-61</span>
+        <span class="bn-ticket">TPW-62</span>
+        <span class="bn-ticket">TPW-63</span>
+        <span class="bn-ticket">TPW-64</span>
+      </div>
+    </div>
+    <div class="bottleneck-card amber">
+      <div class="bn-label">Data - Amber</div>
+      <div class="bn-title">Pricing data source</div>
+      <div class="bn-desc">TPW-80 needs a confirmed pricing data source. My Aged Care scraping banned by Dept of Health. Prompt sent to work Claude for clarification.</div>
+      <div class="bn-tickets">
+        <span class="bn-ticket">TPW-80</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. TEAM WORKLOAD -->
+  <div class="section-header reveal">
+    <div class="section-badge neutral">Team</div>
+    <div>
+      <div class="section-title">Team Workload</div>
+      <div class="section-sub">Ticket distribution by person across all 100 tickets.</div>
+    </div>
+  </div>
+
+  <div class="workload-table-wrap reveal">
+    <table class="workload-table">
+      <thead>
+        <tr>
+          <th>Person</th>
+          <th class="num">Done</th>
+          <th class="num">In Progress</th>
+          <th class="num">To Do</th>
+          <th class="num">Total Open</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Leo To</td>
+          <td class="num green">28</td>
+          <td class="num amber">2</td>
+          <td class="num muted">8</td>
+          <td class="num red">10</td>
+          <td><span class="workload-note">Highest open count. Actively engaged on TPW-82, TPW-100.</span></td>
+        </tr>
+        <tr>
+          <td>Mehrnaz</td>
+          <td class="num green">18</td>
+          <td class="num amber">2</td>
+          <td class="num muted">2</td>
+          <td class="num amber">4</td>
+          <td><span class="workload-note">TPW-92 in progress. TPW-74 straightforward.</span></td>
+        </tr>
+        <tr>
+          <td>John (unavailable)</td>
+          <td class="num green">17</td>
+          <td class="num amber">1</td>
+          <td class="num muted">4</td>
+          <td class="num red">5</td>
+          <td><span class="workload-note">3 of 5 open tickets already done by Imran via AI.</span></td>
+        </tr>
+        <tr>
+          <td>Mike Wise</td>
+          <td class="num muted">0</td>
+          <td class="num muted">0</td>
+          <td class="num muted">5</td>
+          <td class="num amber">5</td>
+          <td><span class="workload-note">Analytics block. Status unknown. All To Do.</span></td>
+        </tr>
+        <tr>
+          <td>Unassigned</td>
+          <td class="num muted">2</td>
+          <td class="num amber">1</td>
+          <td class="num muted">1</td>
+          <td class="num muted">2</td>
+          <td><span class="workload-note">Epic-level parent tickets.</span></td>
+        </tr>
+        <tr>
+          <td>Imran (AI)</td>
+          <td class="num muted">0*</td>
+          <td class="num muted">0*</td>
+          <td class="num muted">0*</td>
+          <td class="num muted">-</td>
+          <td><span class="workload-note">3 tickets completed (TPW-79, 81, 88) but not reflected in Jira.</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. SUBURB CONTENT PROGRESS -->
+  <div class="section-header reveal">
+    <div class="section-badge done">Complete</div>
+    <div>
+      <div class="section-title">Suburb Content Progress</div>
+      <div class="section-sub">TPW-88 - AI-generated unique intro paragraphs for every Australian suburb.</div>
+    </div>
+  </div>
+
   <div class="suburb-progress reveal">
     <div class="suburb-header">
       <div class="suburb-header-left">
         <h3>TPW-88 - AI Suburb Content Generation</h3>
-        <p>Unique intro paragraphs per suburb via Claude API. Batch job running across all 17,483 Australian suburbs.</p>
+        <p>Unique intro paragraphs per suburb via Claude API. Batch job completed across all 17,483 Australian suburbs.</p>
       </div>
       <div class="suburb-live-badge"><span class="suburb-live-dot"></span> 100% Complete</div>
     </div>
@@ -458,281 +1191,11 @@
     </div>
   </div>
 
-  <!-- SECTION: IMRAN'S CONTRIBUTIONS (NEW) -->
-  <div class="section-header reveal">
-    <div class="section-badge new">New - Imran</div>
-    <div>
-      <div class="section-title">Imran's Contributions (Weeks 4-7)</div>
-      <div class="section-sub">Work delivered by Imran since joining the project. Not in original Jira scope - all additional value.</div>
-    </div>
-  </div>
-
-  <div class="new-grid reveal">
-    <div class="new-card">
-      <div class="new-card-title">AI Suburb Content Pipeline</div>
-      <div class="new-card-desc">Built batch content generation script using Claude API. All 17,483 unique paragraphs generated across all 8 states/territories. 100% complete. Total cost ~$2-3. Ready for dev team integration.</div>
-      <div class="new-tag">TPW-88 - Complete</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">15+ Design Variants Prototyped</div>
-      <div class="new-card-desc">Built 15+ design iterations in Next.js/Tailwind. v10 baseline, v2 organic, v5 community proof, plus multiple tweaked iterations. All viewable at /variants in the prototype. Informed the design direction decision.</div>
-      <div class="new-tag">Vibe Coding Sprint</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">Design Direction Locked</div>
-      <div class="new-card-desc">Design review session 2 April with Nick and Steve. Direction confirmed: blend Design 10 + 2 + 7. Mobile-first (70% traffic from Google Ads). Soft blues, real photography, big CTA. 5,000+ suburb pages on Vercel.</div>
-      <div class="new-tag">Decision - 2 April</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">Persona Calculator Spec</div>
-      <div class="new-card-desc">Full spec for persona-based calculator flow. 8 personas (parent-carer, spouse-carer, just-assessed, switching, respite, dementia, post-hospital, professional). Persona selection feeds pre-filled numbers into warm summary results.</div>
-      <div class="new-tag">Spec Complete</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">Project Status Dashboard</div>
-      <div class="new-card-desc">This page. Full Jira ticket mapping (TPW-79 to TPW-95), bottleneck analysis, and progress tracking. Deployed to GitHub Pages with auto-updating day counter.</div>
-      <div class="new-tag">Live Dashboard</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">Suburb Progress Tracker</div>
-      <div class="new-card-desc">Real-time progress page for TPW-88 content generation. State-by-state breakdown, completion bar, ETA tracking. Separate suburb coverage map also built showing geographic distribution.</div>
-      <div class="new-tag">Live Dashboard</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">User Testing Plan</div>
-      <div class="new-card-desc">Plan scoped for 6-12 real user tests before full build. Validates calculator flow, suburb page comprehension, and trust signals with actual aged care seekers. Pending scheduling post design lock.</div>
-      <div class="new-tag">Scoped</div>
-    </div>
-    <div class="new-card">
-      <div class="new-card-title">Competitor Research</div>
-      <div class="new-card-desc">PPC competitor analysis completed for Luke ad concepts. 4 concepts drafted from research findings. Concept 3 storyboard written. Feeds into the paid acquisition strategy for the site.</div>
-      <div class="new-tag">PPC Concept for Luke</div>
-    </div>
-  </div>
-
-  <!-- SECTION 1: COMPLETED (dev team) -->
-  <div class="section-header reveal">
-    <div class="section-badge done">Done</div>
-    <div>
-      <div class="section-title">Completed Work (Dev Team)</div>
-      <div class="section-sub">All marked Done in Jira. Core infrastructure, content, and conversion layer are live.</div>
-    </div>
-  </div>
-
-  <div class="done-grid reveal">
-    <div class="done-card">
-      <div class="done-card-title">Data Pipeline and Scraping</div>
-      <div class="done-card-desc">Scraper, processing queue, PAC data import, and validation layer. Provider data is ingested and structured.</div>
-      <div class="done-tag">Infrastructure</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Competitor Pricing Tables</div>
-      <div class="done-card-desc">Pricing comparison data structured and displayed. Provider-level fee breakdowns surfaced to users.</div>
-      <div class="done-tag">Data</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Location SEO Pages</div>
-      <div class="done-card-desc">45,000 suburb pages generated with structured data. Geographic targeting framework live across Australia.</div>
-      <div class="done-tag">SEO</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Search and Discovery</div>
-      <div class="done-card-desc">OpenSearch with hybrid and semantic search. Geolocation, filters, and sort all implemented.</div>
-      <div class="done-tag">Search</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">SAH Calculator</div>
-      <div class="done-card-desc">9-step Support at Home wizard with budget charts, government subsidy rules, and package level guidance.</div>
-      <div class="done-tag">Conversion</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Homepage and Core Pages</div>
-      <div class="done-card-desc">Homepage, about, and structural pages designed and live. Navigation and information architecture in place.</div>
-      <div class="done-tag">Frontend</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Lead Capture</div>
-      <div class="done-card-desc">Contact form live with CRM webhook pushing directly to Zoho. Spam protection implemented.</div>
-      <div class="done-tag">CRM</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">GA4 / GTM Analytics</div>
-      <div class="done-card-desc">Full event tracking implemented via GTM. GA4 configured with key conversion events across the funnel.</div>
-      <div class="done-tag">Analytics</div>
-    </div>
-    <div class="done-card">
-      <div class="done-card-title">Semantic Search Infrastructure</div>
-      <div class="done-card-desc">Built and operational in backend. Hybrid vector + keyword search ready. Awaiting product decision to expose in UI.</div>
-      <div class="done-tag">Backend</div>
-    </div>
-  </div>
-
-  <!-- SECTION 2: IN PROGRESS / INCOMPLETE -->
-  <div class="section-header reveal">
-    <div class="section-badge inprog">Open</div>
-    <div>
-      <div class="section-title">In Progress / Incomplete</div>
-      <div class="section-sub">Tickets in the backlog. Mix of in-progress, not-started, and blocked items.</div>
-    </div>
-  </div>
-
-  <div class="ticket-table-wrap reveal">
-    <table class="ticket-table">
-      <thead>
-        <tr>
-          <th style="width:90px;">Ticket</th>
-          <th>Description</th>
-          <th style="width:130px;">Status</th>
-          <th style="width:110px;">Owner</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="ticket-id">TPW-79</span></td>
-          <td>
-            <div class="ticket-title">Suburb geographic data</div>
-            <div class="ticket-detail">LGA boundaries, CBD distance, nearby suburbs. John's work - John is no longer available. DB queries needed before any geo-enrichment can proceed.</div>
-          </td>
-          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
-          <td><span class="ticket-owner unowned">Unowned</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-80</span></td>
-          <td>
-            <div class="ticket-title">Service-level pricing aggregation per suburb</div>
-            <div class="ticket-detail">Aggregate and surface pricing by service type at suburb level. Requires DB work. Blocked on TPW-79 geographic data.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner unowned">Unowned</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-81</span></td>
-          <td>
-            <div class="ticket-title">Region-level ACPR stats</div>
-            <div class="ticket-detail">Aged Care Provider Register stats rolled up to region level for suburb pages. Needs DB access and data pipeline work.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner unowned">Unowned</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-82</span></td>
-          <td>
-            <div class="ticket-title">Intro paragraph templates</div>
-            <div class="ticket-detail">Templated intro copy for suburb SEO pages. Leo is actively engaged - asking UX questions (hero toggle) via Teams as of 16 April.</div>
-          </td>
-          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
-          <td><span class="ticket-owner">Leo</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-88</span></td>
-          <td>
-            <div class="ticket-title">AI-generated unique suburb content</div>
-            <div class="ticket-detail">All 17,483 suburbs generated (100%). All 8 states/territories complete. 86 priority suburbs + full dataset ready for dev integration. Pipeline built by Imran using Claude API batch job. Total cost ~$2-3.</div>
-          </td>
-          <td><span class="status-chip done"><span class="status-dot" style="background:var(--teal);"></span> Done</span></td>
-          <td><span class="ticket-owner">Imran</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-89</span></td>
-          <td>
-            <div class="ticket-title">Embedded savings widget on suburb pages</div>
-            <div class="ticket-detail">Inline widget showing estimated savings vs. current provider. Frontend build, no backend dependency.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner">-</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-90</span></td>
-          <td>
-            <div class="ticket-title">Service type toggle on suburb pages</div>
-            <div class="ticket-detail">Toggle between service types (personal care, domestic, nursing etc.) on the suburb detail view. Leo asking about hero toggle UX on Teams.</div>
-          </td>
-          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
-          <td><span class="ticket-owner">Leo</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-91</span></td>
-          <td>
-            <div class="ticket-title">Pricing accuracy disclaimer</div>
-            <div class="ticket-detail">Legal / UX copy explaining data freshness, source, and limitations. Small frontend task - copy needed from legal or comms.</div>
-          </td>
-          <td><span class="status-chip not-started"><span class="status-dot" style="background:var(--muted);"></span> Not started</span></td>
-          <td><span class="ticket-owner">-</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-92</span></td>
-          <td>
-            <div class="ticket-title">Provider pricing correction form</div>
-            <div class="ticket-detail">Allows providers to flag incorrect pricing data. In progress with Mehrnaz.</div>
-          </td>
-          <td><span class="status-chip inprog"><span class="status-dot" style="background:var(--amber);"></span> In progress</span></td>
-          <td><span class="ticket-owner">Mehrnaz</span></td>
-        </tr>
-        <tr>
-          <td><span class="ticket-id">TPW-95</span></td>
-          <td>
-            <div class="ticket-title">Domain strategy</div>
-            <div class="ticket-detail">Final domain selection and DNS configuration. Blocked on Luke / marketing decision. "Powered by Trilogy" branding also pending (Aaron, Legal).</div>
-          </td>
-          <td><span class="status-chip blocked"><span class="status-dot" style="background:var(--red);"></span> Blocked</span></td>
-          <td><span class="ticket-owner unowned">Unowned</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- SECTION 3: BOTTLENECKS -->
-  <div class="section-header reveal">
-    <div class="section-badge blocked">Blocked</div>
-    <div>
-      <div class="section-title">Bottlenecks</div>
-      <div class="section-sub">What is stopping progress. Decisions or resources needed before the build can move forward.</div>
-    </div>
-  </div>
-
-  <div class="bottleneck-grid reveal">
-    <div class="bottleneck-card">
-      <div class="bn-label">Dev Capacity</div>
-      <div class="bn-title">John no longer available</div>
-      <div class="bn-desc">John owned the backend geographic data work. His departure leaves the suburb data enrichment pipeline unowned. No replacement assigned. These tickets are the dependency for the entire SEO content layer going live.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">TPW-79</span>
-        <span class="bn-ticket">TPW-80</span>
-        <span class="bn-ticket">TPW-81</span>
-      </div>
-    </div>
-    <div class="bottleneck-card">
-      <div class="bn-label">Leadership Decision</div>
-      <div class="bn-title">Domain decision blocked on Luke</div>
-      <div class="bn-desc">The site cannot launch publicly or be marketed until a domain is confirmed. Luke / marketing team have not yet made a call. "Powered by Trilogy" branding question also open - Aaron (Legal) needs to be looped in.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">TPW-95</span>
-      </div>
-    </div>
-    <div class="bottleneck-card">
-      <div class="bn-label">Team Intro Needed</div>
-      <div class="bn-title">Imran not formally introduced to dev team</div>
-      <div class="bn-desc">Leo, John, Mehrnaz keep coming up but Imran has no formal introduction. Leo is now actively asking dev questions via Teams. Nick needs to set up a joint session before vibe coding goes deeper.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">Nick to action</span>
-      </div>
-    </div>
-    <div class="bottleneck-card amber">
-      <div class="bn-label">Product Decision</div>
-      <div class="bn-title">Semantic search not exposed in UI</div>
-      <div class="bn-desc">The semantic search infrastructure is built and working in the backend. It has not been surfaced to users yet. This requires a product decision from Nick on how and where to expose it. No action is blocked, but this is live capability sitting unused.</div>
-      <div class="bn-tickets">
-        <span class="bn-ticket">Search</span>
-        <span class="bn-ticket">Nick decision</span>
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <!-- FOOTER -->
 <div class="page-footer">
-  <div class="footer-note">AgedCare Compare - Trilogy Care - Confidential - Updated 17 April 2026 - Status sourced from Jira (TPW tickets) and Imran's build log</div>
+  <div class="footer-note">AgedCare Compare - Trilogy Care - Confidential - Updated 19 April 2026 - Source: Jira export (TPW project, 100 tickets) + Imran's build log</div>
 </div>
 
 <script>
@@ -755,7 +1218,7 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-  // Animated progress bars
+  // Animated progress bars and fills
   const barObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -767,7 +1230,7 @@
       }
     });
   }, { threshold: 0.2 });
-  document.querySelectorAll('.progress-summary, .suburb-progress').forEach(el => barObserver.observe(el));
+  document.querySelectorAll('.overall-progress, .suburb-progress, .epic-list').forEach(el => barObserver.observe(el));
 </script>
 
 </body>
