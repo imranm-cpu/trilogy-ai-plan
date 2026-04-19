@@ -1218,6 +1218,12 @@
   }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+  // Fallback: reveal all elements after 2s in case observer doesn't fire
+  setTimeout(() => {
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => el.classList.add('visible'));
+    document.querySelectorAll('[data-width]').forEach(fill => { fill.style.width = fill.dataset.width; });
+  }, 2000);
+
   // Animated progress bars and fills
   const barObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
