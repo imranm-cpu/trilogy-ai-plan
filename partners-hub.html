@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partners Hub | Trilogy AI</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --deep: #060d17;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --cyan: #00cec9;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--deep); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--cyan), var(--teal)); width: 0%; z-index: 300; transition: width 0.1s; }
+
+  /* ---- NAV ---- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 500; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .snav-tab:hover { color: #e2e8f0; }
+  .snav-tab.active { color: #e2e8f0; border-bottom-color: var(--cyan); }
+  .snav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+  .snav-ext { font-size: 11px; color: #64748b; text-decoration: none; transition: color 0.15s; }
+  .snav-ext:hover { color: #e2e8f0; }
+  .snav-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); text-decoration: none; }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* ---- HEADER ---- */
+  .p-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; background: #0a1525;
+    border-bottom: 1px solid var(--border);
+  }
+  .p-header-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(0,206,201,0.12); border: 1px solid rgba(0,206,201,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--cyan);
+  }
+  .p-header-text h1 {
+    font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text);
+  }
+  .p-header-text p {
+    font-size: 11px; color: var(--muted); margin-top: 1px;
+  }
+  .p-status-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(243,156,18,0.08); border: 1px solid rgba(243,156,18,0.25);
+    border-radius: 4px; padding: 3px 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--amber);
+  }
+
+  /* ---- LAYOUT ---- */
+  .p-body { display: flex; min-height: calc(100vh - 52px - 52px); }
+  .p-sidebar {
+    width: 280px; flex-shrink: 0; background: #0a1525;
+    border-right: 1px solid var(--border); overflow-y: auto;
+    padding: 20px 16px;
+  }
+  .p-main { flex: 1; overflow: auto; padding: 20px 28px; max-width: 960px; }
+
+  /* ---- SIDEBAR ---- */
+  .p-sb-section { margin-bottom: 24px; }
+  .p-sb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #3a5572; margin-bottom: 10px; }
+  .p-sb-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .p-sb-item:last-child { border-bottom: none; }
+  .p-sb-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .p-sb-dot.live { background: var(--teal); }
+  .p-sb-dot.scoping { background: var(--amber); }
+  .p-sb-dot.pending { background: #334155; }
+  .p-sb-name { flex: 1; font-size: 12px; color: var(--text); }
+  .p-sb-status { font-size: 10px; color: var(--muted); font-family: 'Courier New', monospace; }
+
+  .p-sb-stat { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+  .p-sb-stat-label { font-size: 11px; color: var(--muted); }
+  .p-sb-stat-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'Courier New', monospace; }
+  .p-sb-stat-value.cyan { color: var(--cyan); }
+  .p-sb-stat-value.amber { color: var(--amber); }
+
+  /* ---- CARDS ---- */
+  .p-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .p-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; transition: border-color 0.2s;
+  }
+  .p-card:hover { border-color: var(--border-strong); }
+  .p-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .p-card-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .p-card-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 3px;
+  }
+  .p-card-badge.done { background: rgba(0,184,148,0.12); color: var(--teal); }
+  .p-card-badge.blocked { background: rgba(231,76,60,0.12); color: var(--red); }
+  .p-card-badge.pending { background: rgba(243,156,18,0.12); color: var(--amber); }
+  .p-card-badge.scoping { background: rgba(0,206,201,0.12); color: var(--cyan); }
+  .p-card-summary { font-size: 12px; color: var(--text); margin-bottom: 8px; line-height: 1.5; }
+  .p-card-meta { font-size: 10px; color: #3a5572; }
+
+  /* ---- SECTIONS ---- */
+  .p-section { margin-bottom: 32px; }
+  .p-section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .p-section-count {
+    background: rgba(0,206,201,0.12); color: var(--cyan);
+    font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  }
+
+  /* ---- TABLE ---- */
+  .p-table-wrap { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .p-table { width: 100%; border-collapse: collapse; }
+  .p-table th {
+    text-align: left; padding: 10px 14px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: #3a5572;
+    background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+  }
+  .p-table td {
+    padding: 10px 14px; font-size: 12px; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .p-table tr:last-child td { border-bottom: none; }
+  .p-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ---- CHECKLIST ---- */
+  .p-checklist { list-style: none; }
+  .p-check-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 12px; border-bottom: 1px solid var(--border);
+    font-size: 12px; color: var(--text); line-height: 1.5;
+  }
+  .p-check-item:last-child { border-bottom: none; }
+  .p-check-box {
+    width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; margin-top: 2px;
+    border: 1px solid #334155; background: rgba(255,255,255,0.03);
+  }
+  .p-check-box.done { background: rgba(0,184,148,0.15); border-color: var(--teal); }
+  .p-check-box.done::after { content: ''; display: block; width: 8px; height: 5px; border-left: 2px solid var(--teal); border-bottom: 2px solid var(--teal); transform: rotate(-45deg); margin: 2px 0 0 2px; }
+  .p-check-label { flex: 1; }
+  .p-check-label.muted { color: var(--muted); text-decoration: line-through; }
+  .p-check-tag {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+    padding: 1px 6px; border-radius: 3px; flex-shrink: 0;
+  }
+  .p-check-tag.blocker { background: rgba(231,76,60,0.12); color: var(--red); }
+  .p-check-tag.decision { background: rgba(243,156,18,0.12); color: var(--amber); }
+  .p-check-tag.input { background: rgba(0,206,201,0.12); color: var(--cyan); }
+
+  /* ---- URL PREVIEW ---- */
+  .p-url-preview {
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 22px; margin-bottom: 28px; font-family: 'Courier New', monospace;
+  }
+  .p-url-label { font-size: 10px; color: #3a5572; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .p-url-line { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .p-url-line .highlight { color: var(--cyan); }
+  .p-url-line .dim { color: #2a3f56; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 48 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    <a class="snav-tab" href="agedcare-compare.html"><span class="snav-dot" style="background:#f97316;"></span> AgedCare Compare</a>
+    <a class="snav-tab" href="jarvis.html"><span class="snav-dot" style="background:#e74c3c;"></span> JARVIS</a>
+    <a class="snav-tab active" href="partners-hub.html"><span class="snav-dot" style="background:#00cec9;"></span> Partners Hub</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://focuspartnership.vercel.app/" target="_blank">Focus Partnership</a>
+    <a class="snav-live" href="https://grow.trilogycare.com.au" target="_blank"><span class="snav-live-dot"></span> Grow</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="p-header">
+  <div class="p-header-icon">P</div>
+  <div class="p-header-text">
+    <h1>Partners Hub</h1>
+    <p>Public-facing partner portal - pitch decks, documents, calculators</p>
+  </div>
+  <div class="p-status-badge">SCOPING</div>
+</div>
+
+<!-- BODY -->
+<div class="p-body">
+
+  <!-- SIDEBAR -->
+  <aside class="p-sidebar">
+    <div class="p-sb-section">
+      <div class="p-sb-label">Project Stats</div>
+      <div class="p-sb-stat">
+        <span class="p-sb-stat-label">Partners Identified</span>
+        <span class="p-sb-stat-value cyan">1</span>
+      </div>
+      <div class="p-sb-stat">
+        <span class="p-sb-stat-label">Pages Live</span>
+        <span class="p-sb-stat-value amber">0</span>
+      </div>
+      <div class="p-sb-stat">
+        <span class="p-sb-stat-label">Blockers</span>
+        <span class="p-sb-stat-value amber">2</span>
+      </div>
+    </div>
+
+    <div class="p-sb-section">
+      <div class="p-sb-label">Partners</div>
+      <div class="p-sb-item">
+        <span class="p-sb-dot scoping"></span>
+        <span class="p-sb-name">Focus Partnership</span>
+        <span class="p-sb-status">pilot</span>
+      </div>
+      <div class="p-sb-item">
+        <span class="p-sb-dot pending"></span>
+        <span class="p-sb-name">TBD (from Bernie)</span>
+        <span class="p-sb-status">--</span>
+      </div>
+    </div>
+
+    <div class="p-sb-section">
+      <div class="p-sb-label">Key Contacts</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.8;">
+        <div><strong style="color:var(--text);">Nick</strong> - Sign-off</div>
+        <div><strong style="color:var(--text);">Bernie</strong> - Partner list + content</div>
+        <div><strong style="color:var(--text);">Tim/Mike</strong> - DNS routing</div>
+        <div><strong style="color:var(--text);">Alisha</strong> - Design review</div>
+        <div><strong style="color:var(--text);">Aaron</strong> - Legal review</div>
+      </div>
+    </div>
+
+    <div class="p-sb-section">
+      <div class="p-sb-label">Tech Stack</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Framework</strong> - Next.js</div>
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Hosting</strong> - Vercel</div>
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Content</strong> - TBD (file / CMS)</div>
+        <div><strong style="color:var(--text);">Auth</strong> - None (public)</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="p-main">
+
+    <!-- URL STRUCTURE -->
+    <div class="p-url-preview">
+      <div class="p-url-label">Target URL Structure</div>
+      <div class="p-url-line"><span class="dim">trilogycare.com.au</span><span class="highlight">/partners/</span> <span class="dim">..................... index</span></div>
+      <div class="p-url-line"><span class="dim">trilogycare.com.au</span><span class="highlight">/partners/focus-partnership/</span> <span class="dim">... landing</span></div>
+      <div class="p-url-line"><span class="dim">trilogycare.com.au</span><span class="highlight">/partners/focus-partnership/pitch-deck</span></div>
+      <div class="p-url-line"><span class="dim">trilogycare.com.au</span><span class="highlight">/partners/focus-partnership/calculator</span></div>
+      <div class="p-url-line"><span class="dim">trilogycare.com.au</span><span class="highlight">/partners/focus-partnership/documents</span></div>
+      <div style="margin-top:10px; font-size:10px; color:#3a5572;">Fallback: partners.trilogycare.com.au/[partner-name]/</div>
+    </div>
+
+    <!-- DECISION CARDS -->
+    <div class="p-section">
+      <div class="p-section-title">Key Decisions <span class="p-section-count">4</span></div>
+      <div class="p-cards">
+        <div class="p-card">
+          <div class="p-card-head">
+            <span class="p-card-title">Domain Routing</span>
+            <span class="p-card-badge blocked">Blocker</span>
+          </div>
+          <div class="p-card-summary">Main domain path (/partners/*) vs subdomain (partners.trilogycare.com.au). Needs Tim or Mike to confirm what's possible and how long it takes.</div>
+          <div class="p-card-meta">Owner: Tim / Mike</div>
+        </div>
+        <div class="p-card">
+          <div class="p-card-head">
+            <span class="p-card-title">Content Model</span>
+            <span class="p-card-badge pending">Pending</span>
+          </div>
+          <div class="p-card-summary">Markdown files in repo (simple) vs headless CMS (self-serve for BD team) vs Grow app admin. Depends on how often content changes and who updates it.</div>
+          <div class="p-card-meta">Owner: Imran</div>
+        </div>
+        <div class="p-card">
+          <div class="p-card-head">
+            <span class="p-card-title">Access Control</span>
+            <span class="p-card-badge pending">Pending</span>
+          </div>
+          <div class="p-card-summary">Fully public or PIN-gated per partner? Some documents may be sensitive. Need Bernie's input on what's shareable.</div>
+          <div class="p-card-meta">Owner: Bernie / Nick</div>
+        </div>
+        <div class="p-card">
+          <div class="p-card-head">
+            <span class="p-card-title">Branding</span>
+            <span class="p-card-badge scoping">Scoping</span>
+          </div>
+          <div class="p-card-summary">Trilogy-branded throughout or co-branded per partner? Needs Alisha's input. Must be mobile responsive -- links shared via email and Teams.</div>
+          <div class="p-card-meta">Owner: Alisha</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONSIDERATIONS CHECKLIST -->
+    <div class="p-section">
+      <div class="p-section-title">Full Considerations Checklist <span class="p-section-count">14 areas</span></div>
+      <div class="p-table-wrap">
+        <table class="p-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Area</th>
+              <th>Key Question</th>
+              <th>Status</th>
+              <th>Owner</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="color:var(--text);">1</td>
+              <td style="color:var(--text);font-weight:500;">Domain + Routing</td>
+              <td>Main domain path or subdomain? Who makes the DNS change?</td>
+              <td><span class="p-card-badge blocked" style="font-size:9px;">BLOCKER</span></td>
+              <td>Tim / Mike</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">2</td>
+              <td style="color:var(--text);font-weight:500;">Auth + Access</td>
+              <td>Fully public or PIN-gated? Any sensitive docs?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Bernie / Nick</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">3</td>
+              <td style="color:var(--text);font-weight:500;">Content per Partner</td>
+              <td>What goes on each page? Who provides it?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Bernie</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">4</td>
+              <td style="color:var(--text);font-weight:500;">Branding + Design</td>
+              <td>Trilogy-only or co-branded? Template needed from Alisha?</td>
+              <td><span class="p-card-badge scoping" style="font-size:9px;">SCOPING</span></td>
+              <td>Alisha</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">5</td>
+              <td style="color:var(--text);font-weight:500;">Tech Stack</td>
+              <td>Next.js + Vercel confirmed. CMS vs file-based?</td>
+              <td><span class="p-card-badge scoping" style="font-size:9px;">SCOPING</span></td>
+              <td>Imran</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">6</td>
+              <td style="color:var(--text);font-weight:500;">Partner Onboarding</td>
+              <td>Who requests new pages? What's the turnaround?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Bernie</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">7</td>
+              <td style="color:var(--text);font-weight:500;">Existing Assets</td>
+              <td>Migrate focuspartnership.vercel.app. How many other partners?</td>
+              <td><span class="p-card-badge scoping" style="font-size:9px;">SCOPING</span></td>
+              <td>Bernie</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">8</td>
+              <td style="color:var(--text);font-weight:500;">Analytics + Tracking</td>
+              <td>GA4, UTMs, download tracking, CRM tie-back?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Imran</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">9</td>
+              <td style="color:var(--text);font-weight:500;">SEO + Discoverability</td>
+              <td>Index partner pages or keep noindex? Likely noindex.</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Imran</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">10</td>
+              <td style="color:var(--text);font-weight:500;">Legal + Compliance</td>
+              <td>Aaron review needed? T&Cs? Privacy policy?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Aaron</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">11</td>
+              <td style="color:var(--text);font-weight:500;">Scalability</td>
+              <td>5 partners or 100? URL structure must be right from day one.</td>
+              <td><span class="p-card-badge scoping" style="font-size:9px;">SCOPING</span></td>
+              <td>Imran / Bernie</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">12</td>
+              <td style="color:var(--text);font-weight:500;">Timeline + Dependencies</td>
+              <td>DNS (blocker), content (blocker), design, sign-off</td>
+              <td><span class="p-card-badge blocked" style="font-size:9px;">BLOCKER</span></td>
+              <td>Imran</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">13</td>
+              <td style="color:var(--text);font-weight:500;">System Integration</td>
+              <td>Links from Grow app, Zoho CRM, email campaigns</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Imran</td>
+            </tr>
+            <tr>
+              <td style="color:var(--text);">14</td>
+              <td style="color:var(--text);font-weight:500;">Maintenance</td>
+              <td>Who keeps pages updated? Quarterly audit cycle?</td>
+              <td><span class="p-card-badge pending" style="font-size:9px;">PENDING</span></td>
+              <td>Bernie / Imran</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NEXT STEPS -->
+    <div class="p-section">
+      <div class="p-section-title">Next Steps</div>
+      <div class="p-table-wrap" style="padding: 16px 18px;">
+        <ul class="p-checklist">
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Confirm domain routing path with Tim/Mike (main domain vs subdomain)</span>
+            <span class="p-check-tag blocker">Blocker</span>
+          </li>
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Get full partner list and content scope from Bernie</span>
+            <span class="p-check-tag input">Input needed</span>
+          </li>
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Migrate focuspartnership.vercel.app as the pilot partner page</span>
+            <span class="p-check-tag decision">First build</span>
+          </li>
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Build page template and deploy pilot</span>
+          </li>
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Get Nick's sign-off on approach and design</span>
+            <span class="p-check-tag decision">Decision</span>
+          </li>
+          <li class="p-check-item">
+            <span class="p-check-box"></span>
+            <span class="p-check-label">Scale to remaining partners</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Scroll progress -->
+<script>
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = Math.min(pct, 100) + '%';
+});
+</script>
+</body>
+</html>
