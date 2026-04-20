@@ -375,6 +375,79 @@
   .suburb-state-pct { font-variant-numeric: tabular-nums; }
   .suburb-state-pct.done { color: var(--teal); }
 
+  /* RESEARCH / COMPETITOR INTEL */
+  .research-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .competitor-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+    overflow: hidden; transition: border-color 0.2s;
+  }
+  .competitor-card:hover { border-color: var(--border-strong); }
+  .competitor-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 26px; background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  .competitor-header:hover { background: rgba(255,255,255,0.04); }
+  .competitor-header-left { display: flex; align-items: center; gap: 14px; }
+  .competitor-logo {
+    width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0;
+  }
+  .competitor-name { font-size: 15px; font-weight: 700; }
+  .competitor-type { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 1px; }
+  .competitor-header-right { display: flex; align-items: center; gap: 12px; }
+  .competitor-stat-pill {
+    font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 999px;
+    background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border);
+  }
+  .competitor-toggle {
+    font-size: 18px; color: var(--faint); transition: transform 0.3s;
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+  }
+  .competitor-toggle.open { transform: rotate(180deg); }
+  .competitor-body { padding: 0 26px 24px; display: none; }
+  .competitor-body.open { display: block; }
+
+  .takeout-section { margin-top: 20px; }
+  .takeout-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .takeout-label.green { color: var(--teal); }
+  .takeout-label.red { color: var(--red); }
+  .takeout-label.blue { color: var(--light-blue); }
+  .takeout-label.violet { color: var(--violet); }
+  .takeout-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 8px 0; font-size: 12px; color: var(--text); line-height: 1.6; font-weight: 500;
+  }
+  .takeout-bullet {
+    width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 6px;
+  }
+  .takeout-bullet.steal { background: var(--teal); }
+  .takeout-bullet.gap { background: var(--red); }
+  .takeout-bullet.beat { background: var(--violet); }
+  .takeout-bullet.fact { background: var(--muted); }
+
+  .compare-table-wrap {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    overflow: hidden; margin-top: 20px;
+  }
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    text-align: left; padding: 10px 16px; font-size: 10px; font-weight: 700;
+    letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted);
+    background: rgba(0,0,0,0.15); border-bottom: 1px solid var(--border);
+  }
+  .compare-table td {
+    padding: 10px 16px; font-size: 12px; color: var(--muted); font-weight: 500;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table td.val { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .compare-table td.win { color: var(--teal); font-weight: 700; }
+  .compare-table td.lose { color: var(--red); }
+
   /* FOOTER */
   .page-footer { max-width: 1200px; margin: 0 auto; padding: 0 48px 48px; }
   .footer-note { font-size: 11px; color: #334155; border-top: 1px solid var(--border); padding-top: 24px; font-weight: 500; }
@@ -1076,6 +1149,323 @@
 
 </div>
 
+  <!-- 9. COMPETITOR RESEARCH -->
+  <div class="section-header reveal">
+    <div class="section-badge ai">Research</div>
+    <div>
+      <div class="section-title">Competitor Intelligence</div>
+      <div class="section-sub">Teardowns of key competitors. Click each to expand takeouts and what we're applying to AgedCare Compare.</div>
+    </div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div class="compare-table-wrap reveal" style="margin-bottom:20px;">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Caring Co</th>
+          <th>Care & Co (AGC)</th>
+          <th>AgedCare Compare</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Total indexed pages</td>
+          <td class="val">~900</td>
+          <td class="val">~60,000</td>
+          <td class="val">5,000+ (target)</td>
+        </tr>
+        <tr>
+          <td>Provider profiles</td>
+          <td class="val">395+</td>
+          <td class="val">7,745</td>
+          <td class="val">TBD</td>
+        </tr>
+        <tr>
+          <td>Location pages</td>
+          <td class="val">397</td>
+          <td class="val">40,000+</td>
+          <td class="val">5,000+</td>
+        </tr>
+        <tr>
+          <td>Information guides</td>
+          <td class="lose">0</td>
+          <td class="val">412</td>
+          <td class="val">20-50 (target)</td>
+        </tr>
+        <tr>
+          <td>Per-provider cost comparison</td>
+          <td class="lose">No</td>
+          <td class="lose">No</td>
+          <td class="win">Yes -- our moat</td>
+        </tr>
+        <tr>
+          <td>Quality data (staffing, compliance)</td>
+          <td class="lose">No</td>
+          <td class="lose">No</td>
+          <td class="win">Yes -- ACQSC data</td>
+        </tr>
+        <tr>
+          <td>Self-managed SAH niche</td>
+          <td class="lose">No</td>
+          <td class="lose">No</td>
+          <td class="win">Yes -- Trilogy core</td>
+        </tr>
+        <tr>
+          <td>Suburb editorial content</td>
+          <td class="lose">Thin listings</td>
+          <td class="lose">Search results only</td>
+          <td class="win">17,483 unique paras</td>
+        </tr>
+        <tr>
+          <td>Monthly traffic</td>
+          <td class="val">31,000</td>
+          <td class="val">~115,000</td>
+          <td class="lose">0 (pre-launch)</td>
+        </tr>
+        <tr>
+          <td>Years operating</td>
+          <td class="val">~2</td>
+          <td class="val">25+</td>
+          <td class="lose">0</td>
+        </tr>
+        <tr>
+          <td>Revenue model</td>
+          <td>Referral fees</td>
+          <td>Ads + listings + SaaS</td>
+          <td class="win">Provider-owned (no bias)</td>
+        </tr>
+        <tr>
+          <td>Ad-free experience</td>
+          <td class="val">Yes</td>
+          <td class="lose">No (AdSense sitewide)</td>
+          <td class="win">Yes</td>
+        </tr>
+        <tr>
+          <td>Fee calculator</td>
+          <td class="lose">No</td>
+          <td class="val">Generic (2 tools)</td>
+          <td class="val">Provider-linked (target)</td>
+        </tr>
+        <tr>
+          <td>AI matching</td>
+          <td class="lose">No</td>
+          <td class="lose">No</td>
+          <td class="win">Planned</td>
+        </tr>
+        <tr>
+          <td>Tech stack</td>
+          <td>Next.js / Vercel</td>
+          <td>Laravel / Livewire</td>
+          <td>Next.js / Vercel</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="research-grid reveal">
+
+    <!-- CARING CO -->
+    <div class="competitor-card">
+      <div class="competitor-header" onclick="toggleCompetitor(this)">
+        <div class="competitor-header-left">
+          <div class="competitor-logo" style="background:linear-gradient(135deg,#3b82f6,#6366f1);">CC</div>
+          <div>
+            <div class="competitor-name">Caring Co</div>
+            <div class="competitor-type">caringco.com.au -- Comparison marketplace (not a provider)</div>
+          </div>
+        </div>
+        <div class="competitor-header-right">
+          <span class="competitor-stat-pill">~900 pages</span>
+          <span class="competitor-stat-pill">31K/mo</span>
+          <span class="competitor-stat-pill">Est. 2023</span>
+          <div class="competitor-toggle">&#9662;</div>
+        </div>
+      </div>
+      <div class="competitor-body">
+        <div class="takeout-section">
+          <div class="takeout-label green">What we stole (now in our build plan)</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Programmatic suburb pages from free government data (My Aged Care, ACQSC, ABS)</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Three-tier geographic URL hierarchy: State > City > Suburb with cross-linking</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Trust bar with 4 hard numbers on every page (scale, rating, cost, speed)</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Dual CTA architecture: high-intent (phone) + low-intent (browse) on every page</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Pricing transparency tables: hourly rates by service type, local vs national average</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Content freshness signals: "As of [Month Year]" auto-updated via ISR</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Mobile-first design validated: 70% of traffic from mobile via Google Ads</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label red">Their gaps we're exploiting</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>Zero educational content -- no guides on how home care works, SAH explained, self-managed vs managed</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>Suburb pages are thin listings with no editorial depth or local context</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>No email capture, no newsletter, no owned audience -- 100% dependent on Google</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>T&Cs disclaim all responsibility for accuracy -- undermines their trust promise</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>No provider-level quality data (compliance, staffing, ratings)</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label violet">Our moat they can't copy</div>
+          <div class="takeout-item"><span class="takeout-bullet beat"></span>We're the actual provider. Our suburb pages can include real client stories, named care coordinators, local availability, and actual service delivery details. A directory can never match that.</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label">Key facts</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Founded 2023, 1-10 people, Sydney. Next.js on Vercel (same stack as us).</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Claims 57,000+ families matched, 4.9/5.0 Google Reviews, 31,000 monthly users</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Revenue: referral fees from providers (free to families)</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Trilogy listed at $65/hr, 4.0/5.0 rating, 1,000+ clients, "Great value" label</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Has now left the Trilogy partnership -- $50k replacement campaign in progress (Bernie/LinkedIn)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARE & CO GROUP -->
+    <div class="competitor-card">
+      <div class="competitor-header" onclick="toggleCompetitor(this)">
+        <div class="competitor-header-left">
+          <div class="competitor-logo" style="background:linear-gradient(135deg,#7c2060,#9b59b6);">C&C</div>
+          <div>
+            <div class="competitor-name">Care & Co Group (Aged Care Guide)</div>
+            <div class="competitor-type">careandco.com.au / agedcareguide.com.au -- 9-property media + directory ecosystem</div>
+          </div>
+        </div>
+        <div class="competitor-header-right">
+          <span class="competitor-stat-pill">~60,000 pages</span>
+          <span class="competitor-stat-pill">115K/mo</span>
+          <span class="competitor-stat-pill">25+ years</span>
+          <div class="competitor-toggle">&#9662;</div>
+        </div>
+      </div>
+      <div class="competitor-body">
+        <div class="takeout-section">
+          <div class="takeout-label green">What we're taking from them</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Shortlist feature as primary CTA -- lower commitment than "call now", creates return visits and preference data</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Fee estimator tools are table stakes -- we need our own version tied to actual providers</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Schema markup done properly from day one (LocalBusiness, AggregateRating, FAQ, BreadcrumbList)</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>User accounts for saved searches and return engagement</div>
+          <div class="takeout-item"><span class="takeout-bullet steal"></span>Multiple search modes: search by location OR by name, with service type filtering</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label red">Their gaps we're exploiting</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>No per-provider cost comparison -- fee estimators are generic, can't compare Provider A vs Provider B</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>7,745 provider profiles but no quality indicators, staffing ratios, compliance history, or consumer experience data</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>40,000 location pages are empty search results, not content -- no editorial depth or suburb-specific data</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>Google AdSense running sitewide with multiple ad slots -- degrades mobile UX significantly</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>No AI-powered matching or intelligent recommendation -- keyword/location search only</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>Nobody owns the self-managed Support at Home niche -- they cover all aged care broadly</div>
+          <div class="takeout-item"><span class="takeout-bullet gap"></span>No LocalBusiness or MedicalOrganization schema on provider profiles despite having 7,745 of them</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label violet">Our moat they can't copy</div>
+          <div class="takeout-item"><span class="takeout-bullet beat"></span>Conflict of interest: they own the directory AND care coordination (My Care Path) AND provider compliance tools (CarePage). They make money from providers they list. AgedCare Compare declares "powered by Trilogy" openly -- more honest than hidden referral fees.</div>
+          <div class="takeout-item"><span class="takeout-bullet beat"></span>Ad-free, clean UX vs their AdSense-heavy pages. We have no ad revenue model to protect.</div>
+          <div class="takeout-item"><span class="takeout-bullet beat"></span>Per-provider cost comparison is the "Compare" in our name. Neither competitor does this.</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label">Key facts</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Parent: DPS Publishing (South Melbourne). 9 properties: Aged Care Guide, Aged Care Online, My Care Path, HelloCare, Hello Leaders, Care & Co Media, CarePage, Feedbackly, Talent Identify</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Aged Care Guide: 7,745 provider profiles, 412 guides, 12,298 news articles, 40,000+ location pages across 35 sitemap segments</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Combined network: 4.5M annual visitors, 100K email database, 3,000+ print distribution points (180+ hospitals)</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Tech: Laravel + Livewire + Tailwind + Algolia search + Mapbox. Recently modernised.</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Endorsed by COTA (Council on the Ageing) and ACIA (Aged Care Industry Association) -- quasi-official status</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Revenue: provider listings, display ads, lead gen fees, care coordination, CarePage SaaS ($199-349/mo), print advertising</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Own analytics infra at analytics.dps.com.au -- packages engagement data for provider advertisers</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>AggregateRating schema on homepage: 4.9/5 from 322 reviews (platform-level, not provider-level)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARE & CO MEDIA -->
+    <div class="competitor-card">
+      <div class="competitor-header" onclick="toggleCompetitor(this)">
+        <div class="competitor-header-left">
+          <div class="competitor-logo" style="background:linear-gradient(135deg,#7c2060,#d4c4e0);">M</div>
+          <div>
+            <div class="competitor-name">Care & Co Media</div>
+            <div class="competitor-type">careandcomedia.com.au -- Advertising sales arm of Care & Co Group</div>
+          </div>
+        </div>
+        <div class="competitor-header-right">
+          <span class="competitor-stat-pill">1 page site</span>
+          <span class="competitor-stat-pill">B2B only</span>
+          <div class="competitor-toggle">&#9662;</div>
+        </div>
+      </div>
+      <div class="competitor-body">
+        <div class="takeout-section">
+          <div class="takeout-label">Key facts</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Single-page brochure site selling advertising across the Care & Co network -- not consumer-facing</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Sells: paid directory listings, display ads, sponsored content, print advertising (20+ annual publications), integrated campaigns</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Client logos: Foxtel, LeeCare, Mable, OPAN, Dementia Australia, Uniting, St Vincent's Care, InvoCare, Life Care</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Claims: 4.5M annual web visitors, 100K eDM subscribers, 3,000+ print distribution points</div>
+          <div class="takeout-item"><span class="takeout-bullet fact"></span>Built on Statamic CMS + Laravel. Brand colours: plum/magenta (#7C2060), teal, soft green, pink</div>
+        </div>
+        <div class="takeout-section">
+          <div class="takeout-label violet">Strategic insight</div>
+          <div class="takeout-item"><span class="takeout-bullet beat"></span>This is how Care & Co monetises. The consumer sites (AGC, ACO) are the audience product. Providers pay to reach families through directory listings and ads. This is the conflict of interest AgedCare Compare can exploit: their "trusted directory" is funded by the providers it recommends.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- POSITIONING SUMMARY -->
+  <div class="section-header reveal">
+    <div class="section-badge done">Strategy</div>
+    <div>
+      <div class="section-title">Where AgedCare Compare Wins</div>
+      <div class="section-sub">Based on combined competitor research -- our positioning against both competitors.</div>
+    </div>
+  </div>
+
+  <div class="new-grid reveal" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="new-card" style="background:rgba(0,184,148,0.04);border-color:rgba(0,184,148,0.12);">
+      <div class="new-card-title">Per-Provider Cost Comparison</div>
+      <div class="new-card-desc">Neither competitor lets you compare Provider A vs Provider B on actual price. This is the "Compare" in our name. The single biggest gap in the market.</div>
+      <div class="new-tag" style="color:var(--teal);">Nobody does this</div>
+    </div>
+    <div class="new-card" style="background:rgba(0,184,148,0.04);border-color:rgba(0,184,148,0.12);">
+      <div class="new-card-title">Government Quality Data</div>
+      <div class="new-card-desc">Staffing ratios, compliance history, star ratings, ACQSC consumer experience data on every provider profile. Care & Co has 7,745 profiles but none show this.</div>
+      <div class="new-tag" style="color:var(--teal);">Nobody shows this well</div>
+    </div>
+    <div class="new-card" style="background:rgba(0,184,148,0.04);border-color:rgba(0,184,148,0.12);">
+      <div class="new-card-title">Self-Managed SAH Niche</div>
+      <div class="new-card-desc">Both competitors cover all aged care broadly. Nobody owns self-managed Support at Home specifically. That's Trilogy's core service and our defensible niche.</div>
+      <div class="new-tag" style="color:var(--teal);">Nobody owns this</div>
+    </div>
+    <div class="new-card" style="background:rgba(139,92,246,0.04);border-color:rgba(139,92,246,0.12);">
+      <div class="new-card-title">Ad-Free, Mobile-First</div>
+      <div class="new-card-desc">Care & Co runs AdSense in every slot. We have no ad revenue model to protect. Clean UX on mobile where 70% of traffic comes from.</div>
+      <div class="new-tag" style="color:var(--violet);">UX advantage</div>
+    </div>
+    <div class="new-card" style="background:rgba(139,92,246,0.04);border-color:rgba(139,92,246,0.12);">
+      <div class="new-card-title">Rich Suburb Content</div>
+      <div class="new-card-desc">5,000+ pages with 17,483 unique editorial paragraphs, FAQs, provider stats, local context. Their 40,000 pages are empty search results. Quality beats quantity.</div>
+      <div class="new-tag" style="color:var(--violet);">Content depth</div>
+    </div>
+    <div class="new-card" style="background:rgba(139,92,246,0.04);border-color:rgba(139,92,246,0.12);">
+      <div class="new-card-title">AI-Powered Matching</div>
+      <div class="new-card-desc">"Tell us your situation, we'll recommend." Neither competitor has intelligent matching. Keyword/location search only. This is a feature gap we can own.</div>
+      <div class="new-tag" style="color:var(--violet);">Future differentiator</div>
+    </div>
+    <div class="new-card" style="background:rgba(243,156,18,0.04);border-color:rgba(243,156,18,0.12);">
+      <div class="new-card-title">Transparent Ownership</div>
+      <div class="new-card-desc">"Powered by Trilogy Care" is more honest than Care & Co's hidden referral fees and directory listing revenue. We declare our angle. They hide theirs.</div>
+      <div class="new-tag" style="color:var(--amber);">Trust positioning</div>
+    </div>
+    <div class="new-card" style="background:rgba(243,156,18,0.04);border-color:rgba(243,156,18,0.12);">
+      <div class="new-card-title">Shortlist + Accounts</div>
+      <div class="new-card-desc">Care & Co's strongest conversion pattern. "Start a shortlist" is lower commitment than "call now." We need this -- saved state, return visits, preference data.</div>
+      <div class="new-tag" style="color:var(--amber);">To build</div>
+    </div>
+    <div class="new-card" style="background:rgba(243,156,18,0.04);border-color:rgba(243,156,18,0.12);">
+      <div class="new-card-title">Schema Done Right</div>
+      <div class="new-card-desc">LocalBusiness, AggregateRating, FAQ, BreadcrumbList on every page type from day one. Neither competitor does this properly. Rich snippets in Google.</div>
+      <div class="new-tag" style="color:var(--amber);">To build</div>
+    </div>
+  </div>
+
+</div>
+
 <!-- FOOTER -->
 <div class="page-footer">
   <div class="footer-note">AgedCare Compare - Trilogy Care - Confidential - Updated 20 April 2026 - Source: Jira export (TPW project, 100 tickets) + Imran's build log</div>
@@ -1106,6 +1496,14 @@
   setTimeout(() => {
     document.querySelectorAll('[data-width]').forEach(fill => { fill.style.width = fill.dataset.width; });
   }, 300);
+
+  // Competitor card toggle
+  function toggleCompetitor(header) {
+    const body = header.nextElementSibling;
+    const toggle = header.querySelector('.competitor-toggle');
+    body.classList.toggle('open');
+    toggle.classList.toggle('open');
+  }
 
   // Animated progress bars and fills
   const barObserver = new IntersectionObserver((entries) => {
