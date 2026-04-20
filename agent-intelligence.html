@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Intelligence | Trilogy AI</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --deep: #060d17;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --gold: #f59e0b;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--deep); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 13px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
+
+  #progress { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--gold), var(--amber), var(--teal)); width: 0%; z-index: 300; transition: width 0.1s; }
+
+  /* ---- NAV ---- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 500; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .snav-tab:hover { color: #e2e8f0; }
+  .snav-tab.active { color: #e2e8f0; border-bottom-color: var(--gold); }
+  .snav-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: rgba(255,255,255,0.1); }
+  .snav-ext { font-size: 11px; color: #64748b; text-decoration: none; transition: color 0.15s; }
+  .snav-ext:hover { color: #e2e8f0; }
+  .snav-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--teal); text-decoration: none; }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+  /* ---- HEADER ---- */
+  .ai-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; background: #0a1525;
+    border-bottom: 1px solid var(--border);
+  }
+  .ai-header-icon {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: var(--gold);
+  }
+  .ai-header-text h1 { font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+  .ai-header-text p { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .ai-refresh { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+  .ai-refresh-time { font-size: 10px; color: #3a5572; font-family: 'Courier New', monospace; }
+  .ai-refresh-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 4px; padding: 4px 12px; font-size: 11px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+  .ai-refresh-btn:hover { color: var(--text); border-color: var(--border-strong); }
+
+  /* ---- LAYOUT ---- */
+  .ai-body { display: flex; min-height: calc(100vh - 52px - 52px); }
+  .ai-sidebar { width: 260px; flex-shrink: 0; background: #0a1525; border-right: 1px solid var(--border); overflow-y: auto; padding: 20px 16px; }
+  .ai-main { flex: 1; overflow: auto; padding: 20px 28px; }
+
+  /* ---- SIDEBAR ---- */
+  .ai-sb-section { margin-bottom: 24px; }
+  .ai-sb-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #3a5572; margin-bottom: 10px; }
+  .ai-sb-stat { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .ai-sb-stat-label { font-size: 11px; color: var(--muted); }
+  .ai-sb-stat-value { font-size: 13px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .ai-sb-stat-value.gold { color: var(--gold); }
+  .ai-sb-stat-value.teal { color: var(--teal); }
+  .ai-sb-stat-value.amber { color: var(--amber); }
+  .ai-sb-stat-value.red { color: var(--red); }
+
+  .ai-agent-list { list-style: none; }
+  .ai-agent-item { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 11px; color: var(--muted); cursor: pointer; transition: color 0.15s; }
+  .ai-agent-item:hover { color: var(--text); }
+  .ai-agent-item.active { color: var(--gold); }
+  .ai-agent-dot { width: 6px; height: 6px; border-radius: 50%; background: #334155; flex-shrink: 0; }
+  .ai-agent-dot.has-recs { background: var(--gold); }
+  .ai-agent-count { margin-left: auto; font-size: 10px; font-family: 'Courier New', monospace; color: #3a5572; }
+
+  /* ---- SUMMARY CARDS ---- */
+  .ai-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .ai-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .ai-card-value { font-size: 28px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .ai-card-value.gold { color: var(--gold); }
+  .ai-card-value.teal { color: var(--teal); }
+  .ai-card-value.amber { color: var(--amber); }
+  .ai-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+  /* ---- TABS ---- */
+  .ai-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; width: fit-content; }
+  .ai-tab-btn { background: none; border: none; padding: 6px 16px; font-size: 11px; font-weight: 600; color: #475569; cursor: pointer; border-radius: 4px; transition: all 0.15s; }
+  .ai-tab-btn:hover { color: var(--text); }
+  .ai-tab-btn.active { background: rgba(255,255,255,0.08); color: var(--text); }
+
+  /* ---- TABLE ---- */
+  .ai-table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+  .ai-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .ai-table th { text-align: left; padding: 10px 12px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #3a5572; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border); }
+  .ai-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.03); vertical-align: top; }
+  .ai-table tr:last-child td { border-bottom: none; }
+  .ai-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ---- BADGES ---- */
+  .ai-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .ai-badge.low { background: rgba(0,184,148,0.1); color: var(--teal); border: 1px solid rgba(0,184,148,0.25); }
+  .ai-badge.medium { background: rgba(243,156,18,0.1); color: var(--amber); border: 1px solid rgba(243,156,18,0.25); }
+  .ai-badge.high { background: rgba(231,76,60,0.1); color: var(--red); border: 1px solid rgba(231,76,60,0.25); }
+  .ai-badge.applied { background: rgba(0,184,148,0.1); color: var(--teal); border: 1px solid rgba(0,184,148,0.25); }
+  .ai-badge.pending { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.25); }
+
+  /* ---- RESEARCH CARDS ---- */
+  .ai-research-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .ai-research-card-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+  .ai-research-card-source { font-size: 10px; color: #3a5572; margin-bottom: 6px; }
+  .ai-research-card-insight { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .ai-research-card-agent { font-size: 10px; color: var(--gold); margin-top: 6px; }
+
+  /* ---- EMPTY STATE ---- */
+  .ai-empty { text-align: center; padding: 60px 20px; }
+  .ai-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+  .ai-empty-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .ai-empty-sub { font-size: 11px; color: #3a5572; max-width: 400px; margin: 0 auto; }
+</style>
+</head>
+<body>
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 49 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    <a class="snav-tab" href="agedcare-compare.html"><span class="snav-dot" style="background:#f97316;"></span> AgedCare Compare</a>
+    <a class="snav-tab" href="jarvis.html"><span class="snav-dot" style="background:#e74c3c;"></span> JARVIS</a>
+    <a class="snav-tab" href="partners-hub.html"><span class="snav-dot" style="background:#00cec9;"></span> Partners Hub</a>
+    <a class="snav-tab active" href="agent-intelligence.html"><span class="snav-dot" style="background:#f59e0b;"></span> Agent Intelligence</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://grow.trilogycare.com.au" target="_blank">Grow Admin</a>
+    <a class="snav-live" href="https://ai-roadmap-gilt.vercel.app" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<div class="ai-header">
+  <div class="ai-header-icon">&#9889;</div>
+  <div class="ai-header-text">
+    <h1>Agent Intelligence</h1>
+    <p>Daily prompt improvement recommendations - research-driven self-improvement loop</p>
+  </div>
+  <div class="ai-refresh">
+    <span class="ai-refresh-time" id="lastRefresh">--</span>
+    <button class="ai-refresh-btn" onclick="loadData()">Refresh</button>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="ai-body">
+
+  <!-- SIDEBAR -->
+  <aside class="ai-sidebar">
+    <div class="ai-sb-section">
+      <div class="ai-sb-label">Overview</div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Total Recs</span>
+        <span class="ai-sb-stat-value gold" id="statTotal">--</span>
+      </div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Applied</span>
+        <span class="ai-sb-stat-value teal" id="statApplied">--</span>
+      </div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Pending</span>
+        <span class="ai-sb-stat-value amber" id="statPending">--</span>
+      </div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Today</span>
+        <span class="ai-sb-stat-value gold" id="statToday">--</span>
+      </div>
+    </div>
+
+    <div class="ai-sb-section">
+      <div class="ai-sb-label">Agents</div>
+      <ul class="ai-agent-list" id="agentList">
+        <li class="ai-agent-item" onclick="filterAgent(null)"><span class="ai-agent-dot has-recs"></span> All Agents <span class="ai-agent-count" id="agentCountAll">--</span></li>
+      </ul>
+    </div>
+
+    <div class="ai-sb-section">
+      <div class="ai-sb-label">How It Works</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.6;">
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">6am Daily</strong></div>
+        <div style="font-size:10px;color:#3a5572;margin-bottom:10px;">Research + Output Analysis + Recommendations</div>
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Sources</strong></div>
+        <div style="font-size:10px;color:#3a5572;margin-bottom:10px;">Google, LinkedIn, Reddit, HN</div>
+        <div style="margin-bottom:6px;"><strong style="color:var(--text);">14 Agents</strong></div>
+        <div style="font-size:10px;color:#3a5572;">Social, Brand, Events, Email, Paid Ads, Copy, ORM, Prompt Engineer, Orchestrator, SEO/GEO, Performance, Competitor, Creative Strategy, Post-Mortem</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="ai-main" id="mainContent">
+
+    <!-- SUMMARY CARDS -->
+    <div class="ai-cards">
+      <div class="ai-card"><div class="ai-card-value gold" id="cardTotal">--</div><div class="ai-card-label">Total Recommendations</div></div>
+      <div class="ai-card"><div class="ai-card-value teal" id="cardApplied">--</div><div class="ai-card-label">Applied</div></div>
+      <div class="ai-card"><div class="ai-card-value amber" id="cardPending">--</div><div class="ai-card-label">Pending Review</div></div>
+      <div class="ai-card"><div class="ai-card-value gold" id="cardToday">--</div><div class="ai-card-label">Today</div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="ai-tabs">
+      <button class="ai-tab-btn active" data-tab="recs" onclick="switchTab('recs')">Recommendations</button>
+      <button class="ai-tab-btn" data-tab="research" onclick="switchTab('research')">Research Sources</button>
+    </div>
+
+    <!-- RECOMMENDATIONS TAB -->
+    <div id="recsTab">
+      <div class="ai-table-wrap">
+        <table class="ai-table">
+          <thead>
+            <tr>
+              <th>Agent</th>
+              <th>Issue</th>
+              <th>Proposed Change</th>
+              <th>Risk</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody id="recsBody">
+            <tr><td colspan="6" style="text-align:center;padding:40px;color:#3a5572;">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RESEARCH TAB -->
+    <div id="researchTab" style="display:none;">
+      <div id="researchFeed">
+        <div class="ai-empty">
+          <div class="ai-empty-icon">&#128270;</div>
+          <div class="ai-empty-title">Loading research sources...</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const API_BASE = 'https://grow.trilogycare.com.au/api/admin/agent-intelligence';
+let allRecs = [];
+let currentFilter = null;
+
+function formatTime(iso) {
+  if (!iso) return '--';
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 60000);
+  if (diff < 1) return 'Just now';
+  if (diff < 60) return diff + 'm ago';
+  const hrs = Math.floor(diff / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  const days = Math.floor(hrs / 24);
+  if (days < 7) return days + 'd ago';
+  return d.toLocaleDateString('en-AU', { day:'numeric', month:'short' });
+}
+
+function formatDate(iso) {
+  return new Date(iso).toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short' });
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.ai-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('recsTab').style.display = tab === 'recs' ? 'block' : 'none';
+  document.getElementById('researchTab').style.display = tab === 'research' ? 'block' : 'none';
+}
+
+function filterAgent(agent) {
+  currentFilter = agent;
+  document.querySelectorAll('.ai-agent-item').forEach(el => el.classList.remove('active'));
+  if (!agent) {
+    document.querySelector('.ai-agent-item').classList.add('active');
+  }
+  renderRecs();
+}
+
+function renderRecs() {
+  const filtered = currentFilter ? allRecs.filter(r => r.agent_name === currentFilter) : allRecs;
+
+  if (filtered.length === 0) {
+    document.getElementById('recsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#3a5572;">No recommendations${currentFilter ? ' for ' + currentFilter : ''} yet. The daily cron runs at 6am.</td></tr>`;
+    return;
+  }
+
+  document.getElementById('recsBody').innerHTML = filtered.map(r => `
+    <tr>
+      <td style="color:var(--text);font-weight:500;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;">${r.agent_name}</td>
+      <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${(r.current_issue || '').replace(/"/g, '&quot;')}">${r.current_issue}</td>
+      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${(r.proposed_change || '').replace(/"/g, '&quot;')}">${r.proposed_change}</td>
+      <td><span class="ai-badge ${r.risk_level}">${r.risk_level.toUpperCase()}</span></td>
+      <td><span class="ai-badge ${r.applied ? 'applied' : 'pending'}">${r.applied ? 'APPLIED' : 'PENDING'}</span></td>
+      <td style="font-size:11px;font-family:Courier New,monospace;color:#3a5572;white-space:nowrap;">${formatDate(r.created_at)}</td>
+    </tr>
+  `).join('');
+}
+
+function renderResearch() {
+  const researchRecs = allRecs.filter(r => r.research_context);
+
+  if (researchRecs.length === 0) {
+    document.getElementById('researchFeed').innerHTML = `
+      <div class="ai-empty">
+        <div class="ai-empty-icon">&#128270;</div>
+        <div class="ai-empty-title">No research sources yet</div>
+        <div class="ai-empty-sub">The daily cron searches Google, LinkedIn, Reddit, and HN for prompt engineering articles and case studies. Sources will appear here.</div>
+      </div>
+    `;
+    return;
+  }
+
+  document.getElementById('researchFeed').innerHTML = researchRecs.map(r => {
+    const ctx = r.research_context || {};
+    return `
+      <div class="ai-research-card">
+        <div class="ai-research-card-title">${ctx.article_title || r.summary}</div>
+        <div class="ai-research-card-source">${r.source || 'Unknown source'}</div>
+        <div class="ai-research-card-insight">${ctx.key_insight || r.reasoning}</div>
+        <div class="ai-research-card-agent">Applied to: ${r.agent_name} - ${formatTime(r.created_at)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAgentList() {
+  const agentMap = {};
+  allRecs.forEach(r => {
+    if (!agentMap[r.agent_name]) agentMap[r.agent_name] = 0;
+    agentMap[r.agent_name]++;
+  });
+
+  const agents = Object.entries(agentMap).sort((a, b) => b[1] - a[1]);
+  const list = document.getElementById('agentList');
+  document.getElementById('agentCountAll').textContent = allRecs.length;
+
+  let html = `<li class="ai-agent-item ${!currentFilter ? 'active' : ''}" onclick="filterAgent(null)"><span class="ai-agent-dot has-recs"></span> All Agents <span class="ai-agent-count">${allRecs.length}</span></li>`;
+  agents.forEach(([name, count]) => {
+    const shortName = name.length > 28 ? name.substring(0, 28) + '...' : name;
+    html += `<li class="ai-agent-item ${currentFilter === name ? 'active' : ''}" onclick="filterAgent('${name.replace(/'/g, "\\'")}')"><span class="ai-agent-dot has-recs"></span> ${shortName} <span class="ai-agent-count">${count}</span></li>`;
+  });
+  list.innerHTML = html;
+}
+
+function updateStats() {
+  const total = allRecs.length;
+  const applied = allRecs.filter(r => r.applied).length;
+  const pending = total - applied;
+  const today = allRecs.filter(r => new Date(r.created_at).toDateString() === new Date().toDateString()).length;
+
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statApplied').textContent = applied;
+  document.getElementById('statPending').textContent = pending;
+  document.getElementById('statToday').textContent = today;
+
+  document.getElementById('cardTotal').textContent = total;
+  document.getElementById('cardApplied').textContent = applied;
+  document.getElementById('cardPending').textContent = pending;
+  document.getElementById('cardToday').textContent = today;
+}
+
+async function loadData() {
+  document.getElementById('lastRefresh').textContent = 'Loading...';
+
+  try {
+    const token = localStorage.getItem('jarvis_token') || '';
+    const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+    const res = await fetch(API_BASE + '?per_page=200', { headers });
+    if (res.ok) {
+      const data = await res.json();
+      allRecs = data.data || [];
+    } else {
+      allRecs = [];
+    }
+
+    updateStats();
+    renderAgentList();
+    renderRecs();
+    renderResearch();
+
+    const now = new Date();
+    document.getElementById('lastRefresh').textContent = now.toLocaleTimeString('en-AU', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+  } catch (e) {
+    document.getElementById('lastRefresh').textContent = 'API unavailable';
+    allRecs = [];
+    updateStats();
+    renderRecs();
+    renderResearch();
+    renderAgentList();
+  }
+}
+
+// Scroll progress
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = Math.min(pct, 100) + '%';
+});
+
+// Init
+loadData();
+setInterval(loadData, 60000);
+</script>
+</body>
+</html>
