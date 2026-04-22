@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketing Intake Engine — Trilogy Care</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --card-bg: rgba(255,255,255,0.04);
+    --card-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; }
+
+  /* ---- SITE NAV ---- */
+  .site-nav {
+    position: sticky; top: 0; z-index: 200; height: 52px;
+    background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    display: flex; align-items: center; padding: 0 24px;
+  }
+  .snav-brand { display: flex; align-items: center; gap: 10px; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 600; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+  .snav-tab:hover { color: #cbd5e1; border-bottom-color: #334155; }
+  .snav-tab.active { color: #f8fafc; border-bottom-color: #94a3b8; }
+  .snav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ---- MAIN ---- */
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Hero */
+  .hero { text-align: center; margin-bottom: 60px; }
+  .hero h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.02em; }
+  .hero h1 em { font-style: normal; color: var(--teal); }
+  .hero .subtitle { font-size: 16px; color: var(--muted); max-width: 640px; margin: 0 auto; }
+
+  /* Section headings */
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 24px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* Before/After comparison */
+  .comparison { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 0; margin-bottom: 60px; align-items: start; }
+  .comparison-arrow { display: flex; align-items: center; justify-content: center; padding-top: 60px; font-size: 28px; color: var(--teal); }
+
+  .before-card, .after-card {
+    border-radius: 12px; padding: 28px; position: relative; overflow: hidden;
+  }
+  .before-card { background: linear-gradient(135deg, rgba(231,76,60,0.08), rgba(231,76,60,0.02)); border: 1px solid rgba(231,76,60,0.2); }
+  .after-card { background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(0,184,148,0.02)); border: 1px solid rgba(0,184,148,0.2); }
+
+  .card-header { font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .before-card .card-header { color: var(--red); }
+  .after-card .card-header { color: var(--teal); }
+  .card-header .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .before-card .card-header .dot { background: var(--red); }
+  .after-card .card-header .dot { background: var(--teal); }
+
+  .channel-list { list-style: none; }
+  .channel-list li {
+    padding: 10px 14px; margin-bottom: 6px; border-radius: 8px; font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .before-card .channel-list li { background: rgba(231,76,60,0.06); border: 1px solid rgba(231,76,60,0.1); }
+  .after-card .channel-list li { background: rgba(0,184,148,0.06); border: 1px solid rgba(0,184,148,0.1); }
+  .channel-icon { font-size: 16px; width: 24px; text-align: center; flex-shrink: 0; }
+  .channel-label { font-weight: 600; }
+  .channel-note { color: var(--muted); font-size: 12px; margin-left: auto; }
+
+  /* Flow diagram */
+  .flow-section { margin-bottom: 60px; }
+  .flow { display: flex; align-items: stretch; gap: 0; position: relative; }
+  .flow-step {
+    flex: 1; text-align: center; padding: 24px 16px; position: relative;
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; margin: 0 6px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .flow-step:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+
+  .flow-step .step-num {
+    width: 28px; height: 28px; border-radius: 50%; display: inline-flex;
+    align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .flow-step.intake .step-num { background: var(--accent); color: #fff; }
+  .flow-step.gate .step-num { background: var(--amber); color: #000; }
+  .flow-step.agents .step-num { background: var(--purple); color: #fff; }
+  .flow-step.review .step-num { background: var(--teal); color: #fff; }
+  .flow-step.output .step-num { background: #00d2d3; color: #000; }
+
+  .flow-step h3 { font-size: 14px; margin-bottom: 6px; }
+  .flow-step p { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .flow-connector {
+    position: absolute; top: 50%; width: 12px; right: -12px; z-index: 2;
+  }
+  .flow-connector::after {
+    content: ''; position: absolute; top: -4px; right: 0; width: 0; height: 0;
+    border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+    border-left: 8px solid var(--accent);
+  }
+
+  /* Agent cards */
+  .agents-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 60px; }
+  .agent-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; transition: transform 0.2s, border-color 0.2s;
+  }
+  .agent-card:hover { transform: translateY(-2px); border-color: var(--border-strong); }
+  .agent-card .agent-name { font-size: 14px; font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .agent-card .agent-role { font-size: 11px; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .agent-card .agent-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .agent-badge { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Metrics bar */
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 60px; }
+  .metric-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; text-align: center;
+  }
+  .metric-value { font-size: 28px; font-weight: 700; }
+  .metric-value.teal { color: var(--teal); }
+  .metric-value.accent { color: var(--accent); }
+  .metric-value.amber { color: var(--amber); }
+  .metric-value.purple { color: var(--purple); }
+  .metric-label { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* Status chain */
+  .status-chain { display: flex; gap: 0; margin-bottom: 60px; align-items: center; flex-wrap: wrap; }
+  .status-pill {
+    padding: 8px 18px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    white-space: nowrap; border: 1px solid var(--border);
+  }
+  .status-arrow { color: var(--muted); font-size: 18px; padding: 0 6px; }
+
+  /* SLA table */
+  .sla-table { width: 100%; border-collapse: collapse; margin-bottom: 60px; }
+  .sla-table th {
+    text-align: left; font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--muted); padding: 12px 16px;
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .sla-table td { padding: 14px 16px; font-size: 13px; border-bottom: 1px solid var(--border); }
+  .sla-table tr:hover td { background: var(--card-hover); }
+  .sla-badge {
+    display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 11px; font-weight: 600;
+  }
+  .sla-badge.quick { background: rgba(0,184,148,0.15); color: var(--teal); }
+  .sla-badge.standard { background: rgba(46,134,222,0.15); color: var(--accent); }
+  .sla-badge.complex { background: rgba(243,156,18,0.15); color: var(--amber); }
+
+  /* Bottom line */
+  .bottom-line {
+    background: linear-gradient(135deg, rgba(0,184,148,0.08), rgba(46,134,222,0.06));
+    border: 1px solid rgba(0,184,148,0.2); border-radius: 16px;
+    padding: 32px; text-align: center;
+  }
+  .bottom-line h2 { font-size: 22px; margin-bottom: 12px; }
+  .bottom-line p { font-size: 14px; color: var(--muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+  /* Animate in */
+  .fade-in { opacity: 0; transform: translateY(16px); transition: opacity 0.5s, transform 0.5s; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 768px) {
+    .comparison { grid-template-columns: 1fr; gap: 16px; }
+    .comparison-arrow { transform: rotate(90deg); padding: 0; }
+    .flow { flex-direction: column; }
+    .flow-step { margin: 6px 0; }
+    .agents-grid { grid-template-columns: 1fr; }
+    .metrics { grid-template-columns: repeat(2, 1fr); }
+    .status-chain { flex-direction: column; align-items: flex-start; }
+    .status-arrow { transform: rotate(90deg); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="site-nav">
+  <div class="snav-brand">
+    <div class="snav-brand-name">Trilogy <span>AI</span></div>
+    <div class="snav-day">Day 50 of 90</div>
+  </div>
+  <div class="snav-tabs">
+    <a href="index.html" class="snav-tab"><span class="snav-dot" style="background:#54a0ff"></span> Roadmap</a>
+    <a href="activity-trace.html" class="snav-tab"><span class="snav-dot" style="background:#00b894"></span> Activity</a>
+    <a href="marketing-intake.html" class="snav-tab active"><span class="snav-dot" style="background:#9b59b6"></span> Intake Engine</a>
+    <a href="jarvis.html" class="snav-tab"><span class="snav-dot" style="background:#f39c12"></span> JARVIS</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <div class="hero fade-in">
+    <h1>The Marketing <em>Intake Engine</em></h1>
+    <p class="subtitle">One entry point. Automatic quality control. AI agents do the work. Humans approve and ship.</p>
+  </div>
+
+  <!-- THE PROBLEM -->
+  <div class="section-label fade-in">The Problem vs The Solution</div>
+
+  <div class="comparison fade-in">
+    <!-- Before -->
+    <div class="before-card">
+      <div class="card-header"><span class="dot"></span> Today -- Fragmented</div>
+      <ul class="channel-list">
+        <li><span class="channel-icon">&#9993;</span><span class="channel-label">Email</span><span class="channel-note">ad-hoc, no format</span></li>
+        <li><span class="channel-icon">&#128172;</span><span class="channel-label">Teams messages</span><span class="channel-note">scattered across channels</span></li>
+        <li><span class="channel-icon">&#128196;</span><span class="channel-label">SharePoint forms</span><span class="channel-note">no auto-routing</span></li>
+        <li><span class="channel-icon">&#128203;</span><span class="channel-label">Asana tasks</span><span class="channel-note">vague briefs accepted</span></li>
+        <li><span class="channel-icon">&#128694;</span><span class="channel-label">Walk-ups</span><span class="channel-note">"can you just..."</span></li>
+        <li><span class="channel-icon">&#128241;</span><span class="channel-label">Phone / verbal</span><span class="channel-note">no record</span></li>
+      </ul>
+      <div style="margin-top: 16px; padding: 12px; background: rgba(231,76,60,0.08); border-radius: 8px; font-size: 12px; color: #e8a0a0;">
+        <strong>Result:</strong> Manual triage. Vague briefs accepted. Work falls through cracks. No visibility on what marketing is actually being asked to do.
+      </div>
+    </div>
+
+    <!-- Arrow -->
+    <div class="comparison-arrow">&#10132;</div>
+
+    <!-- After -->
+    <div class="after-card">
+      <div class="card-header"><span class="dot"></span> New -- Centralised</div>
+      <ul class="channel-list">
+        <li><span class="channel-icon">&#9889;</span><span class="channel-label">Single intake form</span><span class="channel-note">grow.trilogycare.com.au</span></li>
+        <li><span class="channel-icon">&#128274;</span><span class="channel-label">Quality gate</span><span class="channel-note">rejects vague briefs</span></li>
+        <li><span class="channel-icon">&#129302;</span><span class="channel-label">AI agents</span><span class="channel-note">auto-process valid briefs</span></li>
+        <li><span class="channel-icon">&#128065;</span><span class="channel-label">Human review</span><span class="channel-note">approve before publish</span></li>
+        <li><span class="channel-icon">&#128200;</span><span class="channel-label">Full visibility</span><span class="channel-note">SLA tracking, status, history</span></li>
+        <li><span class="channel-icon">&#128640;</span><span class="channel-label">Output delivered</span><span class="channel-note">copy, design, social, email</span></li>
+      </ul>
+      <div style="margin-top: 16px; padding: 12px; background: rgba(0,184,148,0.08); border-radius: 8px; font-size: 12px; color: #a0e8d4;">
+        <strong>Result:</strong> Every request tracked. Incomplete briefs bounced back. AI does the production. Humans do the thinking.
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="section-label fade-in">How It Works -- 5 Steps</div>
+
+  <div class="flow-section fade-in">
+    <div class="flow">
+      <div class="flow-step intake">
+        <div class="step-num">1</div>
+        <h3>Request Submitted</h3>
+        <p>Anyone in the business submits a marketing request through a single form on the Grow platform. No more emails, Teams messages, or walk-ups.</p>
+      </div>
+      <div class="flow-step gate">
+        <div class="step-num">2</div>
+        <h3>Quality Gate</h3>
+        <p>AI checks the brief for 4 required fields: task type, due date, target audience, and call to action. Incomplete briefs are bounced back automatically.</p>
+      </div>
+      <div class="flow-step agents">
+        <div class="step-num">3</div>
+        <h3>Agent Routing</h3>
+        <p>Valid briefs are decomposed into sub-tasks and routed to specialised AI agents: copy, design, social, email. Each agent produces a first draft.</p>
+      </div>
+      <div class="flow-step review">
+        <div class="step-num">4</div>
+        <h3>Human Review</h3>
+        <p>Every piece of output is reviewed and approved by a human before it goes live. The AI does the production work. The team does the quality control.</p>
+      </div>
+      <div class="flow-step output">
+        <div class="step-num">5</div>
+        <h3>Output Shipped</h3>
+        <p>Approved content is published. Performance is tracked. The data loops back to make agents better next time.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE AGENT TEAM -->
+  <div class="section-label fade-in">The AI Agent Team</div>
+
+  <div class="agents-grid fade-in">
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: var(--accent)"></span> Copy Agent</div>
+      <div class="agent-role">Content Production</div>
+      <div class="agent-desc">Writes articles, guides, ad copy, email body text, and scripts. Produces full drafts ready for human review.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: var(--purple)"></span> Design Agent</div>
+      <div class="agent-role">Visual Production</div>
+      <div class="agent-desc">Creates design briefs, generates Canva assets using brand templates, coordinates visual production across formats.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: var(--teal)"></span> Social Agent</div>
+      <div class="agent-role">Social Media</div>
+      <div class="agent-desc">Produces platform-specific captions, hashtag sets, posting schedules, and format variations for each social channel.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: var(--amber)"></span> Email Agent</div>
+      <div class="agent-role">Email Marketing</div>
+      <div class="agent-desc">Builds email sequences, drafts automation flows, sets up campaign sends with segmentation and timing logic.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: #00d2d3"></span> Ops Agent</div>
+      <div class="agent-role">Coordination</div>
+      <div class="agent-desc">Manages the intake queue, tracks delivery status, flags blockers, drafts follow-up chasers, and produces weekly reports.</div>
+    </div>
+    <div class="agent-card">
+      <div class="agent-name"><span class="agent-badge" style="background: var(--red)"></span> Campaign Orchestrator</div>
+      <div class="agent-role">Routing + Sequencing</div>
+      <div class="agent-desc">Takes a full campaign brief, decomposes it into sub-tasks, sequences the work across agents, and ensures nothing is missed.</div>
+    </div>
+  </div>
+
+  <!-- STATUS CHAIN -->
+  <div class="section-label fade-in">Workflow Status Chain</div>
+
+  <div class="status-chain fade-in">
+    <span class="status-pill" style="background: rgba(231,76,60,0.15); color: #e8a0a0;">Needs More Info</span>
+    <span class="status-arrow">&#8594;</span>
+    <span class="status-pill" style="background: rgba(127,150,178,0.15); color: var(--muted);">Backlog</span>
+    <span class="status-arrow">&#8594;</span>
+    <span class="status-pill" style="background: rgba(46,134,222,0.15); color: var(--accent);">Todo</span>
+    <span class="status-arrow">&#8594;</span>
+    <span class="status-pill" style="background: rgba(155,89,182,0.15); color: #c39bd3;">In Progress (Agent)</span>
+    <span class="status-arrow">&#8594;</span>
+    <span class="status-pill" style="background: rgba(243,156,18,0.15); color: var(--amber);">In Review</span>
+    <span class="status-arrow">&#8594;</span>
+    <span class="status-pill" style="background: rgba(0,184,148,0.15); color: var(--teal);">Done</span>
+  </div>
+
+  <!-- SLA TIERS -->
+  <div class="section-label fade-in">SLA Tiers -- Delivery Guarantees</div>
+
+  <table class="sla-table fade-in">
+    <thead>
+      <tr>
+        <th>Tier</th>
+        <th>Example Work</th>
+        <th>Turnaround</th>
+        <th>Agent Deadline</th>
+        <th>Review Window</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="sla-badge quick">Quick</span></td>
+        <td>Single social post, short copy, simple asset</td>
+        <td>1 day</td>
+        <td>Same day</td>
+        <td>4 hours</td>
+      </tr>
+      <tr>
+        <td><span class="sla-badge standard">Standard</span></td>
+        <td>Blog post, carousel, email campaign, multi-format</td>
+        <td>3 days</td>
+        <td>Day 2</td>
+        <td>1 day</td>
+      </tr>
+      <tr>
+        <td><span class="sla-badge complex">Complex</span></td>
+        <td>Full campaign, content calendar, multi-channel launch</td>
+        <td>5+ days</td>
+        <td>Day 3-4</td>
+        <td>1-2 days</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- KEY METRICS -->
+  <div class="section-label fade-in">What This Delivers</div>
+
+  <div class="metrics fade-in">
+    <div class="metric-card">
+      <div class="metric-value teal">1</div>
+      <div class="metric-label">Single entry point for all marketing requests</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value accent">6</div>
+      <div class="metric-label">AI agents processing work in parallel</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value amber">100%</div>
+      <div class="metric-label">Requests tracked with SLA enforcement</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-value purple">0</div>
+      <div class="metric-label">Vague or incomplete briefs accepted</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM LINE -->
+  <div class="bottom-line fade-in">
+    <h2>The Bottom Line</h2>
+    <p>Every marketing request from every department goes through one door. AI enforces brief quality. AI agents produce the first draft. Humans review and approve. Nothing falls through the cracks. The team focuses on strategy, not production.</p>
+  </div>
+
+</div>
+
+<script>
+// Fade-in on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
