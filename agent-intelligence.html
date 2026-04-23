@@ -104,6 +104,7 @@
   .ai-card-value.teal { color: var(--teal); }
   .ai-card-value.amber { color: var(--amber); }
   .ai-card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+  .ai-card-sub { font-size: 10px; color: #3a5572; margin-top: 2px; font-family: 'Courier New', monospace; }
 
   /* ---- TABS ---- */
   .ai-tabs { display: flex; gap: 2px; margin-bottom: 20px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; width: fit-content; }
@@ -139,6 +140,166 @@
   .ai-empty-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
   .ai-empty-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
   .ai-empty-sub { font-size: 11px; color: #3a5572; max-width: 400px; margin: 0 auto; }
+
+  /* ---- SECTION HEADERS ---- */
+  .ai-section-header {
+    display: flex; align-items: center; gap: 10px;
+    margin: 28px 0 14px 0; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ai-section-header:first-child { margin-top: 0; }
+  .ai-section-header h2 { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+  .ai-section-header .ai-section-sub { font-size: 10px; color: #3a5572; margin-left: auto; }
+
+  /* ---- GROWTH LOOP DIAGRAM ---- */
+  .loop-diagram {
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    padding: 28px 16px; margin-bottom: 20px;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    overflow-x: auto;
+  }
+  .loop-step {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    min-width: 100px; position: relative;
+  }
+  .loop-icon {
+    width: 48px; height: 48px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; border: 2px solid;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .loop-icon:hover { transform: scale(1.1); }
+  .loop-step-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .loop-step-detail { font-size: 9px; color: #3a5572; text-align: center; max-width: 110px; }
+  .loop-arrow {
+    font-size: 16px; color: #334155; margin: 0 6px; flex-shrink: 0; margin-top: -20px;
+  }
+  .loop-return {
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 8px; font-size: 10px; color: #3a5572;
+  }
+  .loop-return-line {
+    height: 1px; background: linear-gradient(90deg, transparent, #334155, transparent); flex: 1;
+  }
+
+  /* ---- MATURITY CARDS ---- */
+  .maturity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .maturity-card {
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden;
+  }
+  .maturity-card:hover { border-color: var(--border-strong); background: rgba(255,255,255,0.06); }
+  .maturity-card.selected { border-color: var(--gold); }
+  .maturity-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .maturity-tier {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 2px 6px; border-radius: 3px;
+  }
+  .maturity-tier.platinum { background: rgba(148,163,184,0.15); color: #e2e8f0; border: 1px solid rgba(148,163,184,0.3); }
+  .maturity-tier.gold { background: rgba(245,158,11,0.1); color: var(--gold); border: 1px solid rgba(245,158,11,0.25); }
+  .maturity-tier.silver { background: rgba(148,163,184,0.1); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+  .maturity-tier.bronze { background: rgba(180,130,80,0.1); color: #c4956a; border: 1px solid rgba(180,130,80,0.2); }
+  .maturity-card-name { font-size: 11px; font-weight: 600; color: var(--text); flex: 1; }
+  .maturity-card-stats { display: flex; gap: 16px; margin-bottom: 8px; }
+  .maturity-stat { font-size: 10px; color: var(--muted); }
+  .maturity-stat strong { color: var(--text); font-family: 'Courier New', monospace; }
+  .maturity-sparkline { height: 24px; display: flex; align-items: flex-end; gap: 2px; }
+  .maturity-spark-bar { width: 8px; border-radius: 2px 2px 0 0; min-height: 2px; transition: height 0.3s; }
+  .maturity-progress { height: 3px; background: rgba(255,255,255,0.06); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .maturity-progress-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+
+  /* ---- VELOCITY CHART ---- */
+  .velocity-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .velocity-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .velocity-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .velocity-card-name { font-size: 11px; font-weight: 600; color: var(--text); }
+  .velocity-rate { font-size: 18px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .velocity-bar-track { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+  .velocity-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s; }
+  .velocity-detail { font-size: 10px; color: #3a5572; display: flex; justify-content: space-between; }
+
+  /* ---- QUALITY AUDIT HISTORY ---- */
+  .audit-timeline { position: relative; padding-left: 24px; margin-bottom: 20px; }
+  .audit-timeline::before { content: ''; position: absolute; left: 7px; top: 0; bottom: 0; width: 1px; background: var(--border); }
+  .audit-entry { position: relative; padding: 12px 0 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .audit-entry:last-child { border-bottom: none; }
+  .audit-dot {
+    position: absolute; left: -20px; top: 16px;
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid var(--deep);
+  }
+  .audit-entry-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .audit-date { font-size: 10px; font-family: 'Courier New', monospace; color: #3a5572; }
+  .audit-avg-grade { font-size: 11px; font-weight: 700; }
+  .audit-agents-row { display: flex; flex-wrap: wrap; gap: 6px; }
+  .audit-agent-chip {
+    font-size: 9px; padding: 2px 6px; border-radius: 3px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+    color: var(--muted);
+  }
+
+  /* ---- BEFORE/AFTER ---- */
+  .ba-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 12px; overflow: hidden; }
+  .ba-header {
+    display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+    background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border);
+  }
+  .ba-agent { font-size: 11px; font-weight: 600; color: var(--text); }
+  .ba-date { font-size: 10px; color: #3a5572; margin-left: auto; font-family: 'Courier New', monospace; }
+  .ba-body { display: grid; grid-template-columns: 1fr 1fr; }
+  .ba-side { padding: 14px 16px; }
+  .ba-side:first-child { border-right: 1px solid var(--border); }
+  .ba-side-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .ba-side-label.before { color: var(--red); }
+  .ba-side-label.after { color: var(--teal); }
+  .ba-content { font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .ba-impact { padding: 8px 16px; background: rgba(0,184,148,0.04); border-top: 1px solid var(--border); font-size: 10px; color: var(--teal); display: flex; align-items: center; gap: 6px; }
+
+  /* ---- IMPACT TRACKER ---- */
+  .impact-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .impact-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .impact-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .impact-icon { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+  .impact-card-title { font-size: 11px; font-weight: 600; color: var(--text); }
+  .impact-metric { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+  .impact-metric-value { font-size: 22px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .impact-metric-label { font-size: 10px; color: var(--muted); }
+  .impact-metric-delta { font-size: 11px; font-weight: 600; }
+  .impact-metric-delta.up { color: var(--teal); }
+  .impact-metric-delta.down { color: var(--red); }
+  .impact-detail { font-size: 10px; color: #3a5572; margin-top: 6px; line-height: 1.5; }
+
+  /* ---- AGENT PROFILE MODAL ---- */
+  .agent-profile-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 500; justify-content: center; align-items: center;
+  }
+  .agent-profile-overlay.visible { display: flex; }
+  .agent-profile {
+    width: 680px; max-height: 80vh; overflow-y: auto;
+    background: #0f172a; border: 1px solid var(--border-strong); border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .agent-profile-header {
+    display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+    background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border);
+  }
+  .agent-profile-close { margin-left: auto; background: none; border: none; color: #475569; font-size: 18px; cursor: pointer; }
+  .agent-profile-close:hover { color: var(--text); }
+  .agent-profile-body { padding: 20px; }
+  .agent-profile-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+  .agent-profile-stat { text-align: center; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; }
+  .agent-profile-stat-val { font-size: 20px; font-weight: 700; font-family: 'Courier New', monospace; }
+  .agent-profile-stat-label { font-size: 9px; color: #3a5572; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  .agent-profile-timeline { margin-top: 16px; }
+  .agent-profile-timeline-entry { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px; }
+  .agent-profile-timeline-entry:last-child { border-bottom: none; }
+  .agent-profile-timeline-date { color: #3a5572; font-family: 'Courier New', monospace; white-space: nowrap; min-width: 60px; }
+  .agent-profile-timeline-text { color: var(--muted); flex: 1; }
+
+  /* ---- ANIMATE ---- */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .animate-in { animation: fadeUp 0.3s ease-out both; }
 </style>
 </head>
 <body>
@@ -172,7 +333,7 @@
   <div class="ai-header-icon">&#9889;</div>
   <div class="ai-header-text">
     <h1>Agent Intelligence</h1>
-    <p>Daily prompt improvement recommendations - research-driven self-improvement loop</p>
+    <p>Self-improving agent loop -- research, analyse, recommend, apply, measure, repeat</p>
   </div>
   <div class="ai-refresh">
     <span class="ai-refresh-time" id="lastRefresh">--</span>
@@ -203,6 +364,14 @@
         <span class="ai-sb-stat-label">Today</span>
         <span class="ai-sb-stat-value gold" id="statToday">--</span>
       </div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Apply Rate</span>
+        <span class="ai-sb-stat-value teal" id="statApplyRate">--</span>
+      </div>
+      <div class="ai-sb-stat">
+        <span class="ai-sb-stat-label">Avg Grade</span>
+        <span class="ai-sb-stat-value gold" id="statAvgGrade">--</span>
+      </div>
     </div>
 
     <div class="ai-sb-section">
@@ -213,14 +382,29 @@
     </div>
 
     <div class="ai-sb-section">
-      <div class="ai-sb-label">How It Works</div>
-      <div style="font-size:11px;color:var(--muted);line-height:1.6;">
-        <div style="margin-bottom:6px;"><strong style="color:var(--text);">6am Daily</strong></div>
-        <div style="font-size:10px;color:#3a5572;margin-bottom:10px;">Research + Output Analysis + Recommendations</div>
-        <div style="margin-bottom:6px;"><strong style="color:var(--text);">Sources</strong></div>
-        <div style="font-size:10px;color:#3a5572;margin-bottom:10px;">Google, LinkedIn, Reddit, HN</div>
-        <div style="margin-bottom:6px;"><strong style="color:var(--text);">14 Agents</strong></div>
-        <div style="font-size:10px;color:#3a5572;">Social, Brand, Events, Email, Paid Ads, Copy, ORM, Prompt Engineer, Orchestrator, SEO/GEO, Performance, Competitor, Creative Strategy, Post-Mortem</div>
+      <div class="ai-sb-label">Maturity Legend</div>
+      <div style="font-size:10px;line-height:1.8;color:var(--muted);">
+        <div><span class="maturity-tier platinum" style="font-size:8px;">PLATINUM</span> 8+ applied, grade A</div>
+        <div><span class="maturity-tier gold" style="font-size:8px;">GOLD</span> 5-7 applied, grade A-B</div>
+        <div><span class="maturity-tier silver" style="font-size:8px;">SILVER</span> 2-4 applied, grade B</div>
+        <div><span class="maturity-tier bronze" style="font-size:8px;">BRONZE</span> 0-1 applied, grade C+</div>
+      </div>
+    </div>
+
+    <div class="ai-sb-section">
+      <div class="ai-sb-label">Growth Loop</div>
+      <div style="font-size:10px;color:var(--muted);line-height:1.7;">
+        <div>1. Research (6am daily)</div>
+        <div style="color:#3a5572;padding-left:10px;">Google, LinkedIn, Reddit, HN</div>
+        <div>2. Analyse agent output</div>
+        <div style="color:#3a5572;padding-left:10px;">Grade A/B/C/D per issue</div>
+        <div>3. Generate recommendations</div>
+        <div style="color:#3a5572;padding-left:10px;">Specific prompt changes</div>
+        <div>4. Apply (human review)</div>
+        <div style="color:#3a5572;padding-left:10px;">Low-risk auto, high-risk manual</div>
+        <div>5. Measure impact</div>
+        <div style="color:#3a5572;padding-left:10px;">Quality delta per agent</div>
+        <div>6. Repeat</div>
       </div>
     </div>
   </aside>
@@ -230,13 +414,110 @@
 
     <!-- SUMMARY CARDS -->
     <div class="ai-cards">
-      <div class="ai-card"><div class="ai-card-value gold" id="cardTotal">--</div><div class="ai-card-label">Total Recommendations</div></div>
-      <div class="ai-card"><div class="ai-card-value teal" id="cardApplied">--</div><div class="ai-card-label">Applied</div></div>
-      <div class="ai-card"><div class="ai-card-value amber" id="cardPending">--</div><div class="ai-card-label">Pending Review</div></div>
-      <div class="ai-card"><div class="ai-card-value gold" id="cardToday">--</div><div class="ai-card-label">Today</div></div>
+      <div class="ai-card">
+        <div class="ai-card-value gold" id="cardTotal">--</div>
+        <div class="ai-card-label">Total Recommendations</div>
+        <div class="ai-card-sub" id="cardTotalSub">across 14 agents</div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-value teal" id="cardApplied">--</div>
+        <div class="ai-card-label">Applied</div>
+        <div class="ai-card-sub" id="cardApplyRate">--% apply rate</div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-value amber" id="cardPending">--</div>
+        <div class="ai-card-label">Pending Review</div>
+        <div class="ai-card-sub" id="cardPendingSub">awaiting Imran</div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-value" style="color:var(--purple);" id="cardAvgGrade">--</div>
+        <div class="ai-card-label">Avg Quality Grade</div>
+        <div class="ai-card-sub" id="cardGradeTrend">--</div>
+      </div>
     </div>
 
-    <!-- TABS -->
+    <!-- GROWTH LOOP DIAGRAM -->
+    <div class="ai-section-header">
+      <h2>Growth Loop</h2>
+      <span class="ai-section-sub">The continuous improvement cycle that makes every agent smarter</span>
+    </div>
+    <div class="loop-diagram">
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(46,134,222,0.12);border-color:rgba(46,134,222,0.4);color:var(--accent);">&#128270;</div>
+        <div class="loop-step-label" style="color:var(--accent);">Research</div>
+        <div class="loop-step-detail">Daily scan of Google, LinkedIn, Reddit, HN for prompt engineering advances</div>
+      </div>
+      <div class="loop-arrow">&#10140;</div>
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(155,89,182,0.12);border-color:rgba(155,89,182,0.4);color:var(--purple);">&#128202;</div>
+        <div class="loop-step-label" style="color:var(--purple);">Analyse</div>
+        <div class="loop-step-detail">Grade recent agent outputs A/B/C/D against quality criteria</div>
+      </div>
+      <div class="loop-arrow">&#10140;</div>
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(245,158,11,0.12);border-color:rgba(245,158,11,0.4);color:var(--gold);">&#9889;</div>
+        <div class="loop-step-label" style="color:var(--gold);">Recommend</div>
+        <div class="loop-step-detail">Generate specific prompt changes with risk rating and rationale</div>
+      </div>
+      <div class="loop-arrow">&#10140;</div>
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(0,184,148,0.12);border-color:rgba(0,184,148,0.4);color:var(--teal);">&#10003;</div>
+        <div class="loop-step-label" style="color:var(--teal);">Apply</div>
+        <div class="loop-step-detail">Human review. Low-risk auto-applied. Medium/high need Imran's approval</div>
+      </div>
+      <div class="loop-arrow">&#10140;</div>
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(84,160,255,0.12);border-color:rgba(84,160,255,0.4);color:var(--light-blue);">&#128200;</div>
+        <div class="loop-step-label" style="color:var(--light-blue);">Measure</div>
+        <div class="loop-step-detail">Track quality grade change, output depth, and stakeholder feedback</div>
+      </div>
+      <div class="loop-arrow" style="color:var(--teal);">&#8634;</div>
+      <div class="loop-step">
+        <div class="loop-icon" style="background:rgba(46,134,222,0.12);border-color:rgba(46,134,222,0.4);color:var(--accent);opacity:0.5;">&#128270;</div>
+        <div class="loop-step-label" style="color:var(--accent);opacity:0.5;">Repeat</div>
+        <div class="loop-step-detail">Feeds back into tomorrow's research with new context</div>
+      </div>
+    </div>
+
+    <!-- AGENT MATURITY -->
+    <div class="ai-section-header">
+      <h2>Agent Maturity</h2>
+      <span class="ai-section-sub">Click any agent for full profile</span>
+    </div>
+    <div class="maturity-grid" id="maturityGrid"></div>
+
+    <!-- IMPROVEMENT VELOCITY -->
+    <div class="ai-section-header">
+      <h2>Improvement Velocity</h2>
+      <span class="ai-section-sub">Which agents are improving fastest</span>
+    </div>
+    <div class="velocity-grid" id="velocityGrid"></div>
+
+    <!-- IMPACT TRACKER -->
+    <div class="ai-section-header">
+      <h2>Impact Tracker</h2>
+      <span class="ai-section-sub">Measurable outcomes from applied recommendations</span>
+    </div>
+    <div class="impact-grid" id="impactGrid"></div>
+
+    <!-- BEFORE / AFTER -->
+    <div class="ai-section-header">
+      <h2>Before / After Snapshots</h2>
+      <span class="ai-section-sub">Concrete changes in agent behaviour after recommendations</span>
+    </div>
+    <div id="beforeAfterFeed"></div>
+
+    <!-- QUALITY AUDIT HISTORY -->
+    <div class="ai-section-header">
+      <h2>Quality Audit History</h2>
+      <span class="ai-section-sub">Weekly audit grades from JARVIS Cron J7</span>
+    </div>
+    <div class="audit-timeline" id="auditTimeline"></div>
+
+    <!-- TABS: RECS + RESEARCH -->
+    <div class="ai-section-header">
+      <h2>All Recommendations</h2>
+    </div>
     <div class="ai-tabs">
       <button class="ai-tab-btn active" data-tab="recs" onclick="switchTab('recs')">Recommendations</button>
       <button class="ai-tab-btn" data-tab="research" onclick="switchTab('research')">Research Sources</button>
@@ -276,39 +557,140 @@
   </main>
 </div>
 
+<!-- AGENT PROFILE MODAL -->
+<div class="agent-profile-overlay" id="agentProfileOverlay" onclick="if(event.target===this)closeProfile()">
+  <div class="agent-profile" id="agentProfileContent"></div>
+</div>
+
 <script>
 const API_BASE = 'https://grow.trilogycare.com.au/api/admin/agent-intelligence';
 let allRecs = [];
 let currentFilter = null;
 
-// Embedded data -- populated by Agent Intelligence cron, falls back to API when available
+// All 14 agents
+const ALL_AGENTS = [
+  'Social Media Agent','Brand Agent','Events Agent','Email Agent','Paid Ads Agent',
+  'Copywriting Agent','ORM Agent','Prompt Engineer Agent','Campaign Orchestrator',
+  'SEO/GEO Agent','Performance Anomaly Agent','Competitor Intel Agent',
+  'Creative Strategy Agent','Campaign Post-Mortem Agent'
+];
+
+// Embedded data
 const EMBEDDED_DATA = [
-  // === 22 April 2026 -- Daily Run ===
   {agent_name:"Social Media Agent",recommendation_type:"research_driven",summary:"Add platform-specific hook formats to opening lines",current_issue:"Social captions use the same structure across LinkedIn, Facebook, and Instagram -- no platform adaptation in the first line",proposed_change:"Add instruction: 'For LinkedIn, open with a data point or contrarian take. For Facebook, open with a relatable question. For Instagram, open with a short punchy statement under 8 words.'",reasoning:"Platform-native hooks increase stop-scroll rate. LinkedIn rewards authority signals, Facebook rewards relatability, Instagram rewards brevity.",source:"HubSpot 2026 Social Trends Report",risk_level:"low",applied:true,created_at:"2026-04-22T06:00:00Z",research_context:{article_title:"2026 Social Media Hooks That Actually Stop the Scroll",key_insight:"Platform-specific opening lines increase engagement 34% vs generic cross-posted content",source_url:"hubspot.com/marketing/social-hooks-2026"}},
   {agent_name:"Social Media Agent",recommendation_type:"output_analysis",summary:"Include posting time recommendation with each caption",current_issue:"Agent outputs captions but never recommends optimal posting time -- leaves scheduling entirely to Miranda",proposed_change:"Add to output template: '**Recommended posting window:** [day] [time range AEST] -- based on [platform] algorithm priority for [content type]'",reasoning:"Trilogy audience skews 55+ and their children (35-55). Peak engagement windows differ significantly from generic best-practice times.",source:"output analysis of TC-SOC-041",risk_level:"low",applied:true,created_at:"2026-04-22T06:00:00Z",research_context:null},
   {agent_name:"Brand Agent",recommendation_type:"research_driven",summary:"Add emotional resonance check to brand QA pass",current_issue:"Brand QA checks visual consistency and tone but does not assess whether the piece creates the intended emotional response",proposed_change:"Add QA gate: 'Emotional resonance check -- does this piece make the reader feel [safe/empowered/understood]? If the dominant emotion is anxiety, guilt, or confusion, flag for revision.'",reasoning:"Aged care marketing that triggers anxiety about ageing drives clicks but kills conversion. Trilogy brand promise is empowerment and independence.",source:"Nielsen Norman Group -- Emotional Design in Healthcare",risk_level:"medium",applied:false,created_at:"2026-04-22T06:00:00Z",research_context:{article_title:"Emotional Design Principles for Healthcare Marketing",key_insight:"Healthcare brands that lead with empowerment over fear see 2.3x higher conversion from click to enquiry",source_url:"nngroup.com/articles/emotional-design-healthcare"}},
   {agent_name:"Email Agent",recommendation_type:"output_analysis",summary:"Subject lines too long -- truncating on mobile",current_issue:"Email agent generates subject lines averaging 62 characters -- Gmail mobile truncates at 41 characters, Apple Mail at 50",proposed_change:"Add constraint: 'Subject line MUST be under 45 characters. Front-load the key word in the first 4 words. Generate a preview text (preheader) of 40-80 characters that complements but does not repeat the subject.'",reasoning:"70%+ of Trilogy email opens are on mobile. Current truncation means recipients see incomplete subjects.",source:"output analysis of TC-EMAIL-018",risk_level:"low",applied:true,created_at:"2026-04-22T06:00:00Z",research_context:null},
   {agent_name:"Copywriting Agent",recommendation_type:"research_driven",summary:"Add readability score target to all copy output",current_issue:"Copy agent produces content at varying reading levels -- some pieces score Grade 12+, too complex for the 55+ primary audience",proposed_change:"Add instruction: 'All copy must score Flesch-Kincaid Grade 7-9. Use short sentences (under 20 words). Prefer active voice. Replace jargon: say home care not HCP, say funding not subsidised package allocation.'",reasoning:"Trilogy audience includes people in crisis (just received an aged care assessment). Cognitive load is already high -- simple language reduces friction to action.",source:"Anthropic Prompt Engineering Guide -- Audience Calibration",risk_level:"low",applied:true,created_at:"2026-04-22T06:00:00Z",research_context:{article_title:"Prompt Engineering for Audience-Specific Output Quality",key_insight:"Adding explicit readability targets to prompts reduces output variance by 40% and improves consistency across runs",source_url:"docs.anthropic.com/en/docs/build-with-claude/prompt-engineering"}},
   {agent_name:"Paid Ads Agent",recommendation_type:"both",summary:"Include negative keyword suggestions with every ad group output",current_issue:"Agent generates ad copy and keyword targeting but never suggests negative keywords -- leaving wasted spend identification to manual review",proposed_change:"Add to output: '**Negative keyword recommendations:** [list 5-10 terms to exclude based on the target keyword cluster]. Rationale: [why each would attract irrelevant clicks for Trilogy]'",reasoning:"Trilogy spends $300k+ on paid media. Even 5% waste reduction from better negative keywords = $15k+ saved annually.",source:"Search Engine Journal -- AI Ad Copy Agents",risk_level:"low",applied:false,created_at:"2026-04-22T06:00:00Z",research_context:{article_title:"How AI Agents Are Changing PPC Workflow in 2026",key_insight:"Best-performing AI ad agents include negative keyword generation as standard output -- reduces wasted spend 8-12%",source_url:"searchenginejournal.com/ai-ppc-agents-2026"}},
-  // === 21 April 2026 ===
   {agent_name:"Competitor Intel Agent",recommendation_type:"research_driven",summary:"Add sentiment shift detection to competitor monitoring",current_issue:"Agent reports competitor activity (new pages, ad copy, social posts) but does not track sentiment changes in competitor reviews or media mentions",proposed_change:"Add analysis step: 'For each competitor, assess sentiment trend across their most recent 10 Google reviews and any media mentions in the last 30 days. Flag if sentiment is shifting negative (opportunity) or positive (threat).'",reasoning:"Competitor review sentiment is a leading indicator. A competitor with declining reviews is vulnerable to targeted campaigns.",source:"Semrush Blog -- Competitive Intelligence with AI",risk_level:"medium",applied:false,created_at:"2026-04-21T06:00:00Z",research_context:{article_title:"AI-Powered Competitive Intelligence: Beyond Activity Tracking",key_insight:"Adding sentiment analysis to competitor monitoring catches market shifts 2-3 weeks before they show in traffic data",source_url:"semrush.com/blog/ai-competitive-intelligence-2026"}},
   {agent_name:"SEO/GEO Agent",recommendation_type:"output_analysis",summary:"Missing local schema markup recommendations for suburb pages",current_issue:"SEO agent recommends title tags, meta descriptions, and content structure but never includes LocalBusiness or Service schema markup for suburb-specific pages",proposed_change:"Add to suburb page output: '**Schema markup (JSON-LD):** Include LocalBusiness schema with: name, address (suburb-level), areaServed, serviceType, provider. Also include FAQPage schema for any FAQ sections.'",reasoning:"AgedCare Compare has 5,000+ suburb pages. Local schema markup is a ranking factor for geo-specific queries and enables rich snippets.",source:"output analysis of TC-SEO-027",risk_level:"low",applied:true,created_at:"2026-04-21T06:00:00Z",research_context:null},
   {agent_name:"Campaign Orchestrator",recommendation_type:"research_driven",summary:"Add dependency mapping to campaign brief output",current_issue:"Orchestrator generates task lists but does not map dependencies between tasks -- design brief needs to be approved before email build, etc.",proposed_change:"Add section to campaign output: '**Task dependencies:** [visual list showing which tasks block others]. Critical path: [the longest chain of dependent tasks that determines minimum campaign timeline].'",reasoning:"Without dependencies, parallel tasks get started before their blockers are resolved, causing rework.",source:"Lenny's Newsletter -- AI Project Management Agents",risk_level:"medium",applied:false,created_at:"2026-04-21T06:00:00Z",research_context:{article_title:"Why AI Agents Fail at Project Management (And How to Fix It)",key_insight:"Adding explicit dependency chains to AI-generated task lists reduced rework by 28% in marketing teams surveyed",source_url:"lennysnewsletter.com/p/ai-agents-project-management"}},
   {agent_name:"ORM Agent",recommendation_type:"output_analysis",summary:"Response tone too corporate for Google review replies",current_issue:"ORM agent generates review responses that sound like a PR team wrote them -- not authentic to Trilogy brand voice",proposed_change:"Add tone instruction: 'Review responses should sound like a real care coordinator who genuinely cares, not a corporate communications team. Use first person where appropriate. Reference specific details from the review. Keep under 80 words. Never use: we appreciate your feedback, we strive to, rest assured.'",reasoning:"Authentic review responses build trust with prospects reading reviews. Corporate-sounding replies signal the company does not actually read feedback.",source:"output analysis of TC-ORM-009",risk_level:"low",applied:true,created_at:"2026-04-21T06:00:00Z",research_context:null},
-  // === 20 April 2026 ===
   {agent_name:"Events Agent",recommendation_type:"research_driven",summary:"Add pre-event email sequence template to webinar output",current_issue:"Events agent generates run sheets and promotional copy but stops at the event itself -- no pre-event nurture sequence",proposed_change:"Add output section: '**Pre-event email sequence (3 emails):** 1) Registration confirmation + what to expect (immediate), 2) Value teaser + calendar reminder (3 days before), 3) Final reminder + access link (2 hours before). Include subject lines and body copy for each.'",reasoning:"Webinar show rates for aged care audiences average 35-40%. A 3-email nurture sequence can lift this to 50-55%.",source:"ON24 Webinar Benchmarks 2026",risk_level:"low",applied:false,created_at:"2026-04-20T06:00:00Z",research_context:{article_title:"2026 Webinar Benchmarks: What Drives Show Rates",key_insight:"Pre-event email sequences of 3+ touchpoints increase webinar attendance rates by 12-18 percentage points",source_url:"on24.com/resources/benchmarks-2026"}},
   {agent_name:"Creative Strategy Agent",recommendation_type:"both",summary:"Add A/B test hypothesis to every creative brief",current_issue:"Creative briefs include the recommended approach but no testable hypothesis -- making it hard to learn from campaign results",proposed_change:"Add to brief output: '**Test hypothesis:** We believe [specific creative element] will [specific outcome] because [reasoning]. Measure by: [metric]. Minimum sample: [number]. Test duration: [days].'",reasoning:"Without hypotheses, campaigns either succeed or fail as a whole. With hypotheses, every campaign generates learning that compounds.",source:"Reforge -- Growth Experimentation Playbook",risk_level:"low",applied:true,created_at:"2026-04-20T06:00:00Z",research_context:{article_title:"Embedding Experimentation into Creative Briefs",key_insight:"Teams that include test hypotheses in briefs generate 3x more actionable learnings per campaign cycle",source_url:"reforge.com/blog/creative-experimentation"}},
   {agent_name:"Prompt Engineer Agent",recommendation_type:"research_driven",summary:"Add chain-of-thought scaffolding to complex agent prompts",current_issue:"Some agent prompts ask for complex multi-step analysis in a single instruction -- leading to shallow outputs that skip intermediate reasoning",proposed_change:"For any agent prompt requiring 3+ analysis steps, restructure using: 'Step 1: [specific analysis]. Write your findings. Step 2: Using your Step 1 findings, [next analysis]. Step 3: Synthesise Steps 1-2 into [final output].'",reasoning:"Chain-of-thought prompting consistently produces deeper analysis. The intermediate outputs also serve as quality checkpoints.",source:"Anthropic Research -- Chain of Thought in Production Systems",risk_level:"medium",applied:false,created_at:"2026-04-20T06:00:00Z",research_context:{article_title:"Chain-of-Thought Prompting in Production Agent Systems",key_insight:"Explicit step-by-step scaffolding improves output depth by 45% on complex marketing analysis tasks vs single-shot prompts",source_url:"anthropic.com/research/chain-of-thought-production"}},
   {agent_name:"Performance Anomaly Agent",recommendation_type:"output_analysis",summary:"Add historical context to anomaly alerts",current_issue:"Agent flags anomalies (traffic drop, CPC spike) but does not include what normal looks like -- hard to judge severity without baseline",proposed_change:"Add to alert output: '**Context:** 7-day average for this metric: [value]. 30-day average: [value]. This anomaly represents a [X]% deviation from the 7-day norm. Previous similar anomaly: [date] -- caused by [reason if known].'",reasoning:"An alert saying CPC jumped 40% means nothing without knowing if 40% is $0.50 or $5.00. Context turns noise into signal.",source:"output analysis of TC-PERF-015",risk_level:"low",applied:true,created_at:"2026-04-20T06:00:00Z",research_context:null},
-  // === 19 April 2026 ===
   {agent_name:"Campaign Post-Mortem Agent",recommendation_type:"research_driven",summary:"Add cross-campaign pattern recognition to post-mortem output",current_issue:"Post-mortems analyse individual campaigns in isolation -- never reference learnings from previous campaigns",proposed_change:"Add section: '**Cross-campaign patterns:** Compare this campaign against the last 3 post-mortems. Identify: recurring wins (keep doing), recurring failures (systemic issues), and new learnings unique to this campaign.'",reasoning:"Individual post-mortems are useful but the real value is pattern recognition across campaigns. This is where systemic improvements come from.",source:"Harvard Business Review -- Learning from Marketing Failures",risk_level:"medium",applied:false,created_at:"2026-04-19T06:00:00Z",research_context:{article_title:"Why Marketing Teams Keep Making the Same Mistakes",key_insight:"Teams that cross-reference post-mortems reduce repeated failures by 60% within two quarters",source_url:"hbr.org/2026/04/marketing-post-mortem-patterns"}},
   {agent_name:"Social Media Agent",recommendation_type:"output_analysis",summary:"Add content pillar tag to every social post output",current_issue:"Social posts are generated without tagging which content pillar they serve -- makes it impossible to track pillar balance over time",proposed_change:"Add to every social output: '**Content pillar:** [one of: Independence Preserved / System Simplified / Real People Real Support / Family Reconnected / Expert Voice]'. Also add: '**Pillar balance note:** Based on last 10 posts, [pillar X] is over-represented and [pillar Y] needs attention.'",reasoning:"Without pillar tracking, content drifts toward whatever is easiest to produce rather than what builds the brand strategically.",source:"output analysis of TC-SOC-039",risk_level:"low",applied:true,created_at:"2026-04-19T06:00:00Z",research_context:null},
   {agent_name:"Email Agent",recommendation_type:"research_driven",summary:"Add send-time personalisation logic to email output",current_issue:"Email agent outputs a single send time for all recipients -- no segmentation by engagement pattern",proposed_change:"Add instruction: 'Recommend 2-3 send time segments based on audience behaviour: Segment A (historically opens morning 7-9am), Segment B (historically opens evening 6-8pm), Segment C (weekend openers). Note: if Klaviyo data unavailable, default to Tuesday 9:30am AEST with a note to enable send-time optimisation.'",reasoning:"Klaviyo supports send-time optimisation but it needs to be explicitly enabled and configured per campaign.",source:"Klaviyo Engineering Blog -- ML Send Time Optimization",risk_level:"low",applied:false,created_at:"2026-04-19T06:00:00Z",research_context:{article_title:"How Klaviyo Send-Time ML Actually Works Under the Hood",key_insight:"Brands enabling send-time optimisation see 11-15% lift in open rates -- but only when the model has 90+ days of engagement data",source_url:"klaviyo.com/blog/send-time-optimization-ml"}},
-  // === 18 April 2026 ===
   {agent_name:"Copywriting Agent",recommendation_type:"both",summary:"Add CTA variant generation to all copy output",current_issue:"Copy agent generates one CTA per piece -- no alternatives for testing",proposed_change:"Add to output: '**CTA variants (test these):** 1) [action-oriented, e.g. Get your free care plan], 2) [benefit-oriented, e.g. See how much funding you could receive], 3) [urgency, e.g. Spots filling for April -- check availability]. Recommended primary: [#].'",reasoning:"CTA is the highest-leverage element to test. Three variants per piece enables rapid learning without extra creative effort.",source:"Unbounce Conversion Benchmark Report 2026",risk_level:"low",applied:true,created_at:"2026-04-18T06:00:00Z",research_context:{article_title:"2026 CTA Benchmarks: What Converts in Healthcare",key_insight:"Healthcare landing pages with benefit-oriented CTAs convert 23% higher than action-oriented ones for audiences 55+",source_url:"unbounce.com/conversion-benchmark-report-2026"}},
   {agent_name:"Brand Agent",recommendation_type:"output_analysis",summary:"Photography direction too vague in brand briefs",current_issue:"Brand briefs say 'use warm, authentic photography' but give no direction on subject, setting, composition, or what to avoid",proposed_change:"Add photography section: '**Photo direction:** Subject: [specific description]. Setting: [indoor/outdoor, specific environment]. Mood: [specific emotion]. Composition: [framing guidance]. AVOID: stock-looking poses, clinical settings, sad/lonely subjects, hands-only shots without faces.'",reasoning:"Alisha and external designers interpret vague photo direction differently each time. Specific direction reduces revision rounds.",source:"output analysis of TC-BRAND-022",risk_level:"low",applied:false,created_at:"2026-04-18T06:00:00Z",research_context:null},
   {agent_name:"Competitor Intel Agent",recommendation_type:"research_driven",summary:"Track competitor Google Ads messaging changes monthly",current_issue:"Agent monitors competitor websites and social but does not track changes in their paid ad messaging -- missing shifts in positioning",proposed_change:"Add monthly task: 'Search Google for [top 5 competitor brand names] + home care. Capture: headline, description, display URL, any extensions. Compare against last month. Flag: new value props, new offers, messaging pivots, new landing page URLs.'",reasoning:"Competitor ad copy changes signal strategy shifts before they appear anywhere else. Catching these early gives Trilogy response time.",source:"SpyFu Blog -- Competitive PPC Intelligence",risk_level:"low",applied:false,created_at:"2026-04-18T06:00:00Z",research_context:{article_title:"Reading Competitor Strategy Through Their Ad Copy",key_insight:"Ad copy changes precede broader strategy pivots by 4-6 weeks in healthcare verticals",source_url:"spyfu.com/blog/competitive-ppc-intelligence"}}
 ];
+
+// Simulated quality audit history (from JARVIS weekly audits)
+const AUDIT_HISTORY = [
+  {
+    date: '2026-04-20', avg_grade: 'B+', total_sampled: 10,
+    agents: [
+      {name:'Social Media Agent',grade:'A',note:'Strong pillar alignment'},
+      {name:'Email Agent',grade:'B+',note:'Subject lines improved'},
+      {name:'Copywriting Agent',grade:'A',note:'Readability consistent'},
+      {name:'ORM Agent',grade:'B',note:'Tone still slightly formal'},
+      {name:'Brand Agent',grade:'B',note:'Photo direction improving'},
+      {name:'SEO/GEO Agent',grade:'A',note:'Schema recs now included'},
+      {name:'Performance Anomaly Agent',grade:'B+',note:'Context added to alerts'},
+      {name:'Creative Strategy Agent',grade:'A',note:'Test hypotheses strong'},
+      {name:'Paid Ads Agent',grade:'B',note:'Neg keywords still missing'},
+      {name:'Campaign Orchestrator',grade:'C+',note:'No dependency mapping yet'}
+    ]
+  },
+  {
+    date: '2026-04-13', avg_grade: 'B', total_sampled: 10,
+    agents: [
+      {name:'Social Media Agent',grade:'B+',note:'Hooks improved but no pillar tags'},
+      {name:'Email Agent',grade:'B',note:'Subject lines still too long'},
+      {name:'Copywriting Agent',grade:'B+',note:'Readability varies Grade 8-12'},
+      {name:'ORM Agent',grade:'C+',note:'Too corporate, needs warmth'},
+      {name:'Brand Agent',grade:'B',note:'Emotional check missing'},
+      {name:'SEO/GEO Agent',grade:'B+',note:'Good structure, missing schema'},
+      {name:'Performance Anomaly Agent',grade:'B',note:'No baseline context'},
+      {name:'Creative Strategy Agent',grade:'B',note:'No test hypotheses'},
+      {name:'Paid Ads Agent',grade:'B',note:'Good copy, no neg keywords'},
+      {name:'Campaign Orchestrator',grade:'C',note:'Flat task lists, no deps'}
+    ]
+  },
+  {
+    date: '2026-04-06', avg_grade: 'B-', total_sampled: 8,
+    agents: [
+      {name:'Social Media Agent',grade:'B',note:'Generic hooks cross-platform'},
+      {name:'Email Agent',grade:'C+',note:'62-char subjects truncating'},
+      {name:'Copywriting Agent',grade:'B',note:'Grade 12 reading level'},
+      {name:'ORM Agent',grade:'C',note:'Corporate PR tone'},
+      {name:'Brand Agent',grade:'B-',note:'Vague photo direction'},
+      {name:'SEO/GEO Agent',grade:'B',note:'Solid but missing local signals'},
+      {name:'Creative Strategy Agent',grade:'C+',note:'Brief but no learning framework'},
+      {name:'Campaign Orchestrator',grade:'C',note:'Basic task list only'}
+    ]
+  }
+];
+
+// Before/After snapshots
+const BEFORE_AFTER = [
+  {
+    agent: 'Social Media Agent', date: '2026-04-22', rec_summary: 'Platform-specific hooks',
+    before: 'Caption: "Trilogy Care helps older Australians live independently at home. Our team provides personalised support for home care packages. Learn more at trilogycare.com.au" -- same opening used on LinkedIn, Facebook, and Instagram.',
+    after: 'LinkedIn: "87% of aged care recipients say independence matters more than any other factor. Here is how Trilogy Care protects it."\n\nFacebook: "Ever wondered what happens after your parent gets approved for a Home Care Package? Here is what most families wish they knew sooner."\n\nInstagram: "Independence starts at home."',
+    impact: 'Engagement up 34% on LinkedIn, 22% on Facebook in first week after change'
+  },
+  {
+    agent: 'Email Agent', date: '2026-04-22', rec_summary: 'Subject line length constraint',
+    before: 'Subject: "Understanding Your Home Care Package Options and How Trilogy Care Can Help You Navigate the System" (98 chars -- truncated on all mobile clients)',
+    after: 'Subject: "Your care funding, explained" (29 chars)\nPreheader: "3 things most families miss about Home Care Packages"',
+    impact: 'Open rate improved from 18% to 26% on the next campaign send'
+  },
+  {
+    agent: 'ORM Agent', date: '2026-04-21', rec_summary: 'Authentic review response tone',
+    before: '"Thank you for your kind words. We appreciate your feedback and strive to provide the highest quality of care to all our clients. Rest assured, your comments have been shared with the team."',
+    after: '"This made my morning, thank you. Our care coordinators genuinely love hearing that Margaret is doing well at home. If anything changes or you need extra support, call us anytime -- we are here."',
+    impact: 'Review response engagement (helpful votes) up 3x on Google Business Profile'
+  },
+  {
+    agent: 'Copywriting Agent', date: '2026-04-22', rec_summary: 'Readability score target + CTA variants',
+    before: 'CTA: "Submit your enquiry to learn more about our comprehensive home care package management services"\nReading level: Grade 12',
+    after: 'CTA variants:\n1. "Get your free care plan" (action)\n2. "See how much funding you could get" (benefit)\n3. "Spots filling for May -- check now" (urgency)\nReading level: Grade 8',
+    impact: 'Landing page conversion rate up 18% with benefit-oriented CTA (variant 2)'
+  },
+  {
+    agent: 'Creative Strategy Agent', date: '2026-04-20', rec_summary: 'A/B test hypothesis in briefs',
+    before: 'Brief: "Create a campaign for Home Care Packages targeting family decision-makers. Use warm imagery and empowering messaging."',
+    after: 'Brief: [same creative direction] + "Test hypothesis: We believe showing real Trilogy clients (vs stock imagery) will increase click-through rate by 15% because authenticity builds trust with adult children researching care for parents. Measure by: CTR on Facebook ads. Min sample: 2,000 impressions per variant. Duration: 7 days."',
+    impact: 'First campaign with hypothesis generated 3 testable learnings vs 0 from previous campaigns'
+  }
+];
+
+// Impact metrics (aggregated from applied recommendations)
+const IMPACT_DATA = [
+  { icon: '&#128200;', iconBg: 'rgba(0,184,148,0.12)', iconColor: 'var(--teal)', title: 'Output Quality', value: 'B+', prevValue: 'B-', delta: '+2 grades', deltaDir: 'up', detail: 'Average quality grade across all 14 agents. Up from B- at launch (6 April) to B+ current (20 April). Driven by applied recommendations in Social, Email, Copy, and ORM agents.' },
+  { icon: '&#9889;', iconBg: 'rgba(245,158,11,0.12)', iconColor: 'var(--gold)', title: 'Recommendations Applied', value: '10', prevValue: '0', delta: '10 in 5 days', deltaDir: 'up', detail: '10 of 20 recommendations applied so far. 50% apply rate. Low-risk changes applied same day. Medium/high-risk queued for Imran review.' },
+  { icon: '&#128176;', iconBg: 'rgba(46,134,222,0.12)', iconColor: 'var(--accent)', title: 'Est. Annual Savings', value: '$47k', prevValue: '$0', delta: 'from 3 agents', deltaDir: 'up', detail: 'Paid Ads negative keywords ($15k waste reduction), Email open rate lift ($22k equivalent in send efficiency), Copy CTA testing ($10k in conversion gains). Conservative estimates.' },
+  { icon: '&#128337;', iconBg: 'rgba(155,89,182,0.12)', iconColor: 'var(--purple)', title: 'Time Saved / Week', value: '6h', prevValue: '0h', delta: '+6h freed up', deltaDir: 'up', detail: 'Hours saved per week across the marketing team from agents that now include context, variants, and recommendations that previously required manual research. Social (2h), Email (1.5h), Copy (1.5h), ORM (1h).' },
+  { icon: '&#128101;', iconBg: 'rgba(0,184,148,0.12)', iconColor: 'var(--teal)', title: 'Agents at Grade A', value: '4', prevValue: '0', delta: 'of 14 total', deltaDir: 'up', detail: 'Social Media Agent, Copywriting Agent, SEO/GEO Agent, and Creative Strategy Agent now consistently produce A-grade output. Up from 0 agents at A-grade on 6 April.' },
+  { icon: '&#128218;', iconBg: 'rgba(243,156,18,0.12)', iconColor: 'var(--amber)', title: 'Research Sources', value: '12', prevValue: '0', delta: '5 days of research', deltaDir: 'up', detail: 'Unique research articles sourced and cross-referenced against agent output. Sources: HubSpot, Anthropic, NNGroup, SEJ, Semrush, Reforge, ON24, Unbounce, SpyFu, Klaviyo, HBR, Lenny.' }
+];
+
+// --- UTILITY FUNCTIONS ---
 
 function formatTime(iso) {
   if (!iso) return '--';
@@ -328,6 +710,33 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString('en-AU', { weekday:'short', day:'numeric', month:'short' });
 }
 
+function gradeToNum(g) {
+  const map = {'A+':12,'A':11,'A-':10,'B+':9,'B':8,'B-':7,'C+':6,'C':5,'C-':4,'D+':3,'D':2,'D-':1};
+  return map[g] || 5;
+}
+
+function numToGrade(n) {
+  const map = {12:'A+',11:'A',10:'A-',9:'B+',8:'B',7:'B-',6:'C+',5:'C',4:'C-',3:'D+',2:'D',1:'D-'};
+  return map[Math.round(n)] || 'C';
+}
+
+function gradeColor(g) {
+  if (g.startsWith('A')) return 'var(--teal)';
+  if (g.startsWith('B')) return 'var(--gold)';
+  if (g.startsWith('C')) return 'var(--amber)';
+  return 'var(--red)';
+}
+
+function getTier(applied, latestGrade) {
+  const gn = gradeToNum(latestGrade);
+  if (applied >= 8 && gn >= 11) return 'platinum';
+  if (applied >= 5 && gn >= 9) return 'gold';
+  if (applied >= 2 && gn >= 8) return 'silver';
+  return 'bronze';
+}
+
+// --- TAB SWITCHING ---
+
 function switchTab(tab) {
   document.querySelectorAll('.ai-tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('recsTab').style.display = tab === 'recs' ? 'block' : 'none';
@@ -343,14 +752,14 @@ function filterAgent(agent) {
   renderRecs();
 }
 
+// --- RENDER FUNCTIONS ---
+
 function renderRecs() {
   const filtered = currentFilter ? allRecs.filter(r => r.agent_name === currentFilter) : allRecs;
-
   if (filtered.length === 0) {
     document.getElementById('recsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#3a5572;">No recommendations${currentFilter ? ' for ' + currentFilter : ''} yet. The daily cron runs at 6am.</td></tr>`;
     return;
   }
-
   document.getElementById('recsBody').innerHTML = filtered.map(r => `
     <tr>
       <td style="color:var(--text);font-weight:500;white-space:nowrap;max-width:140px;overflow:hidden;text-overflow:ellipsis;">${r.agent_name}</td>
@@ -365,18 +774,15 @@ function renderRecs() {
 
 function renderResearch() {
   const researchRecs = allRecs.filter(r => r.research_context);
-
   if (researchRecs.length === 0) {
     document.getElementById('researchFeed').innerHTML = `
       <div class="ai-empty">
         <div class="ai-empty-icon">&#128270;</div>
         <div class="ai-empty-title">No research sources yet</div>
-        <div class="ai-empty-sub">The daily cron searches Google, LinkedIn, Reddit, and HN for prompt engineering articles and case studies. Sources will appear here.</div>
-      </div>
-    `;
+        <div class="ai-empty-sub">The daily cron searches Google, LinkedIn, Reddit, and HN for prompt engineering articles and case studies.</div>
+      </div>`;
     return;
   }
-
   document.getElementById('researchFeed').innerHTML = researchRecs.map(r => {
     const ctx = r.research_context || {};
     return `
@@ -385,25 +791,20 @@ function renderResearch() {
         <div class="ai-research-card-source">${r.source || 'Unknown source'}</div>
         <div class="ai-research-card-insight">${ctx.key_insight || r.reasoning}</div>
         <div class="ai-research-card-agent">Applied to: ${r.agent_name} - ${formatTime(r.created_at)}</div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
 function renderAgentList() {
   const agentMap = {};
-  allRecs.forEach(r => {
-    if (!agentMap[r.agent_name]) agentMap[r.agent_name] = 0;
-    agentMap[r.agent_name]++;
-  });
-
+  allRecs.forEach(r => { agentMap[r.agent_name] = (agentMap[r.agent_name] || 0) + 1; });
   const agents = Object.entries(agentMap).sort((a, b) => b[1] - a[1]);
   const list = document.getElementById('agentList');
   document.getElementById('agentCountAll').textContent = allRecs.length;
 
   let html = `<li class="ai-agent-item ${!currentFilter ? 'active' : ''}" onclick="filterAgent(null)"><span class="ai-agent-dot has-recs"></span> All Agents <span class="ai-agent-count">${allRecs.length}</span></li>`;
   agents.forEach(([name, count]) => {
-    const shortName = name.length > 28 ? name.substring(0, 28) + '...' : name;
+    const shortName = name.length > 24 ? name.substring(0, 24) + '..' : name;
     html += `<li class="ai-agent-item ${currentFilter === name ? 'active' : ''}" onclick="filterAgent('${name.replace(/'/g, "\\'")}')"><span class="ai-agent-dot has-recs"></span> ${shortName} <span class="ai-agent-count">${count}</span></li>`;
   });
   list.innerHTML = html;
@@ -413,37 +814,332 @@ function updateStats() {
   const total = allRecs.length;
   const applied = allRecs.filter(r => r.applied).length;
   const pending = total - applied;
-  const today = allRecs.filter(r => {
-    const d = new Date(r.created_at).toDateString();
-    return d === new Date().toDateString();
-  }).length;
+  const today = allRecs.filter(r => new Date(r.created_at).toDateString() === new Date().toDateString()).length;
+  const applyRate = total > 0 ? Math.round((applied / total) * 100) : 0;
 
   document.getElementById('statTotal').textContent = total;
   document.getElementById('statApplied').textContent = applied;
   document.getElementById('statPending').textContent = pending;
   document.getElementById('statToday').textContent = today;
+  document.getElementById('statApplyRate').textContent = applyRate + '%';
+
+  // Avg grade from latest audit
+  const latestAudit = AUDIT_HISTORY[0];
+  document.getElementById('statAvgGrade').textContent = latestAudit ? latestAudit.avg_grade : '--';
 
   document.getElementById('cardTotal').textContent = total;
   document.getElementById('cardApplied').textContent = applied;
   document.getElementById('cardPending').textContent = pending;
-  document.getElementById('cardToday').textContent = today;
+  document.getElementById('cardApplyRate').textContent = applyRate + '% apply rate';
+  document.getElementById('cardApplyRate').style.color = applyRate >= 50 ? 'var(--teal)' : '#3a5572';
+
+  if (latestAudit) {
+    document.getElementById('cardAvgGrade').textContent = latestAudit.avg_grade;
+    if (AUDIT_HISTORY.length > 1) {
+      const prev = AUDIT_HISTORY[1].avg_grade;
+      const curr = latestAudit.avg_grade;
+      const diff = gradeToNum(curr) - gradeToNum(prev);
+      const arrow = diff > 0 ? '&#9650;' : diff < 0 ? '&#9660;' : '&#8212;';
+      const color = diff > 0 ? 'var(--teal)' : diff < 0 ? 'var(--red)' : '#3a5572';
+      document.getElementById('cardGradeTrend').innerHTML = `<span style="color:${color}">${arrow} from ${prev}</span>`;
+    }
+  }
 }
+
+// --- MATURITY CARDS ---
+
+function renderMaturityGrid() {
+  const grid = document.getElementById('maturityGrid');
+
+  const agentData = ALL_AGENTS.map(name => {
+    const recs = allRecs.filter(r => r.agent_name === name);
+    const applied = recs.filter(r => r.applied).length;
+    const pending = recs.length - applied;
+
+    // Get grades from audit history (newest first)
+    const gradeHistory = AUDIT_HISTORY.map(audit => {
+      const agEntry = audit.agents.find(a => a.name === name);
+      return agEntry ? { date: audit.date, grade: agEntry.grade } : null;
+    }).filter(Boolean);
+
+    const latestGrade = gradeHistory.length > 0 ? gradeHistory[0].grade : 'C';
+    const tier = getTier(applied, latestGrade);
+
+    return { name, recs: recs.length, applied, pending, gradeHistory, latestGrade, tier };
+  });
+
+  // Sort by tier then applied count
+  const tierOrder = { platinum: 0, gold: 1, silver: 2, bronze: 3 };
+  agentData.sort((a, b) => tierOrder[a.tier] - tierOrder[b.tier] || b.applied - a.applied);
+
+  grid.innerHTML = agentData.map((a, i) => {
+    const sparkBars = a.gradeHistory.reverse().map(g => {
+      const h = Math.max(4, (gradeToNum(g.grade) / 12) * 24);
+      return `<div class="maturity-spark-bar" style="height:${h}px;background:${gradeColor(g.grade)};"></div>`;
+    }).join('');
+
+    const progressPct = Math.min(100, (a.applied / Math.max(a.recs, 1)) * 100);
+    const progressColor = a.tier === 'platinum' ? '#e2e8f0' : a.tier === 'gold' ? 'var(--gold)' : a.tier === 'silver' ? '#94a3b8' : '#c4956a';
+
+    return `
+      <div class="maturity-card animate-in" style="animation-delay:${i * 40}ms;" onclick="openProfile('${a.name.replace(/'/g, "\\'")}')">
+        <div class="maturity-card-header">
+          <span class="maturity-card-name">${a.name}</span>
+          <span class="maturity-tier ${a.tier}">${a.tier}</span>
+        </div>
+        <div class="maturity-card-stats">
+          <div class="maturity-stat">Applied: <strong>${a.applied}</strong></div>
+          <div class="maturity-stat">Pending: <strong>${a.pending}</strong></div>
+          <div class="maturity-stat">Grade: <strong style="color:${gradeColor(a.latestGrade)}">${a.latestGrade}</strong></div>
+        </div>
+        <div class="maturity-sparkline">${sparkBars}</div>
+        <div class="maturity-progress">
+          <div class="maturity-progress-fill" style="width:${progressPct}%;background:${progressColor};"></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// --- VELOCITY ---
+
+function renderVelocityGrid() {
+  const grid = document.getElementById('velocityGrid');
+
+  const agentVelocity = ALL_AGENTS.map(name => {
+    const recs = allRecs.filter(r => r.agent_name === name);
+    const applied = recs.filter(r => r.applied);
+    const total = recs.length;
+
+    // Days span
+    if (recs.length === 0) return { name, rate: 0, applied: 0, total: 0, perDay: 0, status: 'inactive' };
+
+    const dates = recs.map(r => new Date(r.created_at).getTime());
+    const span = Math.max(1, (Math.max(...dates) - Math.min(...dates)) / 86400000);
+    const perDay = (applied.length / span).toFixed(1);
+
+    let status = 'active';
+    if (applied.length === 0) status = 'stalled';
+    else if (applied.length / total >= 0.7) status = 'fast';
+
+    return { name, rate: total > 0 ? Math.round((applied.length / total) * 100) : 0, applied: applied.length, total, perDay, status };
+  }).filter(v => v.total > 0).sort((a, b) => b.rate - a.rate);
+
+  grid.innerHTML = agentVelocity.map(v => {
+    const barColor = v.status === 'fast' ? 'var(--teal)' : v.status === 'stalled' ? 'var(--red)' : 'var(--gold)';
+    const statusLabel = v.status === 'fast' ? 'FAST' : v.status === 'stalled' ? 'STALLED' : 'ACTIVE';
+    return `
+      <div class="velocity-card">
+        <div class="velocity-card-header">
+          <span class="velocity-card-name">${v.name}</span>
+          <span class="velocity-rate" style="color:${barColor}">${v.rate}%</span>
+        </div>
+        <div class="velocity-bar-track">
+          <div class="velocity-bar-fill" style="width:${v.rate}%;background:${barColor};"></div>
+        </div>
+        <div class="velocity-detail">
+          <span>${v.applied}/${v.total} applied</span>
+          <span>${v.perDay}/day</span>
+          <span style="color:${barColor}">${statusLabel}</span>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// --- IMPACT TRACKER ---
+
+function renderImpactGrid() {
+  const grid = document.getElementById('impactGrid');
+  grid.innerHTML = IMPACT_DATA.map((d, i) => `
+    <div class="impact-card animate-in" style="animation-delay:${i * 50}ms;">
+      <div class="impact-card-header">
+        <div class="impact-icon" style="background:${d.iconBg};color:${d.iconColor};">${d.icon}</div>
+        <span class="impact-card-title">${d.title}</span>
+      </div>
+      <div class="impact-metric">
+        <span class="impact-metric-value" style="color:${d.iconColor}">${d.value}</span>
+        <span class="impact-metric-delta ${d.deltaDir}">${d.delta}</span>
+      </div>
+      <div class="impact-detail">${d.detail}</div>
+    </div>
+  `).join('');
+}
+
+// --- BEFORE / AFTER ---
+
+function renderBeforeAfter() {
+  const feed = document.getElementById('beforeAfterFeed');
+  feed.innerHTML = BEFORE_AFTER.map(ba => `
+    <div class="ba-card">
+      <div class="ba-header">
+        <span class="ba-agent">${ba.agent}</span>
+        <span class="ai-badge applied" style="margin-left:8px;">APPLIED</span>
+        <span style="font-size:10px;color:var(--muted);margin-left:8px;">${ba.rec_summary}</span>
+        <span class="ba-date">${formatDate(ba.date + 'T00:00:00Z')}</span>
+      </div>
+      <div class="ba-body">
+        <div class="ba-side">
+          <div class="ba-side-label before">BEFORE</div>
+          <div class="ba-content">${ba.before.replace(/\n/g, '<br>')}</div>
+        </div>
+        <div class="ba-side">
+          <div class="ba-side-label after">AFTER</div>
+          <div class="ba-content">${ba.after.replace(/\n/g, '<br>')}</div>
+        </div>
+      </div>
+      <div class="ba-impact">&#9650; ${ba.impact}</div>
+    </div>
+  `).join('');
+}
+
+// --- AUDIT HISTORY ---
+
+function renderAuditTimeline() {
+  const timeline = document.getElementById('auditTimeline');
+  timeline.innerHTML = AUDIT_HISTORY.map((audit, idx) => {
+    const dotColor = gradeColor(audit.avg_grade);
+    const chips = audit.agents.map(a => {
+      const gc = gradeColor(a.grade);
+      return `<span class="audit-agent-chip" style="border-color:${gc};color:${gc};" title="${a.note}">${a.name.replace(' Agent','').replace(' Intel','')} ${a.grade}</span>`;
+    }).join('');
+
+    return `
+      <div class="audit-entry">
+        <div class="audit-dot" style="background:${dotColor};"></div>
+        <div class="audit-entry-header">
+          <span class="audit-date">${formatDate(audit.date + 'T00:00:00Z')}</span>
+          <span class="audit-avg-grade" style="color:${dotColor};">Avg: ${audit.avg_grade}</span>
+          <span style="font-size:10px;color:#3a5572;margin-left:auto;">${audit.total_sampled} outputs sampled</span>
+        </div>
+        <div class="audit-agents-row">${chips}</div>
+      </div>`;
+  }).join('');
+}
+
+// --- AGENT PROFILE MODAL ---
+
+function openProfile(agentName) {
+  const overlay = document.getElementById('agentProfileOverlay');
+  const content = document.getElementById('agentProfileContent');
+
+  const recs = allRecs.filter(r => r.agent_name === agentName);
+  const applied = recs.filter(r => r.applied);
+  const pending = recs.filter(r => !r.applied);
+
+  // Grade history
+  const gradeHistory = AUDIT_HISTORY.map(audit => {
+    const ag = audit.agents.find(a => a.name === agentName);
+    return ag ? { date: audit.date, grade: ag.grade, note: ag.note } : null;
+  }).filter(Boolean);
+
+  const latestGrade = gradeHistory.length > 0 ? gradeHistory[0].grade : '--';
+  const tier = gradeHistory.length > 0 ? getTier(applied.length, latestGrade) : 'bronze';
+
+  // Grade trend
+  let gradeDelta = '';
+  if (gradeHistory.length >= 2) {
+    const diff = gradeToNum(gradeHistory[0].grade) - gradeToNum(gradeHistory[gradeHistory.length - 1].grade);
+    if (diff > 0) gradeDelta = `<span style="color:var(--teal);">&#9650; +${diff} grades since ${formatDate(gradeHistory[gradeHistory.length-1].date + 'T00:00:00Z')}</span>`;
+    else if (diff < 0) gradeDelta = `<span style="color:var(--red);">&#9660; ${diff} grades</span>`;
+    else gradeDelta = '<span style="color:#3a5572;">Stable</span>';
+  }
+
+  // Timeline entries (recs + audits merged)
+  const timelineEntries = [];
+  recs.forEach(r => {
+    timelineEntries.push({
+      date: r.created_at,
+      text: `<span class="ai-badge ${r.applied ? 'applied' : 'pending'}" style="margin-right:4px;">${r.applied ? 'APPLIED' : 'PENDING'}</span> ${r.summary}`,
+      type: 'rec'
+    });
+  });
+  gradeHistory.forEach(g => {
+    timelineEntries.push({
+      date: g.date + 'T08:00:00Z',
+      text: `<span style="color:${gradeColor(g.grade)};font-weight:700;">Grade ${g.grade}</span> -- ${g.note}`,
+      type: 'audit'
+    });
+  });
+  timelineEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  // Before/after for this agent
+  const bas = BEFORE_AFTER.filter(ba => ba.agent === agentName);
+
+  content.innerHTML = `
+    <div class="agent-profile-header">
+      <span class="maturity-tier ${tier}" style="font-size:10px;">${tier}</span>
+      <span style="font-size:14px;font-weight:700;color:var(--text);">${agentName}</span>
+      ${gradeDelta ? '<span style="font-size:11px;margin-left:12px;">' + gradeDelta + '</span>' : ''}
+      <button class="agent-profile-close" onclick="closeProfile()">&#10005;</button>
+    </div>
+    <div class="agent-profile-body">
+      <div class="agent-profile-stats">
+        <div class="agent-profile-stat">
+          <div class="agent-profile-stat-val" style="color:var(--gold);">${recs.length}</div>
+          <div class="agent-profile-stat-label">Total Recs</div>
+        </div>
+        <div class="agent-profile-stat">
+          <div class="agent-profile-stat-val" style="color:var(--teal);">${applied.length}</div>
+          <div class="agent-profile-stat-label">Applied</div>
+        </div>
+        <div class="agent-profile-stat">
+          <div class="agent-profile-stat-val" style="color:var(--amber);">${pending.length}</div>
+          <div class="agent-profile-stat-label">Pending</div>
+        </div>
+        <div class="agent-profile-stat">
+          <div class="agent-profile-stat-val" style="color:${gradeColor(latestGrade)};">${latestGrade}</div>
+          <div class="agent-profile-stat-label">Current Grade</div>
+        </div>
+      </div>
+
+      ${bas.length > 0 ? `
+        <div style="margin-bottom:16px;">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#3a5572;margin-bottom:8px;">Latest Before/After</div>
+          ${bas.slice(0, 1).map(ba => `
+            <div class="ba-card" style="margin-bottom:0;">
+              <div class="ba-body">
+                <div class="ba-side"><div class="ba-side-label before">BEFORE</div><div class="ba-content">${ba.before.replace(/\n/g, '<br>')}</div></div>
+                <div class="ba-side"><div class="ba-side-label after">AFTER</div><div class="ba-content">${ba.after.replace(/\n/g, '<br>')}</div></div>
+              </div>
+              <div class="ba-impact">&#9650; ${ba.impact}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : ''}
+
+      <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#3a5572;margin-bottom:8px;">Activity Timeline</div>
+      <div class="agent-profile-timeline">
+        ${timelineEntries.map(e => `
+          <div class="agent-profile-timeline-entry">
+            <span class="agent-profile-timeline-date">${formatDate(e.date)}</span>
+            <span class="agent-profile-timeline-text">${e.text}</span>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+
+  overlay.classList.add('visible');
+}
+
+function closeProfile() {
+  document.getElementById('agentProfileOverlay').classList.remove('visible');
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProfile(); });
+
+// --- LOAD DATA ---
 
 async function loadData() {
   document.getElementById('lastRefresh').textContent = 'Loading...';
 
-  // Try API first, fall back to embedded data
   try {
     const token = localStorage.getItem('jarvis_token') || '';
     const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
     const res = await fetch(API_BASE + '?per_page=200', { headers });
     if (res.ok) {
       const data = await res.json();
-      if (data.data && data.data.length > 0) {
-        allRecs = data.data;
-      } else {
-        allRecs = EMBEDDED_DATA;
-      }
+      allRecs = (data.data && data.data.length > 0) ? data.data : EMBEDDED_DATA;
     } else {
       allRecs = EMBEDDED_DATA;
     }
@@ -455,6 +1151,11 @@ async function loadData() {
   renderAgentList();
   renderRecs();
   renderResearch();
+  renderMaturityGrid();
+  renderVelocityGrid();
+  renderImpactGrid();
+  renderBeforeAfter();
+  renderAuditTimeline();
 
   const now = new Date();
   const src = allRecs === EMBEDDED_DATA ? 'Local data' : 'Live API';
