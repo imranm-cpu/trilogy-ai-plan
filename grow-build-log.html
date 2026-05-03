@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GROW Build Log — Trilogy Care AI Innovations</title>
+<style>
+  :root {
+    --navy: #0d1b2e;
+    --blue: #1e4d8c;
+    --accent: #2e86de;
+    --light-blue: #54a0ff;
+    --teal: #00b894;
+    --amber: #f39c12;
+    --red: #e74c3c;
+    --purple: #9b59b6;
+    --card-bg: rgba(255,255,255,0.04);
+    --card-hover: rgba(255,255,255,0.07);
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #e8edf5;
+    --muted: #7f96b2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--navy); color: var(--text); font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.6; }
+
+  /* ---- SITE NAV (matches sibling pages) ---- */
+  .site-nav { position: sticky; top: 0; z-index: 200; height: 52px; background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.08); box-shadow: 0 2px 12px rgba(0,0,0,0.25); display: flex; align-items: center; padding: 0 24px; }
+  .snav-brand { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .snav-brand-name { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #64748b; }
+  .snav-brand-name span { color: #e2e8f0; }
+  .snav-day { font-size: 10px; color: #475569; background: #1e293b; border: 1px solid #334155; border-radius: 999px; padding: 2px 8px; }
+  .snav-tabs { display: flex; align-items: stretch; height: 100%; margin-left: 24px; overflow-x: auto; }
+  .snav-tab { display: flex; align-items: center; gap: 7px; padding: 0 16px; font-size: 12px; font-weight: 600; color: #64748b; text-decoration: none; border-bottom: 2px solid transparent; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+  .snav-tab:hover { color: #cbd5e1; border-bottom-color: #334155; }
+  .snav-tab.active { color: #f8fafc; border-bottom-color: #94a3b8; }
+  .snav-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .snav-ext-links { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+  .snav-divider { width: 1px; height: 20px; background: #1e293b; margin: 0 4px; }
+  .snav-ext { font-size: 11px; color: #475569; text-decoration: none; padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+  .snav-ext:hover { color: #cbd5e1; background: #1e293b; }
+  .snav-live { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; color: #22c55e; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 999px; font-size: 11px; font-weight: 700; text-decoration: none; margin-left: 6px; }
+  .snav-live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; animation: snav-pulse 2s infinite; }
+  @keyframes snav-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* ---- HERO ---- */
+  .hero {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 80px 48px 48px;
+  }
+  .hero-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 18px; display: flex; align-items: center; gap: 10px; }
+  .hero-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--accent); }
+  .hero h1 { font-size: 50px; font-weight: 800; line-height: 1.08; margin-bottom: 18px; letter-spacing: -0.5px; }
+  .hero h1 .grad { background: linear-gradient(135deg, #54a0ff, #00b894); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero .lede { font-size: 16px; color: var(--muted); line-height: 1.75; margin-bottom: 26px; max-width: 720px; }
+  .hero-meta { display: flex; gap: 20px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
+  .hero-meta .pill { padding: 6px 14px; border-radius: 999px; background: rgba(46,134,222,0.08); border: 1px solid rgba(46,134,222,0.2); color: var(--text); font-weight: 600; letter-spacing: 0.3px; }
+  .hero-meta .pill.teal { background: rgba(0,184,148,0.08); border-color: rgba(0,184,148,0.25); color: var(--teal); }
+  .hero-meta .pill.muted { background: rgba(255,255,255,0.03); border-color: var(--border); color: var(--muted); }
+
+  /* ---- STATS GRID ---- */
+  section { max-width: 1160px; margin: 0 auto 72px; padding: 0 48px; }
+  .sec-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 2.5px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; }
+  .sec-title { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.3px; }
+  .sec-sub { color: var(--muted); font-size: 13px; margin-bottom: 28px; max-width: 720px; line-height: 1.7; }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .stat {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 22px 20px;
+    transition: all 0.2s;
+  }
+  .stat:hover { border-color: rgba(46,134,222,0.4); background: var(--card-hover); }
+  .stat .s-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+  .stat .s-value { font-size: 32px; font-weight: 800; line-height: 1; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .stat .s-sub { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .stat.teal .s-value { color: var(--teal); }
+  .stat.blue .s-value { color: var(--accent); }
+  .stat.amber .s-value { color: var(--amber); }
+  .stat.purple .s-value { color: var(--purple); }
+  .stat.red .s-value { color: var(--red); }
+  .stat.lightblue .s-value { color: var(--light-blue); }
+
+  /* ---- INITIATIVES ---- */
+  .initiatives-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .init-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 24px 20px;
+    transition: all 0.2s;
+  }
+  .init-card:hover { border-color: rgba(46,134,222,0.4); background: var(--card-hover); }
+  .init-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .init-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.1px;
+  }
+  .init-range {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .init-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .init-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .init-tag { font-size: 9px; padding: 2px 8px; border-radius: 8px; background: rgba(255,255,255,0.05); color: var(--muted); border: 1px solid var(--border); letter-spacing: 0.3px; }
+  .init-tag.live { color: var(--teal); border-color: rgba(0,184,148,0.25); background: rgba(0,184,148,0.06); }
+  .init-tag.fresh { color: var(--amber); border-color: rgba(243,156,18,0.25); background: rgba(243,156,18,0.06); }
+  .init-list {
+    list-style: none;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .init-list li {
+    font-size: 11.5px;
+    color: var(--muted);
+    padding: 4px 0 4px 16px;
+    position: relative;
+    line-height: 1.55;
+  }
+  .init-list li::before {
+    content: '·';
+    position: absolute;
+    left: 4px;
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 0.95;
+  }
+  .init-list li strong { color: var(--text); font-weight: 600; }
+
+  /* ---- TIMELINE ---- */
+  .timeline-wrap {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .timeline-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+  }
+  .timeline-toolbar .tt-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+  .tt-btn {
+    background: rgba(46,134,222,0.08);
+    border: 1px solid rgba(46,134,222,0.25);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    letter-spacing: 0.4px;
+    transition: all 0.15s;
+  }
+  .tt-btn:hover { background: rgba(46,134,222,0.15); }
+  .timeline {
+    max-height: 640px;
+    overflow-y: auto;
+    padding: 8px 0;
+  }
+  .timeline.expanded { max-height: none; }
+  .timeline::-webkit-scrollbar { width: 6px; }
+  .timeline::-webkit-scrollbar-track { background: transparent; }
+  .timeline::-webkit-scrollbar-thumb { background: rgba(127,150,178,0.2); border-radius: 6px; }
+
+  .day-block {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    gap: 18px;
+  }
+  .day-block:last-child { border-bottom: none; }
+  .day-meta { display: flex; flex-direction: column; gap: 4px; }
+  .day-date { font-size: 12px; font-weight: 700; color: var(--text); letter-spacing: 0.3px; }
+  .day-num { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; }
+  .day-count {
+    font-size: 9px;
+    color: var(--accent);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: rgba(46,134,222,0.08);
+    border: 1px solid rgba(46,134,222,0.2);
+    padding: 2px 8px;
+    border-radius: 999px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .day-items {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .day-item {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    display: flex;
+    gap: 8px;
+  }
+  .day-item .di-prefix {
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 10px;
+    background: rgba(46,134,222,0.08);
+    border: 1px solid rgba(46,134,222,0.18);
+    padding: 1px 7px;
+    border-radius: 6px;
+    height: 18px;
+    align-self: flex-start;
+    margin-top: 2px;
+    letter-spacing: 0.3px;
+  }
+  .day-item .di-prefix.feat { color: var(--teal); border-color: rgba(0,184,148,0.25); background: rgba(0,184,148,0.06); }
+  .day-item .di-prefix.fix { color: var(--amber); border-color: rgba(243,156,18,0.25); background: rgba(243,156,18,0.06); }
+  .day-item .di-prefix.chore, .day-item .di-prefix.refactor, .day-item .di-prefix.docs, .day-item .di-prefix.test, .day-item .di-prefix.ci { color: var(--muted); }
+  .day-item .di-prefix.ux, .day-item .di-prefix.polish, .day-item .di-prefix.security { color: var(--purple); border-color: rgba(155,89,182,0.25); background: rgba(155,89,182,0.06); }
+  .day-item .di-text { flex: 1; }
+  .day-item .di-text strong { color: var(--text); font-weight: 500; }
+
+  /* ---- IN FLIGHT ---- */
+  .inflight-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  .inflight-card {
+    background: rgba(243,156,18,0.04);
+    border: 1px solid rgba(243,156,18,0.18);
+    border-radius: 12px;
+    padding: 18px 22px;
+  }
+  .inflight-card.blocker {
+    background: rgba(231,76,60,0.04);
+    border-color: rgba(231,76,60,0.18);
+  }
+  .inflight-card.judgment {
+    background: rgba(155,89,182,0.04);
+    border-color: rgba(155,89,182,0.18);
+  }
+  .if-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--amber); margin-bottom: 8px; }
+  .blocker .if-label { color: var(--red); }
+  .judgment .if-label { color: var(--purple); }
+  .if-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; color: var(--text); }
+  .if-detail { font-size: 12px; color: var(--muted); line-height: 1.65; }
+
+  /* ---- FOOTER ---- */
+  footer {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 24px 48px 60px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-top: 1px solid var(--border);
+  }
+  footer .fl { font-size: 12px; color: var(--muted); }
+  footer .fr { font-size: 11px; color: rgba(127,150,178,0.4); }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { color: var(--light-blue); }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    .hero { padding: 60px 20px 36px; }
+    .hero h1 { font-size: 36px; }
+    section { padding: 0 20px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .initiatives-grid { grid-template-columns: 1fr; }
+    .inflight-grid { grid-template-columns: 1fr; }
+    .day-block { grid-template-columns: 1fr; gap: 8px; }
+    .day-meta { flex-direction: row; align-items: center; gap: 10px; flex-wrap: wrap; }
+    footer { padding: 24px 20px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="snav-brand">
+    <span class="snav-brand-name">Trilogy Care &nbsp;&middot;&nbsp; <span>AI Innovations</span></span>
+    <span class="snav-day">Day 61 of 90</span>
+  </div>
+  <div class="snav-tabs">
+    <a class="snav-tab" href="roadmap-visual.html"><span class="snav-dot" style="background:#3b82f6;"></span> Tracker</a>
+    <a class="snav-tab" href="roadmap-canvas.html"><span class="snav-dot" style="background:#a855f7;"></span> Work Canvas</a>
+    <a class="snav-tab" href="index.html"><span class="snav-dot" style="background:#94a3b8;"></span> AI Integration Plan</a>
+    <a class="snav-tab" href="activity-trace.html"><span class="snav-dot" style="background:#00b894;"></span> Activity Trace</a>
+    <a class="snav-tab" href="agedcare-compare.html"><span class="snav-dot" style="background:#f97316;"></span> AgedCare Compare</a>
+    <a class="snav-tab" href="seo-strategy.html"><span class="snav-dot" style="background:#54a0ff;"></span> SEO Strategy</a>
+    <a class="snav-tab" href="jarvis.html"><span class="snav-dot" style="background:#e74c3c;"></span> JARVIS</a>
+    <a class="snav-tab" href="partners-hub.html"><span class="snav-dot" style="background:#00cec9;"></span> Partners Hub</a>
+    <a class="snav-tab" href="agent-intelligence.html"><span class="snav-dot" style="background:#f59e0b;"></span> Agent Intelligence</a>
+    <a class="snav-tab active" href="grow-build-log.html"><span class="snav-dot" style="background:#22c55e;"></span> GROW Build Log</a>
+  </div>
+  <div class="snav-ext-links">
+    <div class="snav-divider"></div>
+    <a class="snav-ext" href="https://app.asana.com/0/1211908105374551/list" target="_blank">Asana</a>
+    <a class="snav-ext" href="https://trilogy-dash-3zgz7xkb.manus.space/csuite" target="_blank">Manus</a>
+    <a class="snav-ext" href="https://linear.app" target="_blank">Linear</a>
+    <a class="snav-live" href="https://grow.trilogycare.com.au" target="_blank"><span class="snav-live-dot"></span> Live</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Build Log — tc-grow-applications</div>
+  <h1>GROW <span class="grad">Build Log</span></h1>
+  <p class="lede">Every shipped change in <strong style="color: var(--text);">tc-grow-applications</strong>, day by day. From Day&nbsp;0 (the first commit on 7&nbsp;April) through to today &mdash; grouped by initiative, with the full git history below.</p>
+  <div class="hero-meta">
+    <span class="pill teal">Day 27 of GROW build</span>
+    <span class="pill">Day 61 of Trilogy</span>
+    <span class="pill muted">Last shipped: 3&nbsp;May&nbsp;2026</span>
+    <span class="pill muted">Auto-derived from git</span>
+  </div>
+</div>
+
+<!-- HEADLINE STATS -->
+<section>
+  <div class="sec-eyebrow">By the Numbers</div>
+  <div class="sec-title">27 days, 248 commits, one platform</div>
+  <div class="sec-sub">Headline output of the GROW build window so far. All numbers are pulled directly from the <code style="color:var(--text);">tc-grow-applications</code> git history since the first commit on 7 April 2026.</div>
+
+  <div class="stats-grid">
+    <div class="stat blue">
+      <div class="s-label">Commits</div>
+      <div class="s-value">248</div>
+      <div class="s-sub">across <strong style="color:var(--text);">20 active days</strong></div>
+    </div>
+    <div class="stat teal">
+      <div class="s-label">Pull requests merged</div>
+      <div class="s-value">115</div>
+      <div class="s-sub">squash-merged via review queue</div>
+    </div>
+    <div class="stat amber">
+      <div class="s-label">Files touched</div>
+      <div class="s-value">442</div>
+      <div class="s-sub">unique files modified or created</div>
+    </div>
+    <div class="stat purple">
+      <div class="s-label">Initiatives</div>
+      <div class="s-value">14</div>
+      <div class="s-sub">distinct workstreams shipped</div>
+    </div>
+    <div class="stat lightblue">
+      <div class="s-label">Lines added</div>
+      <div class="s-value">+113,357</div>
+      <div class="s-sub">net new code across backend, frontend, infra</div>
+    </div>
+    <div class="stat red">
+      <div class="s-label">Lines removed</div>
+      <div class="s-value">&minus;4,422</div>
+      <div class="s-sub">refactors, dead-code purges, sidebar tidy-up</div>
+    </div>
+    <div class="stat blue">
+      <div class="s-label">Active days</div>
+      <div class="s-value">20</div>
+      <div class="s-sub">of <strong style="color:var(--text);">27</strong> elapsed since Day 0</div>
+    </div>
+    <div class="stat teal">
+      <div class="s-label">Top day</div>
+      <div class="s-value">38</div>
+      <div class="s-sub">commits on 23 April (admin/agents day)</div>
+    </div>
+  </div>
+</section>
+
+<!-- INITIATIVES -->
+<section>
+  <div class="sec-eyebrow">Initiatives</div>
+  <div class="sec-title">14 workstreams shipped</div>
+  <div class="sec-sub">Each card groups related commits and PRs into a coherent piece of work. Date ranges show first-shipped to last-shipped within the window.</div>
+
+  <div class="initiatives-grid">
+
+    <!-- 1 Foundation + AppShell -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Platform foundations &amp; AppShell</div>
+        <div class="init-range">7&ndash;23 Apr</div>
+      </div>
+      <div class="init-desc">Bootstrapped the FastAPI + Next.js 16 monorepo, ECS deployment, OAuth via TC Accounts, and Mike's tc-assistant-pattern dual-panel shell with thin rail, AreaSidebar, Help Centre, and waffle launcher.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Infra</span>
+        <span class="init-tag">Shell</span>
+      </div>
+      <ul class="init-list">
+        <li><strong>TC AppShell</strong> with starter thin-rail nav, dual panel, contextual AreaSidebar</li>
+        <li>Sticky glass <strong>PageHeader</strong>, greeting hero, Teams-style splitter for AreaSidebar</li>
+        <li>Help Centre, Petal loader, Waffle (TC suite + external tools), feedback button, error pages</li>
+        <li>OAuth callback, JWT validation via JWKS, Employment Hero enrichment on login</li>
+        <li>Docker glibc fix + Node 20 runtime + ECS rollback detection (the rough deploy week)</li>
+      </ul>
+    </div>
+
+    <!-- 2 Marketing Hub -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Marketing Hub &amp; tools migration</div>
+        <div class="init-range">8&ndash;26 Apr</div>
+      </div>
+      <div class="init-desc">Ported the Lovable comms hub and a dozen marketing tools into GROW &mdash; brand profiles, comms brief, comms register, segment library, content calendar, RACI builder, ORM, UTM builder.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Marketing</span>
+      </div>
+      <ul class="init-list">
+        <li>Internal comms hub migrated <strong>from Lovable into GROW</strong></li>
+        <li><strong>Brand Profiles</strong> tool (partner brand intelligence + scraping pipeline)</li>
+        <li><strong>UTM Builder</strong> 3-tab redesign (Library, Presets, colour-coded preview)</li>
+        <li><strong>Content Calendar</strong> with grid view, platform icons, summary stats, CSV export</li>
+        <li>Marketing Hub layout, search, missing tools added, sidebar tidy</li>
+        <li>Segment Library / RACI Builder / Comms Planning <strong>restricted to Marketing team</strong></li>
+      </ul>
+    </div>
+
+    <!-- 3 Marketing Request flow -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Marketing Request &amp; review queue</div>
+        <div class="init-range">15 Apr&ndash;1 May</div>
+      </div>
+      <div class="init-desc">Unified marketing intake. Cross-team Active Requests board, drafts table, approve/reject queue, email notifications, file attachments, synthetic monitor, and a dedicated review page.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Comms</span>
+      </div>
+      <ul class="init-list">
+        <li>3-box AI-guided <strong>Comms Intake</strong> at <code>/company/comms-intake</code> with classification gate</li>
+        <li>Marketing Request page + Internal Marketing Hub <strong>merged into one unified flow</strong></li>
+        <li>Drafts table, approve/reject queue, email notifications, file attachments</li>
+        <li>Cross-team Active Requests board + quality pass</li>
+        <li><strong>Synthetic Marketing Request monitor</strong> (admin endpoint, drives health board)</li>
+      </ul>
+    </div>
+
+    <!-- 4 Roadmap Agent -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Roadmap Agent (v0 &rarr; v1)</div>
+        <div class="init-range">30 Apr&ndash;3 May</div>
+      </div>
+      <div class="init-desc">Admin-side AI scanner that surfaces roadmap suggestions. v0 was a manual suggestions panel + inbox endpoint; v1 added the weekly AI scan, manual trigger, and graceful degradation when Linear is down.</div>
+      <div class="init-tags">
+        <span class="init-tag fresh">Fresh</span>
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Admin</span>
+      </div>
+      <ul class="init-list">
+        <li><strong>v0:</strong> suggestions panel + inbox endpoint</li>
+        <li><strong>v1:</strong> weekly AI scan + manual trigger</li>
+        <li>Switched from Anthropic SDK to internal <strong>Trilogy LLM service</strong></li>
+        <li>AEST timestamps (not UTC), warm empty states, refined card aesthetic</li>
+      </ul>
+    </div>
+
+    <!-- 5 Pit Wall -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Pit Wall &mdash; TV kiosk &amp; boards</div>
+        <div class="init-range">30 Apr&ndash;3 May</div>
+      </div>
+      <div class="init-desc">F1-pit-wall-style TV kiosk for the office screen. Includes a Sales GP drag race, a marketing board pulling Linear ops data, a sales pulse board with daily SMS metrics, and a data-points manager.</div>
+      <div class="init-tags">
+        <span class="init-tag fresh">Fresh</span>
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Kiosk</span>
+      </div>
+      <ul class="init-list">
+        <li>TV kiosk routes + <strong>Sales GP drag race</strong> + data-points manager</li>
+        <li><strong>Marketing board</strong> pulling Linear ops data</li>
+        <li><strong>Sales pulse board</strong> with daily SMS metrics</li>
+      </ul>
+    </div>
+
+    <!-- 6 Health Checks + Pulse -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Admin: Health Checks, Pulse, SLA</div>
+        <div class="init-range">22&ndash;30 Apr</div>
+      </div>
+      <div class="init-desc">Admin observability layer &mdash; status board for synthetic monitors, recent Linear activity feed, per-agent SLA dashboard with date-range filter, run-time agent status toggles persisted server-side.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Admin</span>
+      </div>
+      <ul class="init-list">
+        <li><strong>Health Checks</strong> admin status board page + synthetic monitor</li>
+        <li>Per-agent <strong>SLA dashboard</strong> at <code>/admin/sla</code> with 7/14/30/90-day filter</li>
+        <li>Run-time agent status toggle, backend-persisted overrides</li>
+        <li>Recent Linear activity feed on <code>/admin</code>, Agents overview section</li>
+        <li>JARVIS &rarr; <strong>Pulse</strong> rename to separate from Linear's JARVIS</li>
+      </ul>
+    </div>
+
+    <!-- 7 Agents page -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Agents directory &amp; pixel art</div>
+        <div class="init-range">27 Apr&ndash;3 May</div>
+      </div>
+      <div class="init-desc">Top-level <code>/agents</code> page &mdash; directory, activity feed, per-agent detail. Drill-in from the home ticker. Plus a Gather-style pixel-art Agent House view as the playful entry point.</div>
+      <div class="init-tags">
+        <span class="init-tag fresh">Fresh</span>
+        <span class="init-tag live">Live</span>
+      </div>
+      <ul class="init-list">
+        <li>Live agent activity widget + ticker on home</li>
+        <li><strong>Top-level /agents page</strong> (directory + activity feed + per-agent detail)</li>
+        <li>Drill into <code>/agents</code> from home ticker</li>
+        <li><strong>Pixel-art Agent House view</strong> &mdash; Gather-style sprite tile renderer + role labels</li>
+        <li>Graceful degradation when Linear API fails (no more 502s)</li>
+      </ul>
+    </div>
+
+    <!-- 8 Policy Check + Market Sentiment -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Policy Check &amp; Market Sentiment v3</div>
+        <div class="init-range">17&ndash;30 Apr</div>
+      </div>
+      <div class="init-desc">Two AI-assisted analyst tools. Policy Check ships a backend service + frontend page for content compliance. Market Sentiment v3 expands to per-pillar insights, citations, week-on-week summary, plus a Support-at-Home landscape briefing and 7 new live sources.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+      </div>
+      <ul class="init-list">
+        <li><strong>Policy Check:</strong> backend service + endpoint + frontend page + nav entry</li>
+        <li>Market Sentiment Index ported to GROW + bearer-token plumbing fix</li>
+        <li>Per-pillar insights, source citations, week-on-week summary</li>
+        <li><strong>v3:</strong> Support at Home landscape, briefing, market position + 7 new live sources</li>
+      </ul>
+    </div>
+
+    <!-- 9 Partner Collateral / Canva -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Partner Collateral generator</div>
+        <div class="init-range">16&ndash;24 Apr</div>
+      </div>
+      <div class="init-desc">Partner-flyer pipeline. Pricing calculator + extended schema + dual-mode Claude prompts, S3 storage for PDFs and logos, Canva integration service (env-var gated), Download-All ZIP and Edit-in-Canva buttons, smoke-test script.</div>
+      <div class="init-tags">
+        <span class="init-tag">Marketing</span>
+        <span class="init-tag">Canva pending</span>
+      </div>
+      <ul class="init-list">
+        <li>Pricing calculator + extended schema + dual-mode Claude prompts</li>
+        <li><strong>S3 storage</strong> for PDFs + logos + TC/hero static URLs</li>
+        <li>Canva integration service (stubbed, env-var gated) wired into collateral_generator</li>
+        <li>PDF logo conversion + dual-branded template + smoke-test script</li>
+        <li><strong>Download-All ZIP</strong> endpoint + Edit-in-Canva buttons</li>
+      </ul>
+    </div>
+
+    <!-- 10 ORM Escalation -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">ORM Escalation</div>
+        <div class="init-range">15&ndash;30 Apr</div>
+      </div>
+      <div class="init-desc">Online reputation escalation form. Char count + regenerate + platform limits, drag-and-drop screenshot upload, DB-backed editable prompt template with in-page editor. End-state: switched from Zoho CRM API to <strong>Zoho Forms prefill URL</strong> (interim until Portal).</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Ops</span>
+      </div>
+      <ul class="init-list">
+        <li>ORM escalation form + Zoho CRM pipeline (initial)</li>
+        <li>Char count, regenerate button, platform limits</li>
+        <li>Drag-and-drop screenshot upload + larger drop zone</li>
+        <li>DB-backed editable prompt template + in-page editor</li>
+        <li><strong>Switched from Zoho CRM API to Zoho Forms prefill URL</strong></li>
+      </ul>
+    </div>
+
+    <!-- 11 LLM proxy migration -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">AI proxy &amp; Trilogy LLM migration</div>
+        <div class="init-range">22&ndash;24 Apr</div>
+      </div>
+      <div class="init-desc">Moved every AI call server-side. Anthropic SDK calls now proxied through FastAPI at <code>/api/ai</code>; migrated to the internal Trilogy LLM service with OpenAI chat-completions; surfaced upstream errors as JSON instead of 500.</div>
+      <div class="init-tags">
+        <span class="init-tag">Backend</span>
+        <span class="init-tag">Security</span>
+      </div>
+      <ul class="init-list">
+        <li>Proxy Anthropic calls through FastAPI at <code>/api/ai</code></li>
+        <li><strong>Migrate to Trilogy LLM service</strong> with OpenAI chat-completions</li>
+        <li>Surface upstream LLM errors as JSON (not 500), egress diagnostics</li>
+        <li>Multimodal ChatMessage support, ContentBlock export</li>
+      </ul>
+    </div>
+
+    <!-- 12 Nav restructure & UX -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Navigation &amp; UX polish</div>
+        <div class="init-range">22 Apr&ndash;3 May</div>
+      </div>
+      <div class="init-desc">Whole-platform nav restructure plus a wide UX pass. Sales, BD, Marketing Ops sub-sections, NEW/UPDATED badges, dark-mode polish across live-call/playbook/hubs, ARIA tabs, hub-tile CSS, thin-rail glow, AreaSidebar always-open.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Nav</span>
+        <span class="init-tag">UX</span>
+      </div>
+      <ul class="init-list">
+        <li>Home &rarr; analytics landing, <strong>Business Development</strong> + <strong>Sales</strong> sections</li>
+        <li>NEW / UPDATED badges with 7-day auto-expiry</li>
+        <li>Dark-mode polish for live-call, sales-playbook tabs, sales/BD hubs</li>
+        <li>Hub-tile CSS, h1 + ARIA tabs, badge contrast, live-call confirm/reload</li>
+        <li>Thin-rail glow extended to home/analytics/company; rail icon glow Marketing/BD/Sales</li>
+        <li>AreaSidebar <strong>always open</strong> &mdash; collapse paths removed</li>
+      </ul>
+    </div>
+
+    <!-- 13 Sales Playbook + Coordinator Lookup -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Sales Playbook &amp; Coordinator Lookup</div>
+        <div class="init-range">27 Apr&ndash;1 May</div>
+      </div>
+      <div class="init-desc">Sales-rep tooling. Ported the Sales Playbook portal end-to-end into GROW; built a Coordinator Lookup with postcode search, Leaflet coverage map, View Profile and Refer Client modals, then moved it from dashboards into the Sales sidebar.</div>
+      <div class="init-tags">
+        <span class="init-tag live">Live</span>
+        <span class="init-tag">Sales</span>
+      </div>
+      <ul class="init-list">
+        <li>Sales Playbook portal <strong>ported end-to-end into GROW</strong></li>
+        <li>Coordinator Lookup &mdash; postcode search, Leaflet map, geocoded centroids</li>
+        <li>View Profile modal (onboarding status, tenure, coverage)</li>
+        <li>Refer Client modal (form + email routing via TC Graph Entra SP)</li>
+        <li>Moved Coordinator Lookup <strong>from dashboards to Sales</strong> (open to all users)</li>
+      </ul>
+    </div>
+
+    <!-- 14 Dashboards + cleanup -->
+    <div class="init-card">
+      <div class="init-head">
+        <div class="init-title">Dashboards, cleanup &amp; Cupboard</div>
+        <div class="init-range">17 Apr&ndash;1 May</div>
+      </div>
+      <div class="init-desc">Operational dashboards (CEC &amp; Retention, IAT Screening Exec, IAT Churn, Competitor Intelligence, Client Onboarding Funnel, TL Remuneration). Cupboard catalogue tile for inventory requests. Plus a dashboards cleanup that removed 9 stale cards.</div>
+      <div class="init-tags">
+        <span class="init-tag">Dashboards</span>
+        <span class="init-tag">Cleanup</span>
+      </div>
+      <ul class="init-list">
+        <li>Dashboards added: CEC &amp; Retention session, IAT Screening Exec Summary, IAT Churn Analysis, Competitor Intelligence, Client Onboarding Funnel, TL Remuneration Calculator</li>
+        <li><strong>Cupboard catalogue tile</strong> for inventory requests</li>
+        <li>Removed 7 stale cards, Staffing Snapshot/Plan, Warm BOF Scoreboard, IAT Churn, IAT Screening</li>
+        <li>TL REM Calculator moved to Sales sidebar (team-leader+)</li>
+        <li>New Consumer Journey restricted to team-leader and above</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- DAY-BY-DAY TIMELINE -->
+<section>
+  <div class="sec-eyebrow">Day by Day</div>
+  <div class="sec-title">The full git history</div>
+  <div class="sec-sub">Every commit and PR shipped against tc-grow-applications since 7&nbsp;April. Newest first. Includes Imran's PRs (squash-merged via the bot), direct commits, and contributions from Mike, Jacqui, and the trilogy-mikew bot.</div>
+
+  <div class="timeline-wrap">
+    <div class="timeline-toolbar">
+      <span class="tt-label">20 active days &middot; 248 commits</span>
+      <button class="tt-btn" id="expand-toggle" type="button">Expand all</button>
+    </div>
+    <div class="timeline" id="timeline">
+
+      <!-- 2026-05-03 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">3 May 2026</div>
+          <div class="day-num">Sat &middot; Day 27</div>
+          <span class="day-count">10 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">agents-activity: role labels by default, persona name on hover</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">agents-activity: Gather-style sprite tile renderer + name labels</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">agents-activity: add CC0 sprite sheets for Gather-style renderer</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">agents-activity: degrade gracefully on Linear failures instead of 502 (#130)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">agents-activity: pixel-art Agent House view</span></div>
+          <div class="day-item"><span class="di-prefix polish">polish</span><span class="di-text">tile-density + section one-liners on hub + tab pages (#126)</span></div>
+          <div class="day-item"><span class="di-prefix polish">polish</span><span class="di-text">roadmap-agent card aesthetic + home microcopy (#124)</span></div>
+          <div class="day-item"><span class="di-prefix polish">polish</span><span class="di-text">warm empty states across roadmap-agent / utm-builder / pit-wall / admin (#123)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">roadmap-agent: show times in AEST, not UTC (#122)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">merge main into feat/agents-pixel-house</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-05-02 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">2 May 2026</div>
+          <div class="day-num">Fri &middot; Day 26</div>
+          <span class="day-count">1 commit</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">roadmap-agent: use internal LLM service instead of Anthropic SDK (#121)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-05-01 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">1 May 2026</div>
+          <div class="day-num">Thu &middot; Day 25</div>
+          <span class="day-count">13 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing: cupboard catalogue tile for inventory requests (#118)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">agents: drill into /agents from home ticker + live activity widget (#119)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">agents: top-level /agents page &mdash; directory, activity feed, per-agent detail (#100)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">housekeeping bundle from QA audit (#117)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">three quick fixes flagged by today's audit (#116)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">restrict New Consumer Journey to team-leader and above</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">add 'coming soon' badge to Coordinator Lookup in Sales sidebar</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">move Coordinator Lookup from dashboards to Sales</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">remove Warm BOF Scoreboard, IAT Churn Analysis, IAT Screening from dashboards</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">remove Staffing Snapshot and Staffing Plan from dashboards listing</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">remove 7 stale cards from dashboards listing</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">move TL REM Calculator to Sales sidebar (team-leader+)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">remove leftover conflict markers in areas.ts</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-30 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">30 Apr 2026</div>
+          <div class="day-num">Wed &middot; Day 24</div>
+          <span class="day-count">22 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">pit-wall: sales pulse board with daily SMS metrics (#115)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">pit-wall: marketing board with Linear ops data (#114)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">pit-wall: TV kiosk routes + Sales GP drag race + data-points manager (#106)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing-review: dual-path Marketing Request + new review queue page (#113)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing-review: drafts table + approve/reject queue endpoints + email notifications (#112)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">health-checks: admin status board page (#108)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">health-checks: synthetic Marketing Request monitor + admin endpoint (#109)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing-request: file attachments + better error messages (#107)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">market-sentiment: v3 &mdash; Support at Home landscape, briefing, market position + 7 new sources (#102)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">policy-check: frontend page + nav entry (#104)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">policy-check: backend service + endpoint for content compliance checking (#105)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">sales-playbook: strip the broken Push-to-Zoho-CRM flow (#103)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: roadmap agent v1 &mdash; weekly AI scan + manual trigger (#99)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">orm-escalation: switch from Zoho CRM API to Zoho Forms prefill URL (#98)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: roadmap agent v0 &mdash; suggestions panel + inbox endpoint (#97)</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">dark-mode polish for sales-playbook inner tabs (#96)</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">extend thin-rail glow to home/analytics/company (#95)</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">dark-mode polish for sales + bd hub pages (#94)</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">dark-mode polish for live-call, marketing nav sub-sections, rail icon glow (#92)</span></div>
+          <div class="day-item"><span class="di-prefix ci">ci</span><span class="di-text">build: retry-with-jitter on tag-creation race (#93)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">mops: richer agent-actioned cards + pipeline flow diagram (#91)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">home: polish agent activity widget + add live agent ticker (#90)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-29 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">29 Apr 2026</div>
+          <div class="day-num">Tue &middot; Day 23</div>
+          <span class="day-count">10 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: add Sales + BD to thin rail; move Comms tools to Company; placeholder Marketing Ops (#89)</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">p0: hub-tile CSS, live-call confirm/reload, h1 + ARIA tabs, badge contrast (#88)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">coordinator-lookup: pause UI surfaces while CDK Deploy is unblocked (#87)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">coordinator-lookup: use embedded coords for search marker</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">coordinator-lookup: replace postcode formula with real geocoded centroids</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator-lookup: map coverage layers select-to-show per coordinator</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: move Sales Playbook from Business Development to Sales (#85)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">sales-playbook: port Sales Playbook portal end-to-end into Grow (#82)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: area sidebar is always open &mdash; remove hide/collapse paths (#81)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: add Call Centre to DomainSwitcher (#84)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-28 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">28 Apr 2026</div>
+          <div class="day-num">Mon &middot; Day 22</div>
+          <span class="day-count">15 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Client Onboarding Funnel dashboard</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator-lookup: switch referral email to TC Graph Entra SP auth</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator-lookup: Refer Client modal &mdash; form, email routing, infra</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator-lookup: View Profile modal (onboarding status, tenure, coverage)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">exact postcode match stamp on coordinator cards</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">bundle Leaflet locally &mdash; no CDN dependency</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">map rendering &mdash; CDN, container height, stale instance cleanup</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">split remote into nearby vs national sections</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">sort face-to-face by matching client count, not coverage %</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">map renders correctly &mdash; defer init + explicit container height</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">use Owner.name (current BD owner) not Business_Development_Manager</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">restore map view tab with Leaflet coverage zones</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">collapsible sections + exclude internal coordinators</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Coordinator Lookup to dashboards page</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">register Coordinator Lookup in apps directory (Sales &amp; BD)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-27 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">27 Apr 2026</div>
+          <div class="day-num">Sun &middot; Day 21</div>
+          <span class="day-count">18 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator lookup dashboard (replaces Next.js page approach)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">correct RawRow type cast for strict TypeScript build</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator lookup tool &mdash; postcode search for external coordinators</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">map redraws on new search, View Profile shows Soon badge</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Coordinator Lookup to Company + BD navigation</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator lookup page with cards and Leaflet map</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">coordinator lookup API route with live Databricks data</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Databricks REST API query helper</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">add .worktrees to gitignore</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">stop OAuth callback hanging on slow Databricks EH lookup (#83)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">comms-intake: cross-team Active Requests board + quality pass (#45)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add TL Remuneration Calculator dashboard</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">home: live agent activity widget (#80)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">apps: group launcher by category + add card/list view toggle (#78)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">home: swap HubTile heading hierarchy (#79)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">apps: App Launcher at /apps &mdash; Ash-inspired but cooler (#77)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">auto-suggestions: add 4 reviewer skills + suggestions scaffold (#76)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-26 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">26 Apr 2026</div>
+          <div class="day-num">Sat &middot; Day 20</div>
+          <span class="day-count">27 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">nav: NEW / UPDATED badges with 7-day auto-expiry (#75)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">sales: add Sales section with coming-soon hub (#74)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">analytics: default the Linear team ID in code, not env (#73)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: fix broken sidebar links and align left rail with area sidebar (#60)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: hide Brief Panel &mdash; superseded by /marketing-request (#72)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">analytics: wire LINEAR_ANALYTICS_TEAM_ID into prod env (#71)</span></div>
+          <div class="day-item"><span class="di-prefix security">sec</span><span class="di-text">X-Frame-Options DENY (matches siblings); tighten OG description (#70)</span></div>
+          <div class="day-item"><span class="di-prefix ux">a11y</span><span class="di-text">shared-shell fixes &mdash; DomainSwitcher target/aria + top-bar contrast/aria (#69)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: rename 'Engineering &amp; Digital' &rarr; 'Digital' (#68)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">analytics: Marketing Ops dashboard (slice 1: Overview) (#67)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">market-sentiment: per-pillar insights, source citations, week-on-week summary (#66)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">segment-library: restrict to the Marketing team only (#65)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: add Engineering &amp; Digital app to DomainSwitcher (#64)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">raci-builder: restrict to the Marketing team only (#63)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">nav: hide Content Calendar from the marketing area sidebar (#62)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">comms-planning: restrict to the Marketing team only (#61)</span></div>
+          <div class="day-item"><span class="di-prefix test">test</span><span class="di-text">marketing: unit tests for isClientFacing routing helper (#59)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing-request: add "How this works" panel for the unified flow (#58)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing-request: merge Internal Hub into one unified brief flow (#57)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing: tidy sidebar &mdash; drop Response Triage + RACI; rename Comms Planning; dual-list Comms Register (#55)</span></div>
+          <div class="day-item"><span class="di-prefix docs">docs</span><span class="di-text">add CONTRIBUTING.md with branch/PR flow + env map (#56)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">orm: double the screenshot drop-zone height (#54)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">orm: drag-and-drop screenshot onto the upload zone (#53)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-25 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">25 Apr 2026</div>
+          <div class="day-num">Fri &middot; Day 19</div>
+          <span class="day-count">3 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">jarvis: first real data &mdash; platform health + Linear board beat tasks (#50)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">admin: rename Grow's JARVIS &rarr; Pulse to separate from the Linear JARVIS (#52)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">rbac: tighten admin seed list to Mike / Nick / Jacqui / Imran (#51)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-24 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">24 Apr 2026</div>
+          <div class="day-num">Thu &middot; Day 18</div>
+          <span class="day-count">30 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">nav: home &rarr; analytics landing, add Business Development section, move tools into hubs (#49)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">marketing-request: move to /marketing-request + Tailwind restyle + hide stats + rename Due Date (#48)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">ai: export ContentBlock + allow multimodal content in ChatMessage (#47)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">orm: DB-backed editable prompt template + in-page editor (#46)</span></div>
+          <div class="day-item"><span class="di-prefix chore">settings</span><span class="di-text">drop About card &mdash; version/runtime info belongs in admin and release notes</span></div>
+          <div class="day-item"><span class="di-prefix chore">shell</span><span class="di-text">add People, Facilities to DomainSwitcher; add Training to waffle</span></div>
+          <div class="day-item"><span class="di-prefix chore">diag</span><span class="di-text">ai: probe 4 hosts to classify the egress failure (#43)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: Download-All ZIP endpoint + Edit-in-Canva buttons (#40)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: PDF logo conversion + dual-branded template + smoke-test script (#42)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: S3 storage for PDFs + logos + TC/hero static URLs (#39)</span></div>
+          <div class="day-item"><span class="di-prefix chore">diag</span><span class="di-text">add unauthenticated /api/ai/diag to probe LLM upstream (#41)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: wire canva_service into collateral_generator (#38)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">ai-proxy: surface upstream LLM errors as JSON instead of 500 (#34)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: Canva integration service (stubbed, env-var gated) (#35)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: new form with live pricing preview (#36)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner-collateral: pricing calculator + extended schema + dual-mode Claude prompts (#37)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">feedback: lift button above mobile bottom nav</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">home: make hero actually sticky</span></div>
+          <div class="day-item"><span class="di-prefix ux">a11y</span><span class="di-text">type=button across marketing tools + help TOC</span></div>
+          <div class="day-item"><span class="di-prefix ux">ux</span><span class="di-text">kill gradient-text slop, add focus/active on ToolCard</span></div>
+          <div class="day-item"><span class="di-prefix ux">a11y</span><span class="di-text">round 3 &mdash; dialog semantics on custom modals</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">Rules of Hooks violation in AreaSidebar + WCAG/ARIA pass</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Teams-style splitter for AreaSidebar collapse</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add nextjs-toploader for route-transition progress bar</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add OpenGraph + Twitter card metadata</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">sticky glass-morphic PageHeader + greeting hero</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Error pages: shared 404 + runtime error layout</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Petal loader: pure-CSS keyframes, no React state</span></div>
+          <div class="day-item"><span class="di-prefix docs">docs</span><span class="di-text">Help Centre: add About + Release Notes articles</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add floating feedback button (mailto, per-site admin)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-23 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">23 Apr 2026</div>
+          <div class="day-num">Wed &middot; Day 17</div>
+          <span class="day-count">38 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix chore">waffle</span><span class="di-text">all four TC suite icons use the TC badge</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Second-panel collapse: rail toggle + double-click header (tc-assistant pattern)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">AreaSidebar: add filter input</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">Help renderer: coerce markdown img src to string</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Sticky glass content header + collapsible AreaSidebar sections</span></div>
+          <div class="day-item"><span class="di-prefix chore">waffle</span><span class="di-text">standardise on the four TC apps + external tools</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Mobile nav: match tc-assistant pattern &mdash; 4 primary + More overflow drawer</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Second panel: contextual AreaSidebar, replace legacy AppSidebar</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Thin rail: populate with top-level hubs from nav config</span></div>
+          <div class="day-item"><span class="di-prefix chore">settings</span><span class="di-text">standardise on "Trilogy Care &lt;App&gt;" naming</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">title + favicon: standardise on "Trilogy Care &lt;App&gt;" across the suite</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Help Centre (tc-assistant's implementation)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">shell cleanup: drop dead links + dual-panel chrome redundancy</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Sign-in page: petal loader + auto-redirect, drop manual card</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add TC AppShell (dual-panel) with starter thin-rail nav</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">admin: merge /admin/agent-map into /admin as tabs (#33)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">restore competitor intelligence original design &mdash; remove sticky nav only</span></div>
+          <div class="day-item"><span class="di-prefix ci">ci</span><span class="di-text">deploy: inject env vars into ECS task def from GitHub secrets (#32)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: recent Linear activity feed on /admin (#31)</span></div>
+          <div class="day-item"><span class="di-prefix ci">ci</span><span class="di-text">add CDK deploy workflow via OIDC (infra PRs self-deploy) (#18)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: backend-persisted agent status overrides (#30)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin/sla: hide paused + no-SLA rows, friendly empty state (#29)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add competitor intelligence dashboard &mdash; April 2026</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin/sla: date-range filter (7 / 14 / 30 / 90 days) (#28)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">history: dept + type tags, completion date, department filter (#20)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">deploy: verify step treats superseded task def as non-rollback (#27)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: per-agent SLA performance dashboard at /admin/sla (#26)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: run-time status toggle for agents on /admin (#25)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">admin: derive Layer-2 orchestrator panel from shared config (#24)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">admin: /admin/agent-map reads from shared config/agents.ts (#23)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">admin: Agents overview section on /admin landing page (#21)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-22 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">22 Apr 2026</div>
+          <div class="day-num">Tue &middot; Day 16</div>
+          <span class="day-count">13 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">comms-intake: 3-box AI-guided intake flow at /company/comms-intake (#19)</span></div>
+          <div class="day-item"><span class="di-prefix ci">ci</span><span class="di-text">post-deploy smoke-test job to catch /api/* 404 regressions (#17)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing: Marketing Request page + Internal Marketing Hub (#14)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">api: port /api/linear* + /api/linear-brief* to FastAPI (#16)</span></div>
+          <div class="day-item"><span class="di-prefix docs">docs</span><span class="di-text">rebuild-prompts: add LLM migration banner to 7 tool specs</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">api: port /api/market-sentiment scraper to FastAPI (#15)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">market-sentiment: call via apiClient so the bearer token is attached</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">ai: migrate to Trilogy LLM service with OpenAI chat-completions (#13)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">api: proxy Anthropic calls through FastAPI at /api/ai (#12)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">infra: route Next.js API paths to frontend target group (#11)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">drift audit: Items CRUD + admin landing + 22 code fixes (#10)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add CEC &amp; Retention role session dashboard</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">remove DEPLOY TEST nav entry + page (#8)</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-21 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">21 Apr 2026</div>
+          <div class="day-num">Mon &middot; Day 15</div>
+          <span class="day-count">14 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">infra: frontend task-def healthcheck uses curl, not wget</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">deploy: fetch log tail from latest stream instead of stopped-task lookup</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">deploy: dump stopped-task reason and log tail on rollback</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">docker: add libstdc++6 and libgcc-s1 for copied Node 20 binary</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">docker: use Node 20 at runtime so Next.js 16 frontend can start</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">deploy: detect silent ECS circuit-breaker rollbacks (#7)</span></div>
+          <div class="day-item"><span class="di-prefix test">test</span><span class="di-text">add DEPLOY TEST nav entry to verify frontend pipeline (#6)</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">docker: align Next.js build and runtime on Debian glibc (#5)</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">orm: ORM escalation form + Zoho CRM pipeline (#4)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">expand webhook test coverage + refresh CLAUDE.md integrations (#3)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">protect headshots upload + extract schemas + test webhook lazy-import (#2)</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">remove unused items scaffolding and example_task stub (#1)</span></div>
+          <div class="day-item"><span class="di-prefix refactor">refactor</span><span class="di-text">remove Agent Intelligence frontend from Grow &mdash; moving to AI tracker site</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Agent Intelligence system &mdash; daily prompt improvement recommendations</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-20 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">20 Apr 2026</div>
+          <div class="day-num">Sun &middot; Day 14</div>
+          <span class="day-count">6 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">add partner collateral test script and sample output</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add JARVIS monitoring backend/frontend and Linear briefs admin page</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add prominent Linear link to comms review panel for direct pipeline access</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add classification gate to comms intake &mdash; reject non-comms before they become Linear issues</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">sync staffing plan &mdash; Retention establishment updated to 2.6 FTE</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">update Sales staffing plan &mdash; Apr 2026 headcount refresh</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-19 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">19 Apr 2026</div>
+          <div class="day-num">Sat &middot; Day 13</div>
+          <span class="day-count">2 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">ensure all agent-created Linear issues have a project assigned</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Agent Architecture Map page to admin panel</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-17 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">17 Apr 2026</div>
+          <div class="day-num">Thu &middot; Day 11</div>
+          <span class="day-count">3 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Market Sentiment Index tool to Grow platform</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add IAT Screening Executive Summary dashboard</span></div>
+          <div class="day-item"><span class="di-prefix chore">chore</span><span class="di-text">agent runner: enforce plain text output across all agent personas</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-16 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">16 Apr 2026</div>
+          <div class="day-num">Wed &middot; Day 10</div>
+          <span class="day-count">2 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">partner collateral generator, UTM suite, Linear triage workflow, comms intake tracking</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add IAT Churn Analysis dashboard</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-15 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">15 Apr 2026</div>
+          <div class="day-num">Tue &middot; Day 9</div>
+          <span class="day-count">9 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">register new ECS task definition revision on each deploy</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">comms intake: risk triage, department dropdown, data validation</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">lazy-import linear_agents in webhook router to unblock CI</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">add linear_webhook to routers __init__.py &mdash; fixes CI build failure</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">marketing hub &mdash; grouped layout, search, missing tools added</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">comms brief &mdash; push to review queue workflow integration</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">ORM tool &mdash; char count, regenerate button, platform limits</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Brand Profiles &mdash; partner brand intelligence tool</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">Linear intake: sub-task project routing + quality gate</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-14 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">14 Apr 2026</div>
+          <div class="day-num">Mon &middot; Day 8</div>
+          <span class="day-count">6 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">content calendar &mdash; grid view, platform icons, summary stats, export CSV</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">UTM builder &mdash; 3-tab redesign with Library, Presets, colour-coded preview</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">premium home page redesign</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">migrate internal comms hub from Lovable into GROW</span></div>
+          <div class="day-item"><span class="di-prefix security">sec</span><span class="di-text">move all AI calls to server-side proxy + upgrade headshot grouping</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add client lookup, RACI builder, company section, Linear API route, home page updates</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-08 -->
+      <div class="day-block">
+        <div class="day-meta">
+          <div class="day-date">8 Apr 2026</div>
+          <div class="day-num">Tue &middot; Day 2</div>
+          <span class="day-count">7 commits</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix chore">revert</span><span class="di-text">restore original force-new-deployment until IAM perms fixed</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">update ECS task definition with new image before deploying</span></div>
+          <div class="day-item"><span class="di-prefix fix">fix</span><span class="di-text">add @anthropic-ai/sdk dependency for comms planning bot</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Comms Planning Session tool with AI bot</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Comms Calendar to Marketing Hub</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Segment Library, Brand Checker, and Response Triage to Marketing Hub</span></div>
+          <div class="day-item"><span class="di-prefix feat">feat</span><span class="di-text">add Comms Brief and Comms Register to Marketing Hub</span></div>
+        </div>
+      </div>
+
+      <!-- 2026-04-07 (DAY 0) -->
+      <div class="day-block" style="background: rgba(0,184,148,0.04);">
+        <div class="day-meta">
+          <div class="day-date" style="color: var(--teal);">7 Apr 2026</div>
+          <div class="day-num" style="color: var(--teal);">Mon &middot; Day 0</div>
+          <span class="day-count" style="color: var(--teal); border-color: rgba(0,184,148,0.3); background: rgba(0,184,148,0.08);">First commit</span>
+        </div>
+        <div class="day-items">
+          <div class="day-item"><span class="di-prefix feat" style="color: var(--teal); border-color: rgba(0,184,148,0.3); background: rgba(0,184,148,0.08);">init</span><span class="di-text"><strong>Bootstrap tc-grow-applications repo</strong> &mdash; FastAPI + Next.js 16 + CDK monorepo, OAuth via TC Accounts, ECS task defs.</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- IN FLIGHT -->
+<section>
+  <div class="sec-eyebrow">Currently in Flight</div>
+  <div class="sec-title">What's open, parked, or pending</div>
+  <div class="sec-sub">Things shipped but waiting on something external, plus open judgment calls.</div>
+
+  <div class="inflight-grid">
+    <div class="inflight-card blocker">
+      <div class="if-label">Blocker</div>
+      <div class="if-title">M2M auth for the weekly Roadmap Agent cron</div>
+      <div class="if-detail">v1 ships with manual trigger and a weekly schedule, but the unattended cron path needs machine-to-machine auth wired up before it runs without a human. Manual trigger works today.</div>
+    </div>
+
+    <div class="inflight-card">
+      <div class="if-label">Deferred polish</div>
+      <div class="if-title">Admin background consistency</div>
+      <div class="if-detail">Admin pages have minor background-tone drift across <code>/admin</code>, <code>/admin/sla</code>, <code>/admin/health-checks</code>. Cosmetic, low priority.</div>
+    </div>
+
+    <div class="inflight-card">
+      <div class="if-label">Deferred polish</div>
+      <div class="if-title">Home next-to-do hero pulse</div>
+      <div class="if-detail">The "what's next" hero on the home page lacks the subtle pulse cue that the live agent ticker has. Visual consistency item.</div>
+    </div>
+
+    <div class="inflight-card">
+      <div class="if-label">Pending</div>
+      <div class="if-title">Canva API credentials &mdash; Path B</div>
+      <div class="if-detail">Partner Collateral has the Canva integration service stubbed and env-var gated. Waiting on api_key + brand_kit_id + 3 template IDs to prove the local Canva integration (TRI-397).</div>
+    </div>
+
+    <div class="inflight-card judgment">
+      <div class="if-label">Judgment call</div>
+      <div class="if-title">Sales vs BD area boundaries</div>
+      <div class="if-detail">Sales-rep tools (Sales Playbook, Coordinator Lookup, TL REM Calculator) now sit under <code>/sales</code>, not <code>/business-development</code>. Tracking which BD-tagged tools also belong on the Sales side.</div>
+    </div>
+
+    <div class="inflight-card judgment">
+      <div class="if-label">Reminder</div>
+      <div class="if-title">TRI-395 &mdash; Jacqui dev-ops coaching</div>
+      <div class="if-detail">Surface this in every GROW status until status flips to Done. Jacqui is learning the dev-ops side of the build cadence.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="fl">Last updated: <strong style="color: var(--text);">3 May 2026</strong> &middot; Day 27 of GROW &middot; Day 61 of Trilogy</div>
+  <div class="fr">Auto-derived from <a href="https://github.com/Trilogy-Care/tc-grow-applications" target="_blank">tc-grow-applications</a> git history.</div>
+</footer>
+
+<script>
+  // Expand-all toggle for the timeline
+  (function() {
+    var btn = document.getElementById('expand-toggle');
+    var tl = document.getElementById('timeline');
+    if (!btn || !tl) return;
+    btn.addEventListener('click', function() {
+      var isExpanded = tl.classList.toggle('expanded');
+      btn.textContent = isExpanded ? 'Collapse' : 'Expand all';
+    });
+  })();
+</script>
+
+</body>
+</html>
